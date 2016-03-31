@@ -12,11 +12,13 @@
 
     <properties>
         <openMRSWebServicesVersion>2.12</openMRSWebServicesVersion>
-        <reportingModuleVersion>0.9.1</reportingModuleVersion>
+        <reportingModuleVersion>0.9.9</reportingModuleVersion>
         <openMRSVersion>1.11.4</openMRSVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <calculationModuleVersion>1.1</calculationModuleVersion>
         <serializationXstreamModuleVersion>0.2.7</serializationXstreamModuleVersion>
+        <bahmniVersion>0.80-SNAPSHOT</bahmniVersion>
+        <testutilsVersion>1.5</testutilsVersion>
     </properties>
 
     <organization>
@@ -119,6 +121,12 @@
 
             <dependency>
                 <groupId>org.openmrs.module</groupId>
+                <artifactId>reporting-api</artifactId>
+                <version>${reportingModuleVersion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
                 <artifactId>webservices.rest-omod-common</artifactId>
                 <version>${openMRSWebServicesVersion}</version>
                 <type>jar</type>
@@ -126,12 +134,6 @@
             </dependency>
 
             <!-- test dependencies -->
-            <dependency>
-                <groupId>org.openmrs.module</groupId>
-                <artifactId>reporting-api</artifactId>
-                <version>${reportingModuleVersion}</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>calculation-api</artifactId>

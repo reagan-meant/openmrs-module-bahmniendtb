@@ -11,7 +11,7 @@
  * <p/>
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.endtb.bahmniextn;
+package org.openmrs.module.bahmniendtb;
 
 
 import org.apache.commons.logging.Log;
@@ -29,42 +29,42 @@ public class EndTBBahmniExtensionActivator implements ModuleActivator {
      * @see ModuleActivator#willRefreshContext()
      */
     public void willRefreshContext() {
-        log.info("Refreshing Bacteriology Module");
+        log.info("Refreshing Endtb Module");
     }
 
     /**
      * @see ModuleActivator#contextRefreshed()
      */
     public void contextRefreshed() {
-        log.info("Bacteriology Module refreshed");
+        log.info("Endtb Module refreshed");
     }
 
     /**
      * @see ModuleActivator#willStart()
      */
     public void willStart() {
-        log.info("Starting Bacteriology Module");
+        log.info("Starting Endtb Module");
     }
 
     /**
      * @see ModuleActivator#started()
      */
     public void started() {
-        log.info("Bacteriology Module started");
+        log.info("Endtb Module started");
     }
 
     /**
      * @see ModuleActivator#willStop()
      */
     public void willStop() {
-        log.info("Stopping Bacteriology Module");
+        log.info("Stopping Endtb Module");
     }
 
     /**
      * @see ModuleActivator#stopped()
      */
     public void stopped() {
-        log.info("Bacteriology Module stopped");
+        log.info("Endtb Module stopped");
     }
 
 }

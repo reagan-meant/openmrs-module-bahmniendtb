@@ -18,5 +18,5 @@
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
 
-    <context:component-scan base-package="org.openmrs.module.endtb"/>
+    <context:component-scan base-package="org.openmrs.module.bahmniendtb"/>
 </beans>
