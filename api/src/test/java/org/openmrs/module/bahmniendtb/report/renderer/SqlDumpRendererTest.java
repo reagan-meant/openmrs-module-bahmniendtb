@@ -48,8 +48,11 @@ public class SqlDumpRendererTest {
 
 		System.out.println(out.toString());
 
-		assertEquals("CREATE DATABASE `endtbreports`;USE `endtbreports`;DROP TABLE IF EXISTS `data`;\n"
-				+ "CREATE TABLE `data` (\n" + " `PATIENT_ID` int(20) DEFAULT NULL, `WITHQUOTE` text DEFAULT NULL);",out.toString());
+		assertEquals("CREATE DATABASE `endtbreports`;USE `endtbreports`;DROP TABLE IF EXISTS `patient`;\n"
+				+ "CREATE TABLE `patient` (\n"
+				+ " `PATIENT_ID` int(20) DEFAULT NULL, `PATIENT_NAME` text DEFAULT NULL, `PATIENT_DOB` datetime DEFAULT NULL);INSERT INTO `patient` VALUES (1,'Ram','2015-01-01 00:00:00'),(2,'Shyam','2014-01-01 00:00:00');DROP TABLE IF EXISTS `concept`;\n"
+				+ "CREATE TABLE `concept` (\n"
+				+ " `CONCEPT_ID` int(20) DEFAULT NULL, `CONCEPT_NAME` text DEFAULT NULL);INSERT INTO `concept` VALUES (10,'Systolic'),(20,'Diastolic');",out.toString());
 
 	}
 

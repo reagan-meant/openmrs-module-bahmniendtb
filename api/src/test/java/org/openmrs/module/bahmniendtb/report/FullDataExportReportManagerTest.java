@@ -2,6 +2,7 @@ package org.openmrs.module.bahmniendtb.report;
 
 import org.junit.Test;
 import org.openmrs.contrib.testdata.TestDataManager;
+import org.openmrs.module.bahmniendtb.Configuration;
 import org.openmrs.module.bahmniendtb.report.manager.FullDataExportReportManager;
 import org.openmrs.module.reporting.dataset.DataSet;
 import org.openmrs.module.reporting.dataset.DataSetRow;
@@ -31,7 +32,7 @@ public class FullDataExportReportManagerTest extends BaseModuleContextSensitiveT
 	public void testFullExport() throws Exception {
 		ReportDefinition reportDefinition = reportManager.constructReportDefinition();
 		ReportData reportData = reportDefinitionService.evaluate(reportDefinition, new EvaluationContext());
-		DataSet patientDataSet = reportData.getDataSets().get(FullDataExportReportManager.PATIENT_DATA_SET_NAME);
+		DataSet patientDataSet = reportData.getDataSets().get(Configuration.PATIENT_DATA_SET_NAME);
 		Iterator<DataSetRow> iterator = patientDataSet.iterator();
 
 		int count = 0;

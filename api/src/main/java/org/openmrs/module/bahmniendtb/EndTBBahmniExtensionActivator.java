@@ -17,6 +17,8 @@ package org.openmrs.module.bahmniendtb;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.ModuleActivator;
+import org.openmrs.module.bahmniendtb.report.manager.FullDataExportReportManager;
+import org.openmrs.module.reporting.report.manager.ReportManagerUtil;
 
 /**
  * This class contains the logic that is run every time this module is either started or stopped.
@@ -50,7 +52,7 @@ public class EndTBBahmniExtensionActivator implements ModuleActivator {
      * @see ModuleActivator#started()
      */
     public void started() {
-        log.info("Endtb Module started");
+        ReportManagerUtil.setupAllReports(FullDataExportReportManager.class);
     }
 
     /**
