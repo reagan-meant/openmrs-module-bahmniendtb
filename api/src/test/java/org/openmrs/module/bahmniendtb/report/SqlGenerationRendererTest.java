@@ -3,8 +3,10 @@ package org.openmrs.module.bahmniendtb.report;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.bahmniendtb.report.renderer.SqlDumpRenderer;
 import org.openmrs.module.reporting.cohort.definition.GenderCohortDefinition;
 import org.openmrs.module.reporting.dataset.definition.CohortCrossTabDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.SimplePatientDataSetDefinition;
@@ -50,16 +52,16 @@ public class SqlGenerationRendererTest extends BaseModuleContextSensitiveTest {
 		CohortCrossTabDataSetDefinition genderDsd = new CohortCrossTabDataSetDefinition();
 		genderDsd.addColumn("males", males, null);
 		genderDsd.addColumn("females", females, null);
-		reportDefinition.addDataSetDefinition("genders", genderDsd, null);
+//		reportDefinition.addDataSetDefinition("genders", genderDsd, null);
 
 		final ReportDesign reportDesign = new ReportDesign();
 		reportDesign.setName("TestDesign");
 		reportDesign.setReportDefinition(reportDefinition);
-		reportDesign.setRendererType(TextTemplateRenderer.class);
+		reportDesign.setRendererType(SqlDumpRenderer.class);
 
-		if (templateType != null) {
-			reportDesign.addPropertyValue(TextTemplateRenderer.TEMPLATE_TYPE, templateType);
-		}
+//		if (templateType != null) {
+//			reportDesign.addPropertyValue(TextTemplateRenderer.TEMPLATE_TYPE, templateType);
+//		}
 
 		EvaluationContext context = new EvaluationContext();
 		ReportDefinitionService rs = Context.getService(ReportDefinitionService.class);
@@ -74,16 +76,12 @@ public class SqlGenerationRendererTest extends BaseModuleContextSensitiveTest {
 
 		reportDesign.addPropertyValue("databaseName","endtbreports");
 
-		TextTemplateRenderer renderer = new TextTemplateRenderer() {
-			public ReportDesign getDesign(String argument) {
-				return reportDesign;
-			}
-		};
+		SqlDumpRenderer renderer = new SqlDumpRenderer();
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		renderer.render(reportData, "ReportData", baos);
 		String renderedOutput = baos.toString();
-		System.out.println(renderedOutput);
+//		System.out.println(renderedOutput);
 
 //		String xml = "<?xml version=\"1.0\"?>" + "<dataset>" + "	<rows>"
 //				+ "		<row><patientId>2</patientId><gender>M</gender><birthdate>08/Apr/1975</birthdate></row>"

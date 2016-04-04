@@ -64,6 +64,6 @@ public class DatabaseColumnWriter {
 			return columnValue.toString();
 		}
 
-		return null;
+		throw new RuntimeException("Unsupported Datatype ["+column.getDataType()+"] and cannot convert the value ["+columnValue+"]");
 	}
 }

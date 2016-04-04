@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.openmrs.module.endtb</groupId>
-        <artifactId>bahmniextn</artifactId>
+        <groupId>org.openmrs.module</groupId>
+        <artifactId>bahmniendtb</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
 
     <packaging>jar</packaging>
-    <artifactId>bahmniextn-api</artifactId>
+    <artifactId>bahmniendtb-api</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
