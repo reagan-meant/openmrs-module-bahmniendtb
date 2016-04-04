@@ -1,4 +1,4 @@
-package org.openmrs.module.bahmniendtb.reports;
+package org.openmrs.module.bahmniendtb.report.manager;
 
 import org.openmrs.module.reporting.common.MessageUtil;
 import org.openmrs.module.reporting.dataset.definition.SqlDataSetDefinition;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class FullDataExportReportManager implements ReportManager{
