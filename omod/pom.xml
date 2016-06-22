@@ -94,11 +94,6 @@
         </dependency>
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>reporting-api</artifactId>
-            <version>${reportingModuleVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
             <artifactId>calculation-api</artifactId>
             <version>${calculationModuleVersion}</version>
             <scope>test</scope>
@@ -120,7 +115,7 @@
         <dependency>
             <groupId>org.bahmni.module</groupId>
             <artifactId>bahmni-emr-api</artifactId>
-            <version>0.81-SNAPSHOT</version>
+            <version>${bahmniVersion}</version>
             <scope>provided</scope>
             <type>jar</type>
         </dependency>

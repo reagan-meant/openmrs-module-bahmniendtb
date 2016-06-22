@@ -22,15 +22,11 @@
         <require_module version="${bahmniVersion}">
             org.bahmni.module.bahmnicore
         </require_module>
-        <require_module version="${reportingModuleVersion}">
-            org.openmrs.module.reporting
-        </require_module>
-
     </require_modules>
     <!-- / Required Modules -->
 
     <!-- Module Activator -->
-    <activator>${project.parent.groupId}.${project.parent.artifactId}.EndTBBahmniExtensionActivator</activator>
+    <activator>org.openmrs.module.bahmniendtb.EndTBBahmniExtensionActivator</activator>
 
 
     <!-- Adds link to admin page -->
