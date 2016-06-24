@@ -50,14 +50,14 @@
             <dependency>
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>emrapi-api-1.11</artifactId>
-                <version>1.12</version>
+                <version>1.14</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>emrapi-api</artifactId>
-                <version>1.12</version>
+                <version>1.14</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -148,7 +148,7 @@
             <dependency>
                 <groupId>org.bahmni.module</groupId>
                 <artifactId>bahmni-emr-api</artifactId>
-                <version>0.81-SNAPSHOT</version>
+                <version>0.82-SNAPSHOT</version>
                 <scope>provided</scope>
                 <type>jar</type>
             </dependency>
@@ -185,6 +185,19 @@
             <id>openmrs-repo</id>
             <name>OpenMRS Nexus Repository</name>
             <url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+        </repository>
+        <repository>
+            <id>bahmni-artifactory</id>
+            <name>bahmni-artifactory-snapshots</name>
+            <url>http://bahmnirepo.thoughtworks.com/artifactory/libs-snapshot-local</url>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>bahmni-artifactory-releases</id>
+            <name>bahmni-artifactory-releases</name>
+            <url>http://bahmnirepo.thoughtworks.com/artifactory/libs-release-local</url>
         </repository>
     </repositories>
 

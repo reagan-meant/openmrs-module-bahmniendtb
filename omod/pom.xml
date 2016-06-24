@@ -112,10 +112,18 @@
         </dependency>
         <!-- End OpenMRS core -->
 
+
         <dependency>
             <groupId>org.bahmni.module</groupId>
-            <artifactId>bahmni-emr-api</artifactId>
+            <artifactId>bahmnicore-api</artifactId>
             <version>${bahmniVersion}</version>
+            <scope>provided</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>episodes-api</artifactId>
+            <version>0.1-SNAPSHOT</version>
             <scope>provided</scope>
             <type>jar</type>
         </dependency>
@@ -244,7 +252,14 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin><plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <source>1.7</source>
+                <target>1.7</target>
+            </configuration>
+        </plugin>
         </plugins>
     </build>
 
