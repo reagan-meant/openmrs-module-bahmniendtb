@@ -56,5 +56,12 @@
     </messages>
     <!-- /Internationalization -->
 
+    <globalProperty>
+        <property>endtb.exports.location</property>
+        <defaultValue>/home/bahmni/endtb_export/</defaultValue>
+        <description>Output location of endtb-exports. This field should end with a slash</description>
+    </globalProperty>
+
+
 </module>
 
