@@ -69,9 +69,14 @@ public class RulesForFormFilled implements EncounterDataPreSaveCommand {
 
     private boolean isFormFilledAlready(List<BahmniObservation> newObservations, String conceptName, String patientProgramUuid) {
         if (newObservations.size() > 1) return true;
-        List<Obs> obs = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(conceptName), null, null);
+        List<Obs> obsList = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(conceptName), null, null);
         for (BahmniObservation newObservation : newObservations) {
-            if (obs.size() > 0 && newObservation.getEncounterUuid() == null) {
+            if (obsList.size() > 0) {
+                for(Obs obs : obsList){
+                    if(obs.getUuid().equals(newObservation.getUuid())) {
+                        return false;
+                    }
+                }
                 return true;
             }
         }

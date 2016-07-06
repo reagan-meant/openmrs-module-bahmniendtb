@@ -68,13 +68,11 @@ public class RulesForFormFilledTest {
     }
 
     @Test
-    public void shouldReturnBahmniEncounterTransactionIfBaselineFormEditiedInCurrentEncounter() {
+    public void shouldReturnBahmniEncounterTransactionIfBaselineFormIsEditied() {
         Obs obs = new Obs();
-        Encounter encounter = new Encounter();
-        obs.setEncounter(encounter);
         when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class))).thenReturn(Arrays.asList(obs));
         bahmniEncounterTransaction = getBahmniEncounterTransaction(Arrays.asList("Baseline Template"));
-        bahmniEncounterTransaction.getObservations().iterator().next().setEncounterUuid(encounter.getUuid());
+        bahmniEncounterTransaction.getObservations().iterator().next().setUuid(obs.getUuid());
         BahmniEncounterTransaction actualResult = rulesForFormFilled.update(bahmniEncounterTransaction);
         BahmniEncounterTransaction expectedResult = bahmniEncounterTransaction;
         assertEquals(expectedResult, actualResult);
