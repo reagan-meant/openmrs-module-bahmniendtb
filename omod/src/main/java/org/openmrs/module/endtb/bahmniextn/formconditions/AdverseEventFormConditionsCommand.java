@@ -1,5 +1,6 @@
 package org.openmrs.module.endtb.bahmniextn.formconditions;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.module.bahmniemrapi.encountertransaction.command.EncounterDataPreSaveCommand;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniEncounterTransaction;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniObservation;
@@ -21,8 +22,8 @@ public class AdverseEventFormConditionsCommand implements EncounterDataPreSaveCo
         BahmniObservation dateOfOnsetObservation = getObservationFromAdverseTemplate(bahmniEncounterTransaction.getObservations(), "AE Form, Date of AE onset");
         BahmniObservation dateOfReportObservation = getObservationFromAdverseTemplate(bahmniEncounterTransaction.getObservations(), "AE Form, Date of AE report");
 
-        Date dateOfOnset = dateOfOnsetObservation != null ? getDate(dateOfOnsetObservation.getValue()) : null;
-        Date dateOfReport = dateOfReportObservation != null ? getDate(dateOfReportObservation.getValue()) : null;
+        Date dateOfOnset = (dateOfOnsetObservation != null && StringUtils.isNotEmpty(dateOfOnsetObservation.getValueAsString())) ? getDate(dateOfOnsetObservation.getValue()) : null;
+        Date dateOfReport = (dateOfReportObservation != null && StringUtils.isNotEmpty(dateOfReportObservation.getValueAsString())) ? getDate(dateOfReportObservation.getValue()) : null;
 
         if (dateOfOnset != null && dateOfReport != null && dateOfOnset.after(dateOfReport)) {
             throw new RuntimeException("\"Date of onset\" should be before \"Date of report\" on adverse events form.");
