@@ -1,4 +1,4 @@
-package org.openmrs.module.endtb.bahmniextn.exports;
+package org.openmrs.module.bahmniendtb.exports;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;

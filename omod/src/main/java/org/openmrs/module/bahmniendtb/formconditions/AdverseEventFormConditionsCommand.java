@@ -1,4 +1,4 @@
-package org.openmrs.module.endtb.bahmniextn.formconditions;
+package org.openmrs.module.bahmniendtb.formconditions;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.module.bahmniemrapi.encountertransaction.command.EncounterDataPreSaveCommand;

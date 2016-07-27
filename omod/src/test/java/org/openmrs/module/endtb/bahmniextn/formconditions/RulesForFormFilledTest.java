@@ -14,8 +14,8 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniEncounterTransaction;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniObservation;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
+import org.openmrs.module.bahmniendtb.formconditions.RulesForFormFilled;
 import org.openmrs.module.episodes.dao.impl.EpisodeDAO;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.*;
 

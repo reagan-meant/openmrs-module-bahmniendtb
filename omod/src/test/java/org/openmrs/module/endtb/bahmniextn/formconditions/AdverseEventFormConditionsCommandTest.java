@@ -6,6 +6,7 @@ import org.junit.rules.ExpectedException;
 import org.openmrs.module.bahmniemrapi.encountertransaction.command.EncounterDataPreSaveCommand;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniEncounterTransaction;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniObservation;
+import org.openmrs.module.bahmniendtb.formconditions.AdverseEventFormConditionsCommand;
 import org.openmrs.module.endtb.bahmniextn.builder.BahmniEncounterTransactionBuilder;
 import org.openmrs.module.endtb.bahmniextn.builder.BahmniObservationBuilder;
 

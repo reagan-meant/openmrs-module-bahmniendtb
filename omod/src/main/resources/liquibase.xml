@@ -1,7 +1,48 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="endtb-data-integrity-201607261053" author="Jaya, Deepak">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where rule_code='org.openmrs.module.bahmniendtb.dataintegrity.rules.JavaRuleExample'</sqlCheck>
+        </preConditions>
+        <comment>Add Java Rule Example to Data Integrity Rule</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="JavaRuleExample"/>
+            <column name="rule_category" value="java"/>
+            <column name="rule_type" value="java"/>
+            <column name="rule_code" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.JavaRuleExample"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+    <changeSet id="endtb-data-integrity-201607261054" author="Jaya, Deepak">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where rule_code='org.openmrs.module.bahmniendtb.dataintegrity.rules.DrugConsent'</sqlCheck>
+        </preConditions>
+        <comment>Add Drug Consent Rule to Data Integrity Rule</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="Drug Consent"/>
+            <column name="rule_category" value="java"/>
+            <column name="rule_type" value="java"/>
+            <column name="rule_code" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.DrugConsent"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+    <changeSet id="endtb-data-integrity-201607261055" author="Jaya, Deepak">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where rule_code='org.openmrs.module.bahmniendtb.dataintegrity.rules.EndTBDrugConsent'</sqlCheck>
+        </preConditions>
+        <comment>Add EndTB Drug Consent Rule to Data Integrity Rule</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="EndTB Drug Consent"/>
+            <column name="rule_category" value="java"/>
+            <column name="rule_type" value="java"/>
+            <column name="rule_code" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.EndTBDrugConsent"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>

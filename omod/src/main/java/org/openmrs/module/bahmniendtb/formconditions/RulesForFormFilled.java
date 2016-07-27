@@ -1,4 +1,4 @@
-package org.openmrs.module.endtb.bahmniextn.formconditions;
+package org.openmrs.module.bahmniendtb.formconditions;
 
 
 import org.bahmni.module.bahmnicore.dao.ObsDao;
