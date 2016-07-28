@@ -1,25 +1,29 @@
-package org.openmrs.module.bahmniendtb.dataintegrity.dao.impl;
+package org.openmrs.module.bahmniendtb.dataintegrity.service;
 
-import org.openmrs.module.bahmniendtb.dataintegrity.dao.DataintegrityRuleDao;
 import org.apache.commons.lang3.StringUtils;
 import org.bahmni.module.dataintegrity.rule.RuleResult;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.openmrs.PatientProgram;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
-@Component("DataintegrityRuleDao")
-public class DataintegrityRuleDaoImpl implements DataintegrityRuleDao {
+@Component
+public class DataintegrityRuleService {
 
+    private PatientProgramResultsMapper patientProgramResultsMapper;
     private SessionFactory sessionFactory;
 
-    @Override
-    public List<RuleResult<PatientProgram>> getAllByObsAndDrugs(List<String> drugsList, Map<String, List<String>> codedObs) {
+    public DataintegrityRuleService(SessionFactory sessionFactory,
+                                    PatientProgramResultsMapper patientProgramResultsMapper) {
+        this.sessionFactory = sessionFactory;
+        this.patientProgramResultsMapper = patientProgramResultsMapper;
+    }
+
+    public List<RuleResult> getAllByObsAndDrugs(List<String> drugsList, Map<String, List<String>> codedObs) {
 
         StringBuilder queryString =
                 new StringBuilder("SELECT epp.patient_program_id as entity");
@@ -50,7 +54,9 @@ public class DataintegrityRuleDaoImpl implements DataintegrityRuleDao {
         if(drugsList!=null && drugsList.size() > 0)
             queryToGetObs.setParameterList("drugs", drugsList);
 
-        return queryToGetObs.setResultTransformer(new AliasToBeanResultTransformer(RuleResult.class)).list();
+        List<RuleResult> result = queryToGetObs.setResultTransformer(
+                                    new AliasToBeanResultTransformer(RuleResult.class)).list();
+        return patientProgramResultsMapper.getPatientProgramResults(result);
     }
 
     private String getObsQuery(Map.Entry<String, List<String>> obsConcept) {
@@ -64,14 +70,6 @@ public class DataintegrityRuleDaoImpl implements DataintegrityRuleDao {
                 "           JOIN concept_view cv_value ON   o.value_coded = cv_value.concept_id  AND " +
                 "                                           cv_value.concept_full_name IN ('" + concpetValues + "') " +
                 "   ) obs1 ON obs1.episode_id = ee.episode_id"; //TODO: modify for multiple obs
-    }
-
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
     }
 }
 

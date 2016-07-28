@@ -11,10 +11,9 @@
     <context:component-scan base-package="org.openmrs.module.bahmniendtb"/>
 
 
-    <bean id = "DataintegrityRuleDao" class="org.openmrs.module.bahmniendtb.dataintegrity.dao.impl.DataintegrityRuleDaoImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory" />
-        </property>
+    <bean id = "dataintegrityRuleService" class="org.openmrs.module.bahmniendtb.dataintegrity.service.DataintegrityRuleService">
+        <constructor-arg name="sessionFactory" ref="sessionFactory"></constructor-arg>
+        <constructor-arg name="patientProgramResultsMapper" ref="patientProgramResultsMapper"></constructor-arg>
     </bean>
 
 
