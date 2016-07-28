@@ -12,8 +12,8 @@ public class PatientProgramResultsMapper {
     public PatientProgramResultsMapper() {
     }
 
-    List<RuleResult> getPatientProgramResults(List<RuleResult> result) {
-        List<RuleResult> ruleResultsPP = new ArrayList<>();
+    List<RuleResult<PatientProgram>> getPatientProgramResults(List<RuleResult> result) {
+        List<RuleResult<PatientProgram>> ruleResultsPP = new ArrayList<>();
         for (RuleResult row : result) {
             PatientProgram pp = new PatientProgram();
             pp.setId((Integer) row.getEntity());

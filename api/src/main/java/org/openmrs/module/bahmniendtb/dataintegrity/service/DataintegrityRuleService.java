@@ -23,7 +23,7 @@ public class DataintegrityRuleService {
         this.patientProgramResultsMapper = patientProgramResultsMapper;
     }
 
-    public List<RuleResult> getAllByObsAndDrugs(List<String> drugsList, Map<String, List<String>> codedObs) {
+    public List<RuleResult<PatientProgram>> getAllByObsAndDrugs(List<String> drugsList, Map<String, List<String>> codedObs) {
 
         StringBuilder queryString =
                 new StringBuilder("SELECT epp.patient_program_id as entity");
@@ -72,7 +72,7 @@ public class DataintegrityRuleService {
                 "   ) obs1 ON obs1.episode_id = ee.episode_id"; //TODO: modify for multiple obs
     }
 
-    public List<RuleResult> getDrugConsentResults() {
+    public List<RuleResult<PatientProgram>> getDrugConsentResults() {
 
         StringBuilder queryString =
                 new StringBuilder(

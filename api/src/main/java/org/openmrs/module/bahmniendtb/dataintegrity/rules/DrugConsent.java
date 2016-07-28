@@ -2,6 +2,7 @@ package org.openmrs.module.bahmniendtb.dataintegrity.rules;
 
 import org.bahmni.module.dataintegrity.rule.RuleDefn;
 import org.bahmni.module.dataintegrity.rule.RuleResult;
+import org.openmrs.PatientProgram;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.DataintegrityRuleService;
 
@@ -9,7 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class DrugConsent implements RuleDefn {
+public class DrugConsent implements RuleDefn<PatientProgram>{
     DataintegrityRuleService ruleService;
 
     public DrugConsent() {
@@ -17,7 +18,7 @@ public class DrugConsent implements RuleDefn {
     }
 
     @Override
-    public List<RuleResult> evaluate() {
+    public List<RuleResult<PatientProgram>> evaluate() {
         HashMap<String, List<String>> conceptValuesMap = new HashMap<>();
 
         return ruleService.getDrugConsentResults();
