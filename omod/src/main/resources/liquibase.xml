@@ -7,7 +7,7 @@
 
     <changeSet id="endtb-data-integrity-201607261054" author="Jaya, Deepak">
         <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where rule_code='org.openmrs.module.bahmniendtb.dataintegrity.rules.DrugConsent'</sqlCheck>
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.DrugConsent'</sqlCheck>
         </preConditions>
         <comment>Add Drug Consent Rule to Data Integrity Rule</comment>
         <insert tableName="dataintegrity_rule">
@@ -20,7 +20,7 @@
     </changeSet>
     <changeSet id="endtb-data-integrity-201607261055" author="Jaya, Deepak">
         <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where rule_code='org.openmrs.module.bahmniendtb.dataintegrity.rules.EndTBDrugConsent'</sqlCheck>
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.EndTBDrugConsent'</sqlCheck>
         </preConditions>
         <comment>Add EndTB Drug Consent Rule to Data Integrity Rule</comment>
         <insert tableName="dataintegrity_rule">
