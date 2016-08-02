@@ -59,6 +59,15 @@ public class BahmniSaeEncounterTransactionImportService {
                         && ((EncounterTransaction.Concept) groupMembers.get(SAETemplateConstants.SAE_TERM)).getName().equalsIgnoreCase(saeEncounterRow.saeTerm)
                         && groupMembers.get(SAETemplateConstants.SAE_EVENT_ONSET_DATE) != null
                         && groupMembers.get(SAETemplateConstants.SAE_EVENT_ONSET_DATE).equals(saeEncounterRow.dateOfSaeOnset)) {
+
+
+                    if(saeEncounterRow.saeTerm.equalsIgnoreCase(SAETemplateConstants.OTHER_CONCEPT)) {
+                        if(groupMembers.get(SAETemplateConstants.OTHER_SAE_TERM) != null
+                                && groupMembers.get(SAETemplateConstants.OTHER_SAE_TERM).equals(saeEncounterRow.otherSaeTerm)) {
+                            observation = bahmniObservation;
+                        }
+                        break;
+                    }
                     observation = bahmniObservation;
                     break;
                 }
@@ -70,7 +79,9 @@ public class BahmniSaeEncounterTransactionImportService {
     private Map<String, Object> getGroupMembersOfConceptNames(BahmniObservation observation) {
         Map<String, Object> groupMembers = new HashMap<>();
         for (BahmniObservation groupMember : observation.getGroupMembers()) {
-            if (groupMember.getConcept().getName().equals(SAETemplateConstants.SAE_TERM) || groupMember.getConcept().getName().equals(SAETemplateConstants.SAE_EVENT_ONSET_DATE)) {
+            if (groupMember.getConcept().getName().equals(SAETemplateConstants.SAE_TERM)
+                    || groupMember.getConcept().getName().equals(SAETemplateConstants.SAE_EVENT_ONSET_DATE)
+                    || groupMember.getConcept().getName().equals(SAETemplateConstants.OTHER_SAE_TERM)) {
                 groupMembers.put(groupMember.getConcept().getName(), groupMember.getValue());
             }
         }
