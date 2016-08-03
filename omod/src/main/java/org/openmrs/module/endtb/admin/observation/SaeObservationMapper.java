@@ -80,6 +80,7 @@ public class SaeObservationMapper {
             for (BahmniObservation observation : bahmniObservations) {
                 if (observation.getConcept().getName().equals(entry.getKey()) && !observation.getVoided()) {
                     if (entry.getKey().equals(SAETemplateConstants.SAE_TB_DRUG_TREATMENT)) {
+                        isObservationPresent = isObservationPresent || checkIfSAEFormTBDrugTreatmentIsAlreadyPresent(observation.getGroupMembers(), (Map<String, Object>)entry.getValue());
                         updateSAEFormTBDrugTreatment(observation.getGroupMembers());
                         continue;
                     }
@@ -128,6 +129,20 @@ public class SaeObservationMapper {
                 bahmniObservation.setValue(((EncounterTransaction.Concept) bahmniObservation.getValue()).getUuid());
             }
         }
+    }
+
+    private boolean checkIfSAEFormTBDrugTreatmentIsAlreadyPresent(Collection<BahmniObservation> groupMembers, Map<String, Object> tbDrugTreatmentMap) {
+        for (BahmniObservation bahmniObservation : groupMembers) {
+            String value = (String) tbDrugTreatmentMap.get(bahmniObservation.getConcept().getName());
+            if(bahmniObservation.getValue() instanceof EncounterTransaction.Concept) {
+                if(!value.equalsIgnoreCase(((EncounterTransaction.Concept) bahmniObservation.getValue()).getName())) {
+                    return false;
+                }
+            } else if (!value.equalsIgnoreCase(bahmniObservation.getValue().toString())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private EncounterTransaction.Observation createEncounterTransactionObservation(String conceptName, Date encounterDateTime) {
