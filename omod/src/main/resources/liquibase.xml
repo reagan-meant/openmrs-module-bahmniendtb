@@ -5,29 +5,29 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
-    <changeSet id="endtb-data-integrity-201607261054" author="Jaya, Deepak">
+    <changeSet id="endtb-data-integrity-201608031000" author="Jaya, Deepak">
         <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.DrugConsent'</sqlCheck>
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.NewDrugConsentSignedViolation'</sqlCheck>
         </preConditions>
         <comment>Add Drug Consent Rule to Data Integrity Rule</comment>
         <insert tableName="dataintegrity_rule">
-            <column name="rule_name" value="Drug Consent"/>
+            <column name="rule_name" value="New drug consent form not signed"/>
             <column name="rule_category" value="java"/>
             <column name="handler_config" value="java"/>
-            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.DrugConsent"/>
+            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.NewDrugConsentSignedViolation"/>
             <column name="uuid" valueComputed="uuid()"/>
         </insert>
     </changeSet>
-    <changeSet id="endtb-data-integrity-201607261055" author="Jaya, Deepak">
+    <changeSet id="endtb-data-integrity-201608031125" author="Jaya, Deepak">
         <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.EndTBDrugConsent'</sqlCheck>
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.EndTBStudyConsentSignedViolation'</sqlCheck>
         </preConditions>
         <comment>Add EndTB Drug Consent Rule to Data Integrity Rule</comment>
         <insert tableName="dataintegrity_rule">
-            <column name="rule_name" value="EndTB Drug Consent"/>
+            <column name="rule_name" value="EndTB consent form not signed"/>
             <column name="rule_category" value="java"/>
             <column name="handler_config" value="java"/>
-            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.EndTBDrugConsent"/>
+            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.EndTBStudyConsentSignedViolation"/>
             <column name="uuid" valueComputed="uuid()"/>
         </insert>
     </changeSet>
