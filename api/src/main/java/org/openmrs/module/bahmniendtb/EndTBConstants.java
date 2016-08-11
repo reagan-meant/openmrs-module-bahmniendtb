@@ -14,6 +14,11 @@ public class EndTBConstants {
     public static final String EOT_STOP_DATE = "Tuberculosis treatment end date";
     public static final String EOT_OUTCOME = "EOT, Outcome";
 
+    //Outcome - End Of treatment Template
+    public static final String AE_ADVERSE_EVENT_TEMPLATE = "Adverse Events Template";
+    public static final String AE_REPORTING_DATE = "AE Form, Date of AE report";
+    public static final String AE_ONSET_DATE = "AE Form, Date of AE onset";
+
     //Concept Name
     public static final String DRUG_DELAMANID = "Delamanid";
     public static final String DRUG_BDQ = "Bedaquiline";
@@ -24,4 +29,5 @@ public class EndTBConstants {
     //Default Comments
     public static final String TI_DEFAULT_COMMENT = "The Treatment Initiation form is not filled";
     public static final String EOT_DEFAULT_COMMENT = "The Outcome - End of Treatment form is not filled";
+    public static final String AE_DEFAULT_COMMENT = "The Adverse Events form is not filled";
 }

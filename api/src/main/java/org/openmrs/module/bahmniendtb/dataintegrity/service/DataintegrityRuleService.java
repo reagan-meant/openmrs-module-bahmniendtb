@@ -71,6 +71,28 @@ public class DataintegrityRuleService {
         return filteredEpisodes;
     }
 
+    public List<Episode> getEpisodesWithRequiredObsValues(List<Episode> episodes, Concept questionConcept) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Episode.class, "episodes");
+        criteria = criteria.createAlias("episodes.encounters", "encounters")
+                .createAlias("encounters.obs", "parentObs");
+
+        if(episodes != null && episodes.size() > 0)
+            criteria = criteria.add(Restrictions.in("episodes.episodeId", getEpisodeIds(episodes)));
+
+        criteria = criteria.add(Restrictions.eq("parentObs.concept", questionConcept))
+                    .add(Restrictions.eq("parentObs.voided", false))
+                    .add(Restrictions.not(Restrictions.isNotNull("parentObs.valueCoded")));
+
+        List<Episode> consistentEpisodes = criteria.list();
+
+        if(episodes != null && episodes.size() > 0)
+            episodes.removeAll(consistentEpisodes);
+        else
+            episodes = consistentEpisodes;
+
+        return episodes;
+    }
+
     public List<Obs> getObsListForAPatient(Person whom, List<Encounter> encounters, List<Concept> questions) {
         return obsService.getObservations(Arrays.asList(whom), encounters, questions, null, null, null, null, null, null, null, null, false);
     }
