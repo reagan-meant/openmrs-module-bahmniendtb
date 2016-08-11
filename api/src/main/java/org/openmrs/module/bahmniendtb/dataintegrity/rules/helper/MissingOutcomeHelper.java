@@ -67,6 +67,7 @@ public class MissingOutcomeHelper {
                 stopTreatmentDate = obs.getValueDatetime();
             }
         }
+        if (null == startTreatmentDate) return false;
         if (null == stopTreatmentDate) stopTreatmentDate = new Date();
         long dayDifference = getDateDiff(startTreatmentDate, stopTreatmentDate, TimeUnit.DAYS);
         if (dayDifference > 821) {
