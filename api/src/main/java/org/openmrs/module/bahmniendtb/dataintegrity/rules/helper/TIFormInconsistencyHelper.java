@@ -2,11 +2,9 @@ package org.openmrs.module.bahmniendtb.dataintegrity.rules.helper;
 
 import org.bahmni.module.dataintegrity.rule.RuleResult;
 import org.openmrs.Concept;
-import org.openmrs.Obs;
 import org.openmrs.PatientProgram;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.DataintegrityRuleService;
-import org.openmrs.module.bahmniendtb.dataintegrity.service.impl.EndTBObsServiceImpl;
 import org.openmrs.module.episodes.Episode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,23 +16,27 @@ import java.util.Set;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.DRUG_BDQ;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.DRUG_DELAMANID;
+import static org.openmrs.module.bahmniendtb.EndTBConstants.TI_DEFAULT_COMMENT;
 
 @Component
 public class TIFormInconsistencyHelper {
 
-
-    @Autowired
-    private EndTBObsServiceImpl endTBObsService;
-
-    @Autowired
     private ConceptService conceptService;
+    private DataintegrityRuleService ruleService;
+    private EpisodeHelper episodeHelper;
 
     @Autowired
-    private DataintegrityRuleService ruleService;
+    public TIFormInconsistencyHelper(ConceptService conceptService,
+                                     DataintegrityRuleService ruleService,
+                                     EpisodeHelper episodeHelper) {
+        this.conceptService = conceptService;
+        this.ruleService = ruleService;
+        this.episodeHelper = episodeHelper;
+    }
 
 
-    public List<RuleResult<PatientProgram>> getInconsistenciesForQuestion(Concept question,List<Concept> unacceptableAnswers){
-
+    public List<RuleResult<PatientProgram>> getInconsistenciesForQuestion(String parentTemplateConcept, String questionConceptName, List<Concept> unacceptableAnswers) {
+        Concept question = conceptService.getConcept(questionConceptName);
         List<RuleResult<PatientProgram>> ruleResultList = new ArrayList<>();
 
         List<Concept> tbDrugList = new ArrayList<>();
@@ -45,45 +47,15 @@ public class TIFormInconsistencyHelper {
         Set<Episode> episodesWithInconsistency = ruleService.filterEpisodesForObsWithSpecifiedValue(episodes, question, unacceptableAnswers);
 
         for (Episode episode : episodesWithInconsistency) {
-            ruleResultList.add(transformEpisodeToRuleResult(episode,question));
+            ruleResultList.add(transformEpisodeToRuleResult(episode, parentTemplateConcept, questionConceptName));
         }
 
         return ruleResultList;
 
     }
 
-    private RuleResult<PatientProgram> transformEpisodeToRuleResult(Episode episode, Concept consentQuestion){
-        List<Obs> obsList = endTBObsService.getTreamentInitiationObsForEpisode(episode);
-        PatientProgram patientProgram = episode.getPatientPrograms().iterator().next();
-        RuleResult<PatientProgram> patientProgramRuleResult = new RuleResult<>();
-
-        String patientUuid = patientProgram.getPatient().getUuid();
-        String actionUrl = "";
-        String notes = "";
-        if (obsList.isEmpty()) {
-            actionUrl = "#/default/patient/" + patientUuid
-                    + "/dashboard?programUuid=" + patientProgram.getProgram().getUuid() + "&enrollment=" + patientProgram.getUuid();
-            notes = "The Treatment Initiation form is not filled";
-        } else {
-            Obs treatmentInitiationObs = obsList.iterator().next();
-            actionUrl = "#/default/patient/" + patientUuid + "/dashboard/observation/" + treatmentInitiationObs.getUuid();
-
-            notes = getNotes(treatmentInitiationObs, consentQuestion);
-        }
-        patientProgramRuleResult.setActionUrl(actionUrl);
-        patientProgramRuleResult.setEntity(patientProgram);
-        patientProgramRuleResult.setNotes(notes);
-
-        return patientProgramRuleResult;
-    }
-
-    private String getNotes(Obs formObs, Concept notesConcept) {
-        String notes = "";
-        Obs notesObs = endTBObsService.getChildObsByConcept(formObs, notesConcept);
-        if (notesObs != null) {
-            notes = notesObs.getComment();
-        }
-        return notes;
+    private RuleResult<PatientProgram> transformEpisodeToRuleResult(Episode episode, String parentTemplateConcept, String consentQuestion) {
+        return episodeHelper.mapEpisodeToPatientProgram(episode, parentTemplateConcept, consentQuestion, TI_DEFAULT_COMMENT);
     }
 
     private void addConceptByNameToList(List<String> conceptNames, List<Concept> listToAdd) {

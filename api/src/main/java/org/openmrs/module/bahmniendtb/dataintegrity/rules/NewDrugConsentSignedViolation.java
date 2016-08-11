@@ -20,9 +20,9 @@ public class NewDrugConsentSignedViolation implements RuleDefn<PatientProgram> {
 
     private TIFormInconsistencyHelper tiFormInconsistencyHelper;
 
-    public NewDrugConsentSignedViolation(){
+    public NewDrugConsentSignedViolation() {
         conceptService = Context.getConceptService();
-        tiFormInconsistencyHelper = Context.getRegisteredComponent("TIFormInconsistencyHelper",TIFormInconsistencyHelper.class);
+        tiFormInconsistencyHelper = Context.getRegisteredComponent("TIFormInconsistencyHelper", TIFormInconsistencyHelper.class);
     }
 
     public NewDrugConsentSignedViolation(TIFormInconsistencyHelper tiFormInconsistencyHelper, ConceptService conceptService) {
@@ -32,11 +32,10 @@ public class NewDrugConsentSignedViolation implements RuleDefn<PatientProgram> {
 
     @Override
     public List<RuleResult<PatientProgram>> evaluate() {
-        Concept consentQuestion = conceptService.getConceptByName(FSN_TREATMENT_INITIATION_CONSENT_QUESTION);
         List<Concept> unacceptableConsentResponses = new ArrayList<>();
         addConceptByNameToList(Arrays.asList(FALSE, UNKNOWN), unacceptableConsentResponses);
 
-        return tiFormInconsistencyHelper.getInconsistenciesForQuestion(consentQuestion,unacceptableConsentResponses);
+        return tiFormInconsistencyHelper.getInconsistenciesForQuestion(FSN_TREATMENT_INITIATION_FORM, FSN_TREATMENT_INITIATION_CONSENT_QUESTION, unacceptableConsentResponses);
     }
 
 

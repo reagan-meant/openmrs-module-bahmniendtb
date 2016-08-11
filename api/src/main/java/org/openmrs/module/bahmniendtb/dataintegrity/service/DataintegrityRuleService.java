@@ -6,11 +6,16 @@ import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
+import org.openmrs.Encounter;
+import org.openmrs.Obs;
+import org.openmrs.Person;
+import org.openmrs.api.ObsService;
 import org.openmrs.module.episodes.Episode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,15 +25,18 @@ public class DataintegrityRuleService {
 
     private PatientProgramResultsMapper patientProgramResultsMapper;
     private SessionFactory sessionFactory;
+    private ObsService obsService;
 
     @Autowired
     public DataintegrityRuleService(SessionFactory sessionFactory,
-                                    PatientProgramResultsMapper patientProgramResultsMapper) {
+                                    PatientProgramResultsMapper patientProgramResultsMapper,
+                                    ObsService obsService) {
         this.sessionFactory = sessionFactory;
         this.patientProgramResultsMapper = patientProgramResultsMapper;
+        this.obsService = obsService;
     }
 
-    public List<Episode> getEpisodeForEncountersWithDrugs(List<Concept> conceptsForDrugs){
+    public List<Episode> getEpisodeForEncountersWithDrugs(List<Concept> conceptsForDrugs) {
         StringBuilder queryString = new StringBuilder("select episode\n" +
                 "from Episode as episode\n" +
                 "    join episode.encounters as encounter\n" +
@@ -46,7 +54,7 @@ public class DataintegrityRuleService {
         return query.list();
     }
 
-    public Set<Episode> filterEpisodesForObsWithSpecifiedValue(List<Episode> episodes, Concept questionConcept, List<Concept> valueCodedAnswers){
+    public Set<Episode> filterEpisodesForObsWithSpecifiedValue(List<Episode> episodes, Concept questionConcept, List<Concept> valueCodedAnswers) {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Episode.class, "episodes");
         criteria.createAlias("episodes.encounters", "encounters")
                 .createAlias("encounters.obs", "parentObs")
@@ -63,7 +71,11 @@ public class DataintegrityRuleService {
         return filteredEpisodes;
     }
 
-    private List<Integer> getEpisodeIds(List<Episode> episodes){
+    public List<Obs> getObsListForAPatient(Person whom, List<Encounter> encounters, List<Concept> questions) {
+        return obsService.getObservations(Arrays.asList(whom), encounters, questions, null, null, null, null, null, null, null, null, false);
+    }
+
+    private List<Integer> getEpisodeIds(List<Episode> episodes) {
         List<Integer> episodeIds = new ArrayList<>();
         for (Episode episode : episodes) {
             episodeIds.add(episode.getEpisodeId());

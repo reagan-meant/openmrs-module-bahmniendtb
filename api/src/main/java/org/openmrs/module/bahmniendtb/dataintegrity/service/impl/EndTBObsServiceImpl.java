@@ -22,41 +22,32 @@ public class EndTBObsServiceImpl implements EndTBObsService {
     private ConceptService conceptService;
 
     @Override
-    public Obs getTreatmentInitiationObsForEncounter(Encounter encounter) {
-
+    public Obs getObsForEncounter(Encounter encounter, String conceptName) {
         Set<Obs> obsList = encounter.getObsAtTopLevel(false);
-
         for (Obs obs : obsList) {
-            if (obs.getConcept() == conceptService.getConceptByName(FSN_TREATMENT_INITIATION_FORM))
+            if (obs.getConcept().getName().getName().equals(conceptName)) {
                 return obs;
+            }
         }
-
         return null;
     }
 
     @Override
-    public List<Obs> getTreamentInitiationObsForEpisode(Episode episode) {
-
+    public List<Obs> getObsForEpisode(Episode episode, String conceptName) {
         List<Obs> obsList = new ArrayList<>();
-
         for (Encounter encounter : episode.getEncounters()) {
-            Obs treatmentInitiationObsForEncounter = getTreatmentInitiationObsForEncounter(encounter);
-
+            Obs treatmentInitiationObsForEncounter = getObsForEncounter(encounter, conceptName);
             if (treatmentInitiationObsForEncounter != null) {
                 obsList.add(treatmentInitiationObsForEncounter);
             }
         }
-
         return obsList;
     }
 
     @Override
     public Obs getChildObsByConcept(Obs parentObs, Concept childConcept) {
         Set<Obs> groupMembers = parentObs.getGroupMembers();
-
-        if (groupMembers == null)
-            return null;
-
+        if (groupMembers == null) return null;
         for (Obs obs : groupMembers) {
             if (obs.getConcept().equals(childConcept)) {
                 return obs;
@@ -66,7 +57,6 @@ public class EndTBObsServiceImpl implements EndTBObsService {
                 return childObs;
             }
         }
-
         return null;
     }
 

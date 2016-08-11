@@ -8,9 +8,9 @@ import org.openmrs.module.episodes.Episode;
 import java.util.List;
 
 public interface EndTBObsService {
-    Obs getTreatmentInitiationObsForEncounter(Encounter encounter);
+    Obs getObsForEncounter(Encounter encounter, String conceptName);
 
-    List<Obs> getTreamentInitiationObsForEpisode(Episode episode);
+    List<Obs> getObsForEpisode(Episode episode, String concepTname);
 
     Obs getChildObsByConcept(Obs parentObs, Concept childConceptName);
 }
