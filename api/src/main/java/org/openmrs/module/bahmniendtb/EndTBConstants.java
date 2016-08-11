@@ -11,7 +11,7 @@ public class EndTBConstants {
 
     //Outcome - End Of treatment Template
     public static final String EOT_TREATMENT_TEMPLATE = "Outcome End of Treatment Template";
-    public static final String EOT_STOP_DATE = "EOT, End of Treatment Outcome date";
+    public static final String EOT_STOP_DATE = "Tuberculosis treatment end date";
     public static final String EOT_OUTCOME = "EOT, Outcome";
 
     //Concept Name
