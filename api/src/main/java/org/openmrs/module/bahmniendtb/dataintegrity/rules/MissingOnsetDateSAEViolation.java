@@ -13,18 +13,18 @@ import java.util.List;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
-public class MissingEventBecameSeriousSAEViolation implements RuleDefn<PatientProgram> {
+public class MissingOnsetDateSAEViolation implements RuleDefn<PatientProgram> {
 
     private ConceptService conceptService;
 
     private MissingValuesHelper missingValuesHelper;
 
-    public MissingEventBecameSeriousSAEViolation(){
+    public MissingOnsetDateSAEViolation(){
         conceptService = Context.getConceptService();
         missingValuesHelper = Context.getRegisteredComponent("missingValuesHelper",MissingValuesHelper.class);
     }
 
-    public MissingEventBecameSeriousSAEViolation(MissingValuesHelper missingDatesHelper, ConceptService conceptService) {
+    public MissingOnsetDateSAEViolation(MissingValuesHelper missingDatesHelper, ConceptService conceptService) {
         this.missingValuesHelper = missingDatesHelper;
         this.conceptService = conceptService;
     }
@@ -33,10 +33,10 @@ public class MissingEventBecameSeriousSAEViolation implements RuleDefn<PatientPr
     public List<RuleResult<PatientProgram>> evaluate() {
 
         Concept reportingDateQuestion = conceptService.getConceptByName(SAE_REPORTING_DATE);
-        Concept eventBecameSeriousQuestion = conceptService.getConceptByName(SAE_EVENT_BECAME_SERIOUS_DATE);
+        Concept onsetDateQuestion = conceptService.getConceptByName(SAE_ONSET_DATE);
 
         return missingValuesHelper
-            .getInconsistenciesForMissingValues(SAE_ADVERSE_EVENT_TEMPLATE, SAE_EVENT_BECAME_SERIOUS_DATE,
-                    Arrays.asList(reportingDateQuestion, eventBecameSeriousQuestion));
+            .getInconsistenciesForMissingValues(SAE_ADVERSE_EVENT_TEMPLATE, SAE_ONSET_DATE,
+                    Arrays.asList(reportingDateQuestion, onsetDateQuestion));
     }
 }

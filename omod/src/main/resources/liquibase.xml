@@ -71,4 +71,62 @@
         </insert>
     </changeSet>
 
+    <changeSet id="endtb-data-integrity-201608121122" author="Deepak">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingOnsetDateAEViolation'</sqlCheck>
+        </preConditions>
+        <comment>Add MissingOnsetDateAEViolation to Data Integrity Rules</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="Adverse event onset date is missing"/>
+            <column name="rule_category" value="java"/>
+            <column name="handler_config" value="java"/>
+            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingOnsetDateAEViolation"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="endtb-data-integrity-201608121123" author="Deepak">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingOnsetDateSAEViolation'</sqlCheck>
+        </preConditions>
+        <comment>Add MissingOnsetDateSAEViolation to Data Integrity Rules</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="SAE onset date is missing"/>
+            <column name="rule_category" value="java"/>
+            <column name="handler_config" value="java"/>
+            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingOnsetDateSAEViolation"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="endtb-data-integrity-201608121135" author="Deepak">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where
+                handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingEventBecameSeriousSAEViolation'</sqlCheck>
+        </preConditions>
+        <comment>Add MissingEventBecameSeriousSAEViolationTest to Data Integrity Rules</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="SAE date became serious is missing"/>
+            <column name="rule_category" value="java"/>
+            <column name="handler_config" value="java"/>
+            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingEventBecameSeriousSAEViolation"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="endtb-data-integrity-201608121136" author="Deepak">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where
+                handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingCaseDefinitionViolation'</sqlCheck>
+        </preConditions>
+        <comment>Add MissingEventBecameSeriousSAEViolationTest to Data Integrity Rules</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="Incomplete or missing case definition"/>
+            <column name="rule_category" value="java"/>
+            <column name="handler_config" value="java"/>
+            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingCaseDefinitionViolation"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

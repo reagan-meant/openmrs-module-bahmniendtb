@@ -13,18 +13,18 @@ import java.util.List;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
-public class MissingEventBecameSeriousSAEViolation implements RuleDefn<PatientProgram> {
+public class MissingOnsetDateAEViolation implements RuleDefn<PatientProgram> {
 
     private ConceptService conceptService;
 
     private MissingValuesHelper missingValuesHelper;
 
-    public MissingEventBecameSeriousSAEViolation(){
+    public MissingOnsetDateAEViolation(){
         conceptService = Context.getConceptService();
-        missingValuesHelper = Context.getRegisteredComponent("missingValuesHelper",MissingValuesHelper.class);
+        missingValuesHelper = Context.getRegisteredComponent("missingValuesHelper", MissingValuesHelper.class);
     }
 
-    public MissingEventBecameSeriousSAEViolation(MissingValuesHelper missingDatesHelper, ConceptService conceptService) {
+    public MissingOnsetDateAEViolation(MissingValuesHelper missingDatesHelper, ConceptService conceptService) {
         this.missingValuesHelper = missingDatesHelper;
         this.conceptService = conceptService;
     }
@@ -32,11 +32,13 @@ public class MissingEventBecameSeriousSAEViolation implements RuleDefn<PatientPr
     @Override
     public List<RuleResult<PatientProgram>> evaluate() {
 
-        Concept reportingDateQuestion = conceptService.getConceptByName(SAE_REPORTING_DATE);
-        Concept eventBecameSeriousQuestion = conceptService.getConceptByName(SAE_EVENT_BECAME_SERIOUS_DATE);
+        Concept reportingDateQuestion = conceptService.getConceptByName(AE_REPORTING_DATE);
+        Concept onsetDateQuestion = conceptService.getConceptByName(AE_ONSET_DATE);
 
         return missingValuesHelper
-            .getInconsistenciesForMissingValues(SAE_ADVERSE_EVENT_TEMPLATE, SAE_EVENT_BECAME_SERIOUS_DATE,
-                    Arrays.asList(reportingDateQuestion, eventBecameSeriousQuestion));
+            .getInconsistenciesForMissingValues(AE_ADVERSE_EVENT_TEMPLATE, AE_ONSET_DATE,
+                    Arrays.asList(reportingDateQuestion, onsetDateQuestion));
     }
 }
+
+

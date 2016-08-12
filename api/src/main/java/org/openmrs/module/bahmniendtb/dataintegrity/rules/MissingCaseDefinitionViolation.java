@@ -13,18 +13,18 @@ import java.util.List;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
-public class MissingEventBecameSeriousSAEViolation implements RuleDefn<PatientProgram> {
+public class MissingCaseDefinitionViolation implements RuleDefn<PatientProgram> {
 
     private ConceptService conceptService;
 
     private MissingValuesHelper missingValuesHelper;
 
-    public MissingEventBecameSeriousSAEViolation(){
+    public MissingCaseDefinitionViolation(){
         conceptService = Context.getConceptService();
-        missingValuesHelper = Context.getRegisteredComponent("missingValuesHelper",MissingValuesHelper.class);
+        missingValuesHelper = Context.getRegisteredComponent("missingValuesHelper", MissingValuesHelper.class);
     }
 
-    public MissingEventBecameSeriousSAEViolation(MissingValuesHelper missingDatesHelper, ConceptService conceptService) {
+    public MissingCaseDefinitionViolation(MissingValuesHelper missingDatesHelper, ConceptService conceptService) {
         this.missingValuesHelper = missingDatesHelper;
         this.conceptService = conceptService;
     }
@@ -32,11 +32,14 @@ public class MissingEventBecameSeriousSAEViolation implements RuleDefn<PatientPr
     @Override
     public List<RuleResult<PatientProgram>> evaluate() {
 
-        Concept reportingDateQuestion = conceptService.getConceptByName(SAE_REPORTING_DATE);
-        Concept eventBecameSeriousQuestion = conceptService.getConceptByName(SAE_EVENT_BECAME_SERIOUS_DATE);
+        Concept whoGroupQuestion = conceptService.getConceptByName(BASELINE_CASEDEFINITION_WHO_GROUP);
+        Concept siteDateQuestion = conceptService.getConceptByName(BASELINE_CASEDEFINITION_DISEASE_SITE);
+        Concept methodQuestion = conceptService.getConceptByName(BASELINE_CASEDEFINITION_CONFIRMATION_METHOD);
 
         return missingValuesHelper
-            .getInconsistenciesForMissingValues(SAE_ADVERSE_EVENT_TEMPLATE, SAE_EVENT_BECAME_SERIOUS_DATE,
-                    Arrays.asList(reportingDateQuestion, eventBecameSeriousQuestion));
+            .getInconsistenciesForMissingValues(BASELINE_FORM, BASELINE_CASEDEFINITION_WHO_GROUP,
+                    Arrays.asList(whoGroupQuestion, siteDateQuestion, methodQuestion));
     }
 }
+
+

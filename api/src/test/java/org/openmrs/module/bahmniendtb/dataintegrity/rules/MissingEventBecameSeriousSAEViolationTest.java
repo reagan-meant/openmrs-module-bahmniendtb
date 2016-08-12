@@ -2,7 +2,6 @@ package org.openmrs.module.bahmniendtb.dataintegrity.rules;
 
 import org.bahmni.module.dataintegrity.rule.RuleResult;
 import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Concept;
@@ -36,7 +35,7 @@ public class MissingEventBecameSeriousSAEViolationTest {
     EndTBObsService endTBObsService;
 
     @InjectMocks
-    MissingEventBecameSeriousSAEViolation missingEventBecameSeriousSAEViolation;
+    MissingOnsetDateSAEViolation missingOnsetDateSAEViolation;
 
     @Mock
     Concept treatmentInitiationTemplateConcept;
@@ -59,7 +58,7 @@ public class MissingEventBecameSeriousSAEViolationTest {
         when(dataintegrityRuleService.getEpisodeForEncountersWithDrugs(any(List.class))).thenReturn(episodeList);
         when(dataintegrityRuleService.filterEpisodesForObsWithSpecifiedValue(eq(episodeList), eq(treatmentInitiationTemplateConcept), any(List.class))).thenReturn(episodeSet);
 
-        List<RuleResult<PatientProgram>> ruleResults = missingEventBecameSeriousSAEViolation.evaluate();
+        List<RuleResult<PatientProgram>> ruleResults = missingOnsetDateSAEViolation.evaluate();
 
         assertEquals(ruleResults.size(), 0);
     }
