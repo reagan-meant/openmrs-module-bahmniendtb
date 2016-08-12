@@ -21,6 +21,8 @@ import org.openmrs.module.endtb.admin.models.SaeEncounterRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -58,6 +60,16 @@ public class SaeEncounterPersister implements EntityPersister<SaeEncounterRow> {
         }
         if (StringUtils.isEmpty(saeEncounterRow.dateOfSaeReport)) {
             errorMessages.add("Date of SAE report cannot be null.");
+        }
+
+        if (!isValidDate(saeEncounterRow.dateOfSaeReport)) {
+            errorMessages.add("Invalid date format for Date of SAE report.");
+        }
+        if (!isValidDate(saeEncounterRow.dateOfSaeOnset)) {
+            errorMessages.add("Invalid date format for Date of SAE onset.");
+        }
+        if (!isValidDate(saeEncounterRow.dateOfSaeOutcome)) {
+            errorMessages.add("Invalid date format for Date od SAE Outcome.");
         }
         return errorMessages;
     }
@@ -124,6 +136,19 @@ public class SaeEncounterPersister implements EntityPersister<SaeEncounterRow> {
             saeEncounterRow.saeOtherCasualFactors = saeEncounterRow.saeOtherCasualFactors.concat("|");
         }
         saeEncounterRow.saeOtherCasualFactors = saeEncounterRow.saeOtherCasualFactors.concat(value);
+    }
+
+    private static boolean isValidDate(String dateString) {
+        if(StringUtils.isEmpty(dateString)) {
+            return true;
+        }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(dateString);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     private Messages noMatchingPatientProgramFound(SaeEncounterRow saeEncounterRow) {
