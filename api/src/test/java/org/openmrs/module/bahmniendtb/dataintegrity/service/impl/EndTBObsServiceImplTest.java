@@ -5,17 +5,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.internal.util.collections.Sets;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.User;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.bahmniendtb.EndTBConstants;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.EndTBObsService;
 import org.openmrs.module.episodes.Episode;
 import org.powermock.api.mockito.PowerMockito;
@@ -31,15 +27,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.FSN_TREATMENT_INITIATION_FORM;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Context.class})
 public class EndTBObsServiceImplTest {
-
-    @Mock
-    public ConceptService mockConceptService;
-
     @Mock
     private Concept treatmentInitiationTemplateConcept;
 
@@ -48,9 +37,6 @@ public class EndTBObsServiceImplTest {
 
     @Mock
     private Concept treatmentNewDrugConsentConcept;
-
-    @Mock
-    private AdministrationService administrationService;
 
     @InjectMocks
     EndTBObsService endTBObsService = new EndTBObsServiceImpl();
@@ -61,8 +47,6 @@ public class EndTBObsServiceImplTest {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        mockStatic(Context.class);
-        Mockito.when(Context.getAuthenticatedUser()).thenReturn(authenticatedUser);
     }
 
     @Test
@@ -123,7 +107,6 @@ public class EndTBObsServiceImplTest {
 
         when(concept1.getName()).thenReturn(conceptName1);
         when(concept2.getName()).thenReturn(conceptName2);
-        when(mockConceptService.getConceptByName(FSN_TREATMENT_INITIATION_FORM)).thenReturn(treatmentInitiationTemplateConcept);
 
         Obs actualObs = endTBObsService.getObsForEncounter(encounter, FSN_TREATMENT_INITIATION_FORM);
 

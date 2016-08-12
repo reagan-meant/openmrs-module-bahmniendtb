@@ -18,9 +18,6 @@ import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 @Component
 public class EndTBObsServiceImpl implements EndTBObsService {
 
-    @Autowired
-    private ConceptService conceptService;
-
     @Override
     public Obs getObsForEncounter(Encounter encounter, String conceptName) {
         Set<Obs> obsList = encounter.getObsAtTopLevel(false);

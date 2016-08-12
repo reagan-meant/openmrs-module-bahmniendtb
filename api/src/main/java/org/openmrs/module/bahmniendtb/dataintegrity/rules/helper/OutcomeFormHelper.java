@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.EOT_DEFAULT_COMMENT;
@@ -25,16 +26,16 @@ import static org.openmrs.module.bahmniendtb.EndTBConstants.EOT_TREATMENT_TEMPLA
 import static org.openmrs.module.bahmniendtb.EndTBConstants.TI_START_DATE;
 
 @Component
-public class MissingOutcomeHelper {
+public class OutcomeFormHelper {
 
     private DataintegrityRuleService dataintegrityRuleService;
     private EpisodeService episodeService;
     private EpisodeHelper episodeHelper;
 
     @Autowired
-    public MissingOutcomeHelper(DataintegrityRuleService dataintegrityRuleService,
-                                EpisodeService episodeService,
-                                EpisodeHelper episodeHelper) {
+    public OutcomeFormHelper(DataintegrityRuleService dataintegrityRuleService,
+                             EpisodeService episodeService,
+                             EpisodeHelper episodeHelper) {
         this.dataintegrityRuleService = dataintegrityRuleService;
         this.episodeService = episodeService;
         this.episodeHelper = episodeHelper;
@@ -42,12 +43,10 @@ public class MissingOutcomeHelper {
 
     public List<RuleResult<PatientProgram>> fetchMissingOutComeData(List<Concept> conceptNames) {
         List<RuleResult<PatientProgram>> patientPrograms = new ArrayList<>();
-        List<Episode> episodes = episodeService.getAllEpisodes();
-        for (Episode episode : episodes) {
-            Patient patient = episode.getPatientPrograms().iterator().next().getPatient();
-            List<Obs> obsList = dataintegrityRuleService.getObsListForAPatient(patient, new ArrayList<Encounter>(episode.getEncounters()), conceptNames);
-            if (hasValidDateDifference(obsList)) {
-                patientPrograms.add(convertToPatientProgram(episode));
+        Map<Episode, List<Obs>> episodeObsMap = episodeHelper.retrieveAllEpisodesWithObs(conceptNames);
+        for (Map.Entry<Episode, List<Obs>> episodeObsMapEntry : episodeObsMap.entrySet()) {
+            if (hasValidDateDifference(episodeObsMapEntry.getValue())) {
+                patientPrograms.add(convertToPatientProgram(episodeObsMapEntry.getKey()));
             }
         }
         return patientPrograms;
