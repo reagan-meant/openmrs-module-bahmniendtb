@@ -37,10 +37,36 @@
         </preConditions>
         <comment>Add Missing Outcome Rule to Data Integrity Rule</comment>
         <insert tableName="dataintegrity_rule">
-            <column name="rule_name" value="Missing Outcome"/>
+            <column name="rule_name" value="Outcome Missing"/>
             <column name="rule_category" value="java"/>
             <column name="handler_config" value="java"/>
             <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingOutcomeViolation"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+    <changeSet id="endtb-data-integrity-201608111800" author="Vikash">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingTreatmentStartDate'</sqlCheck>
+        </preConditions>
+        <comment>Add Missing Treatment Start Rule to Data Integrity Rule</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="Treatment Start Date Missing"/>
+            <column name="rule_category" value="java"/>
+            <column name="handler_config" value="java"/>
+            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingTreatmentStartDate"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+    <changeSet id="endtb-data-integrity-201608121100" author="Vikash">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingTreatmentStopDate'</sqlCheck>
+        </preConditions>
+        <comment>Add Missing Treatment Stop Date Rule to Data Integrity Rule</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="End of Treatment Date Missing"/>
+            <column name="rule_category" value="java"/>
+            <column name="handler_config" value="java"/>
+            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingTreatmentStopDate"/>
             <column name="uuid" valueComputed="uuid()"/>
         </insert>
     </changeSet>

@@ -3,13 +3,9 @@ package org.openmrs.module.bahmniendtb.dataintegrity.rules.helper;
 
 import org.bahmni.module.dataintegrity.rule.RuleResult;
 import org.openmrs.Concept;
-import org.openmrs.Encounter;
 import org.openmrs.Obs;
-import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
-import org.openmrs.module.bahmniendtb.dataintegrity.service.DataintegrityRuleService;
 import org.openmrs.module.episodes.Episode;
-import org.openmrs.module.episodes.service.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,39 +20,54 @@ import static org.openmrs.module.bahmniendtb.EndTBConstants.EOT_OUTCOME;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.EOT_STOP_DATE;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.EOT_TREATMENT_TEMPLATE;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.TI_START_DATE;
+import static org.openmrs.module.bahmniendtb.EndTBConstants.TWENTY_SEVEN_MONTHS_IN_DAYS;
 
 @Component
 public class OutcomeFormHelper {
 
-    private DataintegrityRuleService dataintegrityRuleService;
-    private EpisodeService episodeService;
     private EpisodeHelper episodeHelper;
 
     @Autowired
-    public OutcomeFormHelper(DataintegrityRuleService dataintegrityRuleService,
-                             EpisodeService episodeService,
-                             EpisodeHelper episodeHelper) {
-        this.dataintegrityRuleService = dataintegrityRuleService;
-        this.episodeService = episodeService;
+    public OutcomeFormHelper(EpisodeHelper episodeHelper) {
         this.episodeHelper = episodeHelper;
     }
 
-    public List<RuleResult<PatientProgram>> fetchMissingOutComeData(List<Concept> conceptNames) {
+    public List<RuleResult<PatientProgram>> fetchMissingOutComeData(List<Concept> concepts) {
         List<RuleResult<PatientProgram>> patientPrograms = new ArrayList<>();
-        Map<Episode, List<Obs>> episodeObsMap = episodeHelper.retrieveAllEpisodesWithObs(conceptNames);
+        Map<Episode, List<Obs>> episodeObsMap = episodeHelper.retrieveAllEpisodesWithObs(concepts);
         for (Map.Entry<Episode, List<Obs>> episodeObsMapEntry : episodeObsMap.entrySet()) {
-            if (hasValidDateDifference(episodeObsMapEntry.getValue())) {
-                patientPrograms.add(convertToPatientProgram(episodeObsMapEntry.getKey()));
+            if (hasInvalidOutcomeValidation(episodeObsMapEntry.getValue())) {
+                patientPrograms.add(convertToPatientProgram(episodeObsMapEntry.getKey(), EOT_TREATMENT_TEMPLATE, EOT_OUTCOME, EOT_DEFAULT_COMMENT));
             }
         }
         return patientPrograms;
     }
 
-    private RuleResult<PatientProgram> convertToPatientProgram(Episode episode) {
-        return episodeHelper.mapEpisodeToPatientProgram(episode, EOT_TREATMENT_TEMPLATE, EOT_OUTCOME, EOT_DEFAULT_COMMENT);
+    public List<RuleResult<PatientProgram>> retrieveMissingTreatmentStopDate(List<Concept> conceptNames) {
+        List<RuleResult<PatientProgram>> patientPrograms = new ArrayList<>();
+        Map<Episode, List<Obs>> episodeObsMap = episodeHelper.retrieveAllEpisodesWithObs(conceptNames);
+        for (Map.Entry<Episode, List<Obs>> episodeObsMapEntry : episodeObsMap.entrySet()) {
+            Obs outcomeObs = null;
+            Obs treatmentStopDate = null;
+            for (Obs obs : episodeObsMapEntry.getValue()) {
+                if (obs.getConcept().getName().getName().equals(EOT_OUTCOME)) {
+                    outcomeObs = obs;
+                } else if (obs.getConcept().getName().getName().equals(EOT_STOP_DATE)) {
+                    treatmentStopDate = obs;
+                }
+            }
+            if (null != outcomeObs && null == treatmentStopDate) {
+                patientPrograms.add(convertToPatientProgram(episodeObsMapEntry.getKey(), EOT_TREATMENT_TEMPLATE, EOT_OUTCOME, EOT_DEFAULT_COMMENT));
+            }
+        }
+        return patientPrograms;
     }
 
-    private boolean hasValidDateDifference(List<Obs> obsList) {
+    private RuleResult<PatientProgram> convertToPatientProgram(Episode episode, String parentConcept, String notesConceptName, String defaultNoteComment) {
+        return episodeHelper.mapEpisodeToPatientProgram(episode, parentConcept, notesConceptName, defaultNoteComment);
+    }
+
+    private boolean hasInvalidOutcomeValidation(List<Obs> obsList) {
         Date startTreatmentDate = null;
         Date stopTreatmentDate = null;
         for (Obs obs : obsList) {
@@ -64,12 +75,14 @@ public class OutcomeFormHelper {
                 startTreatmentDate = obs.getValueDatetime();
             } else if (obs.getConcept().getName().getName().equals(EOT_STOP_DATE)) {
                 stopTreatmentDate = obs.getValueDatetime();
+            } else if (obs.getConcept().getName().getName().equals(EOT_OUTCOME)) {
+                return false;
             }
         }
         if (null == startTreatmentDate) return false;
         if (null == stopTreatmentDate) stopTreatmentDate = new Date();
         long dayDifference = getDateDiff(startTreatmentDate, stopTreatmentDate, TimeUnit.DAYS);
-        if (dayDifference > 821) {
+        if (dayDifference > TWENTY_SEVEN_MONTHS_IN_DAYS) {
             return true;
         }
         return false;

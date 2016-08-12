@@ -1,28 +1,43 @@
 package org.openmrs.module.bahmniendtb.dataintegrity.rules.helper;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.bahmni.module.dataintegrity.rule.RuleResult;
 import org.openmrs.Concept;
+import org.openmrs.Encounter;
 import org.openmrs.Obs;
+import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
 import org.openmrs.api.ConceptService;
+import org.openmrs.module.bahmniendtb.dataintegrity.service.DataintegrityRuleService;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.EndTBObsService;
 import org.openmrs.module.episodes.Episode;
+import org.openmrs.module.episodes.service.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 public class EpisodeHelper {
 
     private EndTBObsService endTBObsService;
     private ConceptService conceptService;
+    private EpisodeService episodeService;
+    private DataintegrityRuleService dataintegrityRuleService;
 
     @Autowired
     public EpisodeHelper(EndTBObsService endTBObsService,
-                         ConceptService conceptService) {
+                         ConceptService conceptService,
+                         EpisodeService episodeService,
+                         DataintegrityRuleService dataintegrityRuleService) {
         this.endTBObsService = endTBObsService;
         this.conceptService = conceptService;
+        this.episodeService = episodeService;
+        this.dataintegrityRuleService = dataintegrityRuleService;
     }
 
     public RuleResult<PatientProgram> mapEpisodeToPatientProgram(Episode episode, String parentTemplateConceptName, String notesConceptName, String defaultNoteComment) {
@@ -47,6 +62,19 @@ public class EpisodeHelper {
         patientProgramRuleResult.setNotes(notes);
 
         return patientProgramRuleResult;
+    }
+
+    public Map<Episode, List<Obs>> retrieveAllEpisodesWithObs(List<Concept> concepts) {
+        Map<Episode, List<Obs>> filteredEpisode = new HashMap<>();
+        Set<Episode> episodes = dataintegrityRuleService.getUniqueEpisodeForEncountersWithConceptObs(concepts);
+        for (Episode episode : episodes) {
+            Patient patient = episode.getPatientPrograms().iterator().next().getPatient();
+            List<Obs> obsList = dataintegrityRuleService.getObsListForAPatient(patient, new ArrayList<Encounter>(episode.getEncounters()), concepts);
+            if (CollectionUtils.isNotEmpty(obsList)) {
+                filteredEpisode.put(episode, obsList);
+            }
+        }
+        return filteredEpisode;
     }
 
     private String getNotes(Obs formObs, String notesConceptName) {

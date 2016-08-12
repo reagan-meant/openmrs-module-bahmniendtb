@@ -76,21 +76,38 @@ public class DataintegrityRuleService {
         criteria = criteria.createAlias("episodes.encounters", "encounters")
                 .createAlias("encounters.obs", "parentObs");
 
-        if(episodes != null && episodes.size() > 0)
+        if (episodes != null && episodes.size() > 0)
             criteria = criteria.add(Restrictions.in("episodes.episodeId", getEpisodeIds(episodes)));
 
         criteria = criteria.add(Restrictions.eq("parentObs.concept", questionConcept))
-                    .add(Restrictions.eq("parentObs.voided", false))
-                    .add(Restrictions.not(Restrictions.isNotNull("parentObs.valueCoded")));
+                .add(Restrictions.eq("parentObs.voided", false))
+                .add(Restrictions.not(Restrictions.isNotNull("parentObs.valueCoded")));
 
         List<Episode> consistentEpisodes = criteria.list();
 
-        if(episodes != null && episodes.size() > 0)
+        if (episodes != null && episodes.size() > 0)
             episodes.removeAll(consistentEpisodes);
         else
             episodes = consistentEpisodes;
 
         return episodes;
+    }
+
+    public Set<Episode> getUniqueEpisodeForEncountersWithConceptObs(List<Concept> conceptsForObs) {
+        StringBuilder queryString = new StringBuilder("select episode\n" +
+                "   from Episode as episode\n" +
+                "   join episode.encounters as encounter\n" +
+                "   join encounter.obs as obs\n" +
+                "   where obs.voided = false");
+        if(CollectionUtils.isNotEmpty(conceptsForObs)) {
+            queryString.append("   and obs.concept in :conceptsForObs");
+        }
+        Query query = sessionFactory.getCurrentSession().createQuery(queryString.toString());
+
+        if(CollectionUtils.isNotEmpty(conceptsForObs)) {
+            query.setParameterList("conceptsForObs", conceptsForObs);
+        }
+        return new HashSet<>(query.list());
     }
 
     public List<Obs> getObsListForAPatient(Person whom, List<Encounter> encounters, List<Concept> questions) {
