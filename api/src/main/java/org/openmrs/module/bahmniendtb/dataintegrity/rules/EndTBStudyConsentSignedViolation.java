@@ -38,7 +38,6 @@ public class EndTBStudyConsentSignedViolation implements RuleDefn<PatientProgram
         return tiFormInconsistencyHelper.getInconsistenciesForQuestion(FSN_TREATMENT_INITIATION_FORM, FSN_TI_ENDTB_STUDY_CONSENT_QUESTION, unacceptableConsentResponses);
     }
 
-
     private void addConceptByNameToList(List<String> conceptNames, List<Concept> listToAdd) {
         for (String concept : conceptNames) {
             listToAdd.add(conceptService.getConceptByName(concept));

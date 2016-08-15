@@ -14,11 +14,7 @@ import org.openmrs.module.episodes.Episode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class DataintegrityRuleService {
@@ -65,32 +61,22 @@ public class DataintegrityRuleService {
 
         List<Episode> consistentEpisodes = criteria.list();
 
-        episodes.removeAll(consistentEpisodes);
-        Set<Episode> filteredEpisodes = new HashSet<>();
-        filteredEpisodes.addAll(episodes);
-        return filteredEpisodes;
+        return new HashSet<>(consistentEpisodes);
     }
 
-    public List<Episode> getEpisodesWithRequiredObsValues(List<Episode> episodes, Concept questionConcept) {
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Episode.class, "episodes");
-        criteria = criteria.createAlias("episodes.encounters", "encounters")
-                .createAlias("encounters.obs", "parentObs");
+    public Set<Episode> getEpisodesWithRequiredObs(Concept questionConcept) {
 
-        if (episodes != null && episodes.size() > 0)
-            criteria = criteria.add(Restrictions.in("episodes.episodeId", getEpisodeIds(episodes)));
-
-        criteria = criteria.add(Restrictions.eq("parentObs.concept", questionConcept))
+        Criteria criteria = sessionFactory.getCurrentSession()
+                .createCriteria(Episode.class, "episodes")
+                .createAlias("episodes.encounters", "encounters")
+                .createAlias("encounters.obs", "parentObs")
+                .add(Restrictions.eq("parentObs.concept", questionConcept))
                 .add(Restrictions.eq("parentObs.voided", false))
-                .add(Restrictions.not(Restrictions.isNotNull("parentObs.valueCoded")));
+                .add(Restrictions.or(
+                        Restrictions.isNotNull("parentObs.valueCoded"),
+                        Restrictions.isNotNull("parentObs.valueDatetime")));
 
-        List<Episode> consistentEpisodes = criteria.list();
-
-        if (episodes != null && episodes.size() > 0)
-            episodes.removeAll(consistentEpisodes);
-        else
-            episodes = consistentEpisodes;
-
-        return episodes;
+        return new HashSet<>(criteria.list());
     }
 
     public Set<Episode> getUniqueEpisodeForEncountersWithConceptObs(List<Concept> conceptsForObs) {

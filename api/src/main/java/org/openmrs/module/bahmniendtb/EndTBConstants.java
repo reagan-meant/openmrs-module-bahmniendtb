@@ -46,4 +46,5 @@ public class EndTBConstants {
     public static final String EOT_DEFAULT_COMMENT = "The Outcome - End of Treatment form is not filled";
     public static final String AE_DEFAULT_COMMENT = "The Adverse Events form is not filled";
     public static final String SAE_DEFAULT_COMMENT = "The Serious Adverse Events form is not filled";
+    public static final String BASELINE_DEFAULT_COMMENT = "The Baseline form is not filled";
 }

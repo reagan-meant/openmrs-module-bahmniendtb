@@ -17,7 +17,7 @@ public class MissingOnsetDateSAEViolation implements RuleDefn<PatientProgram> {
 
     private ConceptService conceptService;
 
-    private MissingValuesHelper missingValuesHelper;
+        private MissingValuesHelper missingValuesHelper;
 
     public MissingOnsetDateSAEViolation(){
         conceptService = Context.getConceptService();
@@ -36,7 +36,7 @@ public class MissingOnsetDateSAEViolation implements RuleDefn<PatientProgram> {
         Concept onsetDateQuestion = conceptService.getConceptByName(SAE_ONSET_DATE);
 
         return missingValuesHelper
-            .getInconsistenciesForMissingValues(SAE_ADVERSE_EVENT_TEMPLATE, SAE_ONSET_DATE,
+            .getMissingObsInObsSetViolations(SAE_ADVERSE_EVENT_TEMPLATE, SAE_ONSET_DATE, SAE_DEFAULT_COMMENT,
                     Arrays.asList(reportingDateQuestion, onsetDateQuestion));
     }
 }

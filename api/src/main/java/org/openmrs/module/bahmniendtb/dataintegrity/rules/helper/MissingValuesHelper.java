@@ -9,10 +9,7 @@ import org.openmrs.module.episodes.Episode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
@@ -32,24 +29,34 @@ public class MissingValuesHelper {
         this.episodeHelper = episodeHelper;
     }
 
-
-    public List<RuleResult<PatientProgram>> getInconsistenciesForMissingValues(String parentTemplateConcept, String targetQuestionConceptName, List<Concept> requiredConcepts) {
+    public List<RuleResult<PatientProgram>> getMissingObsInObsSetViolations(String parentTemplateConcept,
+                                                                            String targetQuestionForEdit,
+                                                                            String defaultComment,
+                                                                            List<Concept> requiredConcepts) {
+        List<Set<Episode>> obsEpisodeSets = new ArrayList<>();
         List<RuleResult<PatientProgram>> ruleResultList = new ArrayList<>();
 
-        List<Episode> episodes = null;
-        for(Concept concept : requiredConcepts)
-            episodes = ruleService.getEpisodesWithRequiredObsValues(episodes, concept);
+        for(Concept concept : requiredConcepts) {
+            obsEpisodeSets.add(ruleService.getEpisodesWithRequiredObs(concept));
+        }
 
-        for (Episode episode : episodes) {
+        for (Episode episode : UnionMinusIntersection(obsEpisodeSets)) {
             ruleResultList.add(
-                    transformEpisodeToRuleResult(episode, parentTemplateConcept, targetQuestionConceptName));
+                    episodeHelper.mapEpisodeToPatientProgram(
+                            episode, parentTemplateConcept, targetQuestionForEdit, defaultComment));
         }
         return ruleResultList;
     }
 
-    private RuleResult<PatientProgram> transformEpisodeToRuleResult(Episode episode, String parentTemplateConcept, String consentQuestion) {
-        return episodeHelper
-                .mapEpisodeToPatientProgram(episode, parentTemplateConcept,
-                                            consentQuestion, TI_DEFAULT_COMMENT);
+    private Set<Episode> UnionMinusIntersection(List<Set<Episode>> obsEpisodeSets) {
+        Set<Episode> union = new HashSet<>();
+        for(Set<Episode> episodes : obsEpisodeSets) union.addAll(episodes);
+
+        Set<Episode> intersection = new HashSet<>(obsEpisodeSets.iterator().next());
+        for(Set<Episode> episodes : obsEpisodeSets) intersection.retainAll(episodes);
+
+        union.removeAll(intersection);
+
+        return union;
     }
 }
