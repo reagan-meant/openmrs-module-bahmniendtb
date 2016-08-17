@@ -1,7 +1,7 @@
 package org.openmrs.module.bahmniendtb.dataintegrity.rules.helper;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.bahmni.module.dataintegrity.rule.RuleResult;
+import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;

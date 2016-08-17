@@ -1,6 +1,6 @@
 package org.openmrs.module.bahmniendtb.dataintegrity.rules;
 
-import org.bahmni.module.dataintegrity.rule.RuleResult;
+import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -91,15 +91,15 @@
 
         <!-- Begin Data Integrity omod -->
         <dependency>
-            <groupId>org.bahmni.module</groupId>
-            <artifactId>bahmni-dataintegrity-omod</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>dataintegrity-omod</artifactId>
+            <version>4.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.bahmni.module</groupId>
-            <artifactId>bahmni-dataintegrity-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>dataintegrity-api</artifactId>
+            <version>4.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- End Data Integrity omod  -->

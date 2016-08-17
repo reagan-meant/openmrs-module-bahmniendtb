@@ -64,13 +64,13 @@ public class DataintegrityRuleService {
         return new HashSet<>(consistentEpisodes);
     }
 
-    public Set<Episode> getEpisodesWithRequiredObs(Concept questionConcept) {
+    public Set<Episode> getEpisodesWithRequiredObs(List<Concept> questionConcepts) {
 
         Criteria criteria = sessionFactory.getCurrentSession()
                 .createCriteria(Episode.class, "episodes")
                 .createAlias("episodes.encounters", "encounters")
                 .createAlias("encounters.obs", "parentObs")
-                .add(Restrictions.eq("parentObs.concept", questionConcept))
+                .add(Restrictions.in("parentObs.concept", questionConcepts))
                 .add(Restrictions.eq("parentObs.voided", false))
                 .add(Restrictions.or(
                         Restrictions.isNotNull("parentObs.valueCoded"),

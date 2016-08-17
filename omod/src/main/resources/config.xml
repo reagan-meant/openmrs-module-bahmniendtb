@@ -21,8 +21,8 @@
         <require_module version="${bahmniVersion}">
             org.bahmni.module.bahmnicore
         </require_module>
-        <require_module version="1.0-SNAPSHOT">
-            org.bahmni.module.dataintegrity
+        <require_module version="4.0-SNAPSHOT">
+            org.openmrs.module.dataintegrity
         </require_module>
     </require_modules>
     <!-- / Required Modules -->

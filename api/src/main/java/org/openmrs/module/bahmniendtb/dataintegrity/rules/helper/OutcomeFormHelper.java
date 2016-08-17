@@ -1,7 +1,7 @@
 package org.openmrs.module.bahmniendtb.dataintegrity.rules.helper;
 
 
-import org.bahmni.module.dataintegrity.rule.RuleResult;
+import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.PatientProgram;

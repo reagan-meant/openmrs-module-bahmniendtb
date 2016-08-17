@@ -1,10 +1,12 @@
 package org.openmrs.module.bahmniendtb.dataintegrity.rules.helper;
 
-import org.bahmni.module.dataintegrity.rule.RuleResult;
+import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.Concept;
+import org.openmrs.Obs;
 import org.openmrs.PatientProgram;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.DataintegrityRuleService;
+import org.openmrs.module.bahmniendtb.dataintegrity.service.EndTBObsService;
 import org.openmrs.module.episodes.Episode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,45 +20,55 @@ public class MissingValuesHelper {
 
     private ConceptService conceptService;
     private DataintegrityRuleService ruleService;
-    private EpisodeHelper episodeHelper;
+    private EndTBObsService endTBObsService;
 
     @Autowired
     public MissingValuesHelper(ConceptService conceptService,
                                DataintegrityRuleService ruleService,
-                               EpisodeHelper episodeHelper) {
+                               EndTBObsService endTBObsService) {
         this.conceptService = conceptService;
         this.ruleService = ruleService;
-        this.episodeHelper = episodeHelper;
+        this.endTBObsService = endTBObsService;
     }
 
     public List<RuleResult<PatientProgram>> getMissingObsInObsSetViolations(String parentTemplateConcept,
                                                                             String targetQuestionForEdit,
                                                                             String defaultComment,
                                                                             List<Concept> requiredConcepts) {
-        List<Set<Episode>> obsEpisodeSets = new ArrayList<>();
+
         List<RuleResult<PatientProgram>> ruleResultList = new ArrayList<>();
+        if(requiredConcepts.size() == 0) return null;
 
-        for(Concept concept : requiredConcepts) {
-            obsEpisodeSets.add(ruleService.getEpisodesWithRequiredObs(concept));
-        }
+        Set<Episode> episodesOfInterest
+                = ruleService.getEpisodesWithRequiredObs(requiredConcepts);
 
-        for (Episode episode : UnionMinusIntersection(obsEpisodeSets)) {
-            ruleResultList.add(
-                    episodeHelper.mapEpisodeToPatientProgram(
-                            episode, parentTemplateConcept, targetQuestionForEdit, defaultComment));
+        for(Episode episode : episodesOfInterest) {
+            List<Obs> formObs
+                    = endTBObsService.getObsForEpisode(episode, parentTemplateConcept);
+
+            for(Obs form : formObs) {
+                List<Obs> requiredObsForForm = endTBObsService.getChildObsByConcepts(form, requiredConcepts);
+                if(requiredObsForForm.size() != requiredConcepts.size()) {
+                    String notes = "";
+                    RuleResult<PatientProgram> patientProgramRuleResult = new RuleResult<>();
+
+                    PatientProgram patientProgram = episode.getPatientPrograms().iterator().next();
+
+                    Concept notesConcept = conceptService.getConcept(targetQuestionForEdit);
+                    Obs notesObs = endTBObsService.getChildObsByConcept(form, notesConcept);
+                    if (notesObs != null) {
+                        notes = notesObs.getComment();
+                    }
+                    String patientUuid = patientProgram.getPatient().getUuid();
+                    String actionUrl = "#/default/patient/" + patientUuid + "/dashboard/observation/" + form.getUuid();
+
+                    patientProgramRuleResult.setActionUrl(actionUrl);
+                    patientProgramRuleResult.setEntity(patientProgram);
+                    patientProgramRuleResult.setNotes(notes);
+                    ruleResultList.add(patientProgramRuleResult);
+                }
+            }
         }
         return ruleResultList;
-    }
-
-    private Set<Episode> UnionMinusIntersection(List<Set<Episode>> obsEpisodeSets) {
-        Set<Episode> union = new HashSet<>();
-        for(Set<Episode> episodes : obsEpisodeSets) union.addAll(episodes);
-
-        Set<Episode> intersection = new HashSet<>(obsEpisodeSets.iterator().next());
-        for(Set<Episode> episodes : obsEpisodeSets) intersection.retainAll(episodes);
-
-        union.removeAll(intersection);
-
-        return union;
     }
 }

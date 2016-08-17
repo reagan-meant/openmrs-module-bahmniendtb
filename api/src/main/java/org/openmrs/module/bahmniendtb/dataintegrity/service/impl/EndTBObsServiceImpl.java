@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -55,6 +56,23 @@ public class EndTBObsServiceImpl implements EndTBObsService {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<Obs> getChildObsByConcepts(Obs parentObs, List<Concept> childConcepts) {
+        List<Obs> childObs = new ArrayList<>();
+        Set<Obs> groupMembers = parentObs.getGroupMembers();
+
+        if (groupMembers == null) return childObs;
+
+        for (Obs obs : groupMembers) {
+            if (childConcepts.contains(obs.getConcept())) {
+                childObs.add(obs);
+                continue;
+            }
+            childObs.addAll(getChildObsByConcepts(obs, childConcepts));
+        }
+        return childObs;
     }
 
 }
