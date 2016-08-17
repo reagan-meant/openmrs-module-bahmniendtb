@@ -9,7 +9,7 @@ public class SAETemplateConstants {
     public static final String OTHER_SAE_TERM = "SAE Form, Other SAE term";
     public static final String SAE_EVENT_ONSET_DATE = "SAE Form, Event onset date";
     public static final String SAE_REPORT_DATE = "SAE Form, Date of SAE report";
-    public static final String SAE_SEVERITY_GRADE = "SAE Form, SAE severity grade";
+    public static final String SAE_MAXIMUM_SEVERITY_GRADE = "SAE Form, Maximum severity of SAE";
     public static final String SAE_OUTCOME_PV = "SAE Form, SAE outcome ( from PV unit summary)";
     public static final String SAE_OTHER_CASUAL_FACTORS_PV = "SAE Form, Other causal factors (data from PV unit summary)";
     public static final String SAE_OTHER_CASUAL_FACTORS_RELATED_TO_SAE = "SAE Form, Other causal factors related to SAE";

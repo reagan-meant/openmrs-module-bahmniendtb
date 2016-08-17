@@ -29,7 +29,7 @@ public class SaeEncounterRow extends CSVEntity {
     public String dateOfSaeReport;
 
     @CSVHeader(name = "Maximum severity of SAE")
-    public String maxSeverity;
+    public String maxSeverityOfSae;
 
     @CSVHeader(name = "Date of SAE outcome")
     public String dateOfSaeOutcome;

@@ -43,8 +43,7 @@ public class BahmniSaeEncounterTransactionImportService {
             bahmniEncounterTransaction.setObservations(saeObservationMapper.update(saeEncounterRow, bahmniObservation, encounterDateTime));
             bahmniEncounterTransaction.setEncounterUuid(bahmniEncounterTransaction.getObservations().iterator().next().getEncounterUuid());
         } else {
-            List<EncounterTransaction.Observation> allObservations = saeObservationMapper.create(saeEncounterRow, encounterDateTime);
-            bahmniEncounterTransaction.setObservations(fromETObsToBahmniObs.create(allObservations, new AdditionalBahmniObservationFields(null, encounterDateTime, null, null)));
+            return null;
         }
         return bahmniEncounterTransaction;
     }
@@ -59,7 +58,6 @@ public class BahmniSaeEncounterTransactionImportService {
                         && ((EncounterTransaction.Concept) groupMembers.get(SAETemplateConstants.SAE_TERM)).getName().equalsIgnoreCase(saeEncounterRow.saeTerm)
                         && groupMembers.get(SAETemplateConstants.SAE_EVENT_ONSET_DATE) != null
                         && groupMembers.get(SAETemplateConstants.SAE_EVENT_ONSET_DATE).equals(saeEncounterRow.dateOfSaeOnset)) {
-
 
                     if(saeEncounterRow.saeTerm.equalsIgnoreCase(SAETemplateConstants.OTHER_CONCEPT)) {
                         if(groupMembers.get(SAETemplateConstants.OTHER_SAE_TERM) != null

@@ -63,13 +63,13 @@ public class SaeEncounterPersister implements EntityPersister<SaeEncounterRow> {
         }
 
         if (!isValidDate(saeEncounterRow.dateOfSaeReport)) {
-            errorMessages.add("Invalid date format for Date of SAE report.");
+            errorMessages.add("Invalid date format for Date of SAE report. Date format should be 'yyyy-mm-dd'");
         }
         if (!isValidDate(saeEncounterRow.dateOfSaeOnset)) {
-            errorMessages.add("Invalid date format for Date of SAE onset.");
+            errorMessages.add("Invalid date format for Date of SAE onset. Date format should be 'yyyy-mm-dd'");
         }
         if (!isValidDate(saeEncounterRow.dateOfSaeOutcome)) {
-            errorMessages.add("Invalid date format for Date od SAE Outcome.");
+            errorMessages.add("Invalid date format for Date od SAE Outcome. Date format should be 'yyyy-mm-dd'");
         }
         return errorMessages;
     }
@@ -95,6 +95,9 @@ public class SaeEncounterPersister implements EntityPersister<SaeEncounterRow> {
                 Visit latestVisit = visits.get(0);
 
                 BahmniEncounterTransaction bahmniEncounterTransaction = bahmniSaeEncounterTransactionImportService.getSaeEncounterTransaction(saeEncounterRow, patient, bahmniPatientProgram.getUuid());
+                if(bahmniEncounterTransaction == null) {
+                    return noMatchingSaeFormFound(saeEncounterRow);
+                }
                 bahmniEncounterTransaction.setPatientProgramUuid(bahmniPatientProgram.getUuid());
                 bahmniEncounterTransaction.setLocationUuid(loginUuid);
                 bahmniEncounterTransactionService.save(bahmniEncounterTransaction, patient, latestVisit.getStartDatetime(), latestVisit.getStopDatetime());
@@ -145,7 +148,10 @@ public class SaeEncounterPersister implements EntityPersister<SaeEncounterRow> {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date date = sdf.parse(dateString);
-            return true;
+            if(sdf.format(date).toString().equals(dateString)) {
+                return true;
+            }
+            return false;
         } catch (Exception ex) {
             return false;
         }
@@ -153,5 +159,9 @@ public class SaeEncounterPersister implements EntityPersister<SaeEncounterRow> {
 
     private Messages noMatchingPatientProgramFound(SaeEncounterRow saeEncounterRow) {
         return new Messages("No matching patients found with ID:'" + saeEncounterRow.registrationNumber + "'");
+    }
+
+    private Messages noMatchingSaeFormFound(SaeEncounterRow saeEncounterRow) {
+        return new Messages("No matching sae form found with sae term:'" + saeEncounterRow.saeTerm + "' and sae onset date: '" + saeEncounterRow.dateOfSaeOnset + "'");
     }
 }

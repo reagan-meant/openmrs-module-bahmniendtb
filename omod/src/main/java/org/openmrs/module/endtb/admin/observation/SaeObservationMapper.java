@@ -34,11 +34,8 @@ public class SaeObservationMapper {
         this.fromETObsToBahmniObs = fromETObsToBahmniObs;
     }
 
-    public List<EncounterTransaction.Observation> create(SaeEncounterRow saeEncounterRow, Date encounterDateTime) throws ParseException {
-        return createNewObservation(getSaeTemplateMap(saeEncounterRow), encounterDateTime);
-    }
-
     public List<BahmniObservation> update(SaeEncounterRow saeEncounterRow, BahmniObservation bahmniObservation, Date encounterDateTime) throws ParseException {
+        convertBahmniObservationsValueFromCodedToString(Arrays.asList(bahmniObservation));
         updateObservation(getSaeTemplateMap(saeEncounterRow), Arrays.asList(bahmniObservation), null, encounterDateTime);
         return Arrays.asList(bahmniObservation);
     }
@@ -81,7 +78,6 @@ public class SaeObservationMapper {
                 if (observation.getConcept().getName().equals(entry.getKey()) && !observation.getVoided()) {
                     if (entry.getKey().equals(SAETemplateConstants.SAE_TB_DRUG_TREATMENT)) {
                         isObservationPresent = isObservationPresent || checkIfSAEFormTBDrugTreatmentIsAlreadyPresent(observation.getGroupMembers(), (Map<String, Object>)entry.getValue());
-                        updateSAEFormTBDrugTreatment(observation.getGroupMembers());
                         continue;
                     }
                     if(entry.getKey().equals(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS_PV)) {
@@ -123,14 +119,6 @@ public class SaeObservationMapper {
         }
     }
 
-    private void updateSAEFormTBDrugTreatment(Collection<BahmniObservation> groupMembers) {
-        for (BahmniObservation bahmniObservation : groupMembers) {
-            if (bahmniObservation.getValue() instanceof EncounterTransaction.Concept) {
-                bahmniObservation.setValue(((EncounterTransaction.Concept) bahmniObservation.getValue()).getUuid());
-            }
-        }
-    }
-
     private boolean checkIfSAEFormTBDrugTreatmentIsAlreadyPresent(Collection<BahmniObservation> groupMembers, Map<String, Object> tbDrugTreatmentMap) {
         for (BahmniObservation bahmniObservation : groupMembers) {
             String value = (String) tbDrugTreatmentMap.get(bahmniObservation.getConcept().getName());
@@ -143,6 +131,17 @@ public class SaeObservationMapper {
             }
         }
         return true;
+    }
+
+    private void convertBahmniObservationsValueFromCodedToString(Collection<BahmniObservation> bahmniObservations) {
+        for (BahmniObservation bahmniObservation: bahmniObservations) {
+            if(bahmniObservation.getGroupMembers().size() > 0) {
+                convertBahmniObservationsValueFromCodedToString(bahmniObservation.getGroupMembers());
+            }
+            if(bahmniObservation.getValue() instanceof EncounterTransaction.Concept) {
+                bahmniObservation.setValue(((EncounterTransaction.Concept) bahmniObservation.getValue()).getUuid());
+            }
+        }
     }
 
     private EncounterTransaction.Observation createEncounterTransactionObservation(String conceptName, Date encounterDateTime) {
@@ -184,6 +183,7 @@ public class SaeObservationMapper {
         Map<String, Object> saeOutcomePVGroupMembers = new HashMap<>();
         saeOutcomePVGroupMembers.put(SAETemplateConstants.SAE_EVENT_END_DATE, saeEncounterRow.dateOfSaeOutcome);
         saeOutcomePVGroupMembers.put(SAETemplateConstants.SAE_OUTCOME, saeEncounterRow.saeOutcome);
+        saeOutcomePVGroupMembers.put(SAETemplateConstants.SAE_MAXIMUM_SEVERITY_GRADE, saeEncounterRow.maxSeverityOfSae);
         saeOutcomePVGroupMembers.put(SAETemplateConstants.SAE_RELATED_TO_TB_DRUGS, saeEncounterRow.saeRelatedTbDrug);
         saeOutcomePVGroupMembers.put(SAETemplateConstants.SAE_TB_DRUG_TREATMENT, saeTBDrugTreatmentGroupMembers);
 
@@ -199,7 +199,6 @@ public class SaeObservationMapper {
         saeTemplateGroupMembers.put(SAETemplateConstants.SAE_CASE_NUMBER, saeEncounterRow.saeCaseNumber);
         saeTemplateGroupMembers.put(SAETemplateConstants.SAE_EVENT_ONSET_DATE, saeEncounterRow.dateOfSaeOnset);
         saeTemplateGroupMembers.put(SAETemplateConstants.SAE_REPORT_DATE, saeEncounterRow.dateOfSaeReport);
-        saeTemplateGroupMembers.put(SAETemplateConstants.SAE_SEVERITY_GRADE, saeEncounterRow.maxSeverity);
         saeTemplateGroupMembers.put(SAETemplateConstants.SAE_OUTCOME_PV, saeOutcomePVGroupMembers);
         saeTemplateGroupMembers.put(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS_PV, saeOtherCasualFactorsPVGroupMembers);
 
