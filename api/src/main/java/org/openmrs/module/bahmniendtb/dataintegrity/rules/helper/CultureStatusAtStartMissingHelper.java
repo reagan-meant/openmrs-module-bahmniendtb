@@ -4,14 +4,16 @@ import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.PatientProgram;
 import org.openmrs.api.ConceptService;
-import org.openmrs.module.bahmniendtb.dataintegrity.service.DataintegrityRuleService;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.EndTBObsService;
 import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.module.episodes.Episode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
@@ -20,10 +22,14 @@ import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 public class CultureStatusAtStartMissingHelper {
 
     private EpisodeHelper episodeHelper;
+    private EndTBObsService endTBObsService;
+    private ConceptService conceptService;
 
     @Autowired
-    public CultureStatusAtStartMissingHelper(EpisodeHelper episodeHelper) {
+    public CultureStatusAtStartMissingHelper(EpisodeHelper episodeHelper, EndTBObsService endTBObsService, ConceptService conceptService) {
         this.episodeHelper = episodeHelper;
+        this.endTBObsService = endTBObsService;
+        this.conceptService = conceptService;
     }
 
 
@@ -39,7 +45,33 @@ public class CultureStatusAtStartMissingHelper {
     }
 
     private RuleResult<PatientProgram> convertToPatientProgram(Episode episode, String parentConcept, String notesConceptName, String defaultNoteComment) {
-        return episodeHelper.mapEpisodeToPatientProgram(episode, parentConcept, notesConceptName, defaultNoteComment);
+        return mapEpisodeToPatientProgram(episode, parentConcept, notesConceptName, defaultNoteComment);
+    }
+
+    private RuleResult<PatientProgram> mapEpisodeToPatientProgram(Episode episode, String parentTemplateConceptName, String notesConceptName, String defaultNoteComment) {
+        List<Obs> obsList = endTBObsService.getObsForEpisode(episode, parentTemplateConceptName);
+        PatientProgram patientProgram = episode.getPatientPrograms().iterator().next();
+        RuleResult<PatientProgram> patientProgramRuleResult = new RuleResult<>();
+
+        String patientUuid = patientProgram.getPatient().getUuid();
+        String actionUrl = "#/default/patient/" + patientUuid
+                + "/dashboard?programUuid=" + patientProgram.getProgram().getUuid() + "&enrollment=" + patientProgram.getUuid();
+        Obs obsData = obsList.iterator().next();
+        String notes = getNotes(obsData, notesConceptName, defaultNoteComment);
+        patientProgramRuleResult.setActionUrl(actionUrl);
+        patientProgramRuleResult.setEntity(patientProgram);
+        patientProgramRuleResult.setNotes(notes);
+        return patientProgramRuleResult;
+    }
+
+    private String getNotes(Obs formObs, String notesConceptName, String defaultNoteComment) {
+        Concept notesConcept = conceptService.getConcept(notesConceptName);
+        String notes = defaultNoteComment;
+        Obs notesObs = endTBObsService.getChildObsByConcept(formObs, notesConcept);
+        if (notesObs != null && notesObs.getComment() != null  ) {
+            notes = notesObs.getComment();
+        }
+        return notes;
     }
 
     private boolean hasInvalidCultureStatusForGivenTimePeriod(List<Obs> obsList) {
