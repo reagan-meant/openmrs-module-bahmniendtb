@@ -11,7 +11,7 @@
         </preConditions>
         <comment>Add Drug Consent Rule to Data Integrity Rule</comment>
         <insert tableName="dataintegrity_rule">
-            <column name="rule_name" value="New drug consent form not signed"/>
+            <column name="rule_name" value="New Drug Consent Form not signed"/>
             <column name="rule_category" value="java"/>
             <column name="handler_config" value="java"/>
             <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.NewDrugConsentSignedViolation"/>
@@ -24,7 +24,7 @@
         </preConditions>
         <comment>Add EndTB Drug Consent Rule to Data Integrity Rule</comment>
         <insert tableName="dataintegrity_rule">
-            <column name="rule_name" value="EndTB consent form not signed"/>
+            <column name="rule_name" value="Study Consent Form not signed"/>
             <column name="rule_category" value="java"/>
             <column name="handler_config" value="java"/>
             <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.EndTBStudyConsentSignedViolation"/>
@@ -63,7 +63,7 @@
         </preConditions>
         <comment>Add Missing Treatment Stop Date Rule to Data Integrity Rule</comment>
         <insert tableName="dataintegrity_rule">
-            <column name="rule_name" value="End of Treatment Date Missing"/>
+            <column name="rule_name" value="End Of Treatment Date Missing"/>
             <column name="rule_category" value="java"/>
             <column name="handler_config" value="java"/>
             <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingTreatmentStopDate"/>
@@ -77,7 +77,7 @@
         </preConditions>
         <comment>Add MissingOnsetDateAEViolation to Data Integrity Rules</comment>
         <insert tableName="dataintegrity_rule">
-            <column name="rule_name" value="Adverse event onset date is missing"/>
+            <column name="rule_name" value="Adverse Event Onset Date is missing"/>
             <column name="rule_category" value="java"/>
             <column name="handler_config" value="java"/>
             <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingOnsetDateAEViolation"/>
@@ -91,7 +91,7 @@
         </preConditions>
         <comment>Add MissingOnsetDateSAEViolation to Data Integrity Rules</comment>
         <insert tableName="dataintegrity_rule">
-            <column name="rule_name" value="SAE onset date is missing"/>
+            <column name="rule_name" value="SAE Onset Date is missing"/>
             <column name="rule_category" value="java"/>
             <column name="handler_config" value="java"/>
             <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingOnsetDateSAEViolation"/>
@@ -106,7 +106,7 @@
         </preConditions>
         <comment>Add MissingEventBecameSeriousSAEViolationTest to Data Integrity Rules</comment>
         <insert tableName="dataintegrity_rule">
-            <column name="rule_name" value="SAE date became serious is missing"/>
+            <column name="rule_name" value="SAE Date Became Serious is missing"/>
             <column name="rule_category" value="java"/>
             <column name="handler_config" value="java"/>
             <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingEventBecameSeriousSAEViolation"/>
@@ -121,7 +121,7 @@
         </preConditions>
         <comment>Add MissingEventBecameSeriousSAEViolationTest to Data Integrity Rules</comment>
         <insert tableName="dataintegrity_rule">
-            <column name="rule_name" value="Incomplete or missing case definition"/>
+            <column name="rule_name" value="Case Definition is missing"/>
             <column name="rule_category" value="java"/>
             <column name="handler_config" value="java"/>
             <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingCaseDefinitionViolation"/>
