@@ -144,4 +144,18 @@
         </insert>
     </changeSet>
 
+    <changeSet id="endtb-data-integrity-201608190100" author="Vikash">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.TreatmentTBDrugRule'</sqlCheck>
+        </preConditions>
+        <comment>Add Treatment TB Drud Rule to Data Integrity Rule</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="Less than 4 TB drugs in a patient taking Dlm or Bdq"/>
+            <column name="rule_category" value="java"/>
+            <column name="handler_config" value="java"/>
+            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.TreatmentTBDrugRule"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
