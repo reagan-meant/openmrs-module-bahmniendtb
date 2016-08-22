@@ -9,6 +9,7 @@ public class EndTBConstants {
     public static final String BASELINE_CASEDEFINITION_WHO_GROUP = "Baseline, WHO registration group";
     public static final String BASELINE_CASEDEFINITION_DISEASE_SITE = "Baseline, Disease site";
     public static final String BASELINE_CASEDEFINITION_CONFIRMATION_METHOD = "Baseline, Method of MDR-TB confirmation";
+    public static final String BASELINE_CASEDEFINITION_MDR_TB_DIAGNOSIS_METHOD = "Baseline, MDR-TB diagnosis method";
 
     //Treatment Initiation Template
     public static final String FSN_TREATMENT_INITIATION_FORM = "Treatment Initiation Template";
@@ -39,7 +40,12 @@ public class EndTBConstants {
     public static final String FALSE = "False";
     public static final String UNKNOWN = "Unknown";
     public static final String TI_START_DATE = "TUBERCULOSIS DRUG TREATMENT START DATE";
+    public static final String BACTERIOLOGICALLY_CONFIRMED = "Bacteriologically Confirmed";
     public static final int TWENTY_SEVEN_MONTHS_IN_DAYS = 821;
+
+    //Bacteriology
+    public static final String BACTERIOLOGY_SPECIMEN_COLLECTION_DATE = "Specimen Collection Date";
+    public static final String BACTERIOLOGY_CULTURE_RESULTS = "Bacteriology, Culture results";
 
     //Default Comments
     public static final String TI_DEFAULT_COMMENT = "The Treatment Initiation form is not filled";
@@ -47,4 +53,5 @@ public class EndTBConstants {
     public static final String AE_DEFAULT_COMMENT = "The Adverse Events form is not filled";
     public static final String SAE_DEFAULT_COMMENT = "The Serious Adverse Events form is not filled";
     public static final String BASELINE_DEFAULT_COMMENT = "The Baseline form is not filled";
+    public static final String CULTURE_STATUS_MISSING_DEFAULT_COMMENT = "Their is no bacteriology culture for this patient in the first month";
 }
