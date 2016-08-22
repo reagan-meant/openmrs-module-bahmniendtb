@@ -36,7 +36,7 @@ public class MissingOnsetDateAEViolation implements RuleDefn<PatientProgram> {
         Concept onsetDateQuestion = conceptService.getConceptByName(AE_ONSET_DATE);
 
         return missingValuesHelper
-            .getMissingObsInObsSetViolations(AE_ADVERSE_EVENT_TEMPLATE, AE_ONSET_DATE, AE_DEFAULT_COMMENT,
+            .getMissingObsInObsSetViolations(AE_ADVERSE_EVENT_TEMPLATE, AE_ONSET_DATE,
                     Arrays.asList(reportingDateQuestion, onsetDateQuestion));
     }
 }

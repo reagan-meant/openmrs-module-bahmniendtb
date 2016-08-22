@@ -37,7 +37,7 @@ public class MissingCaseDefinitionViolation implements RuleDefn<PatientProgram> 
         Concept methodQuestion = conceptService.getConceptByName(BASELINE_CASEDEFINITION_CONFIRMATION_METHOD);
 
         return missingValuesHelper
-            .getMissingObsInObsSetViolations(BASELINE_FORM, BASELINE_CASEDEFINITION_WHO_GROUP, BASELINE_DEFAULT_COMMENT,
+            .getMissingObsInObsSetViolations(BASELINE_FORM, BASELINE_CASEDEFINITION_WHO_GROUP,
                     Arrays.asList(whoGroupQuestion, siteDateQuestion, methodQuestion));
     }
 }
