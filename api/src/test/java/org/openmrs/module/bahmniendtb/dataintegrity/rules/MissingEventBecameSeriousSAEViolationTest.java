@@ -60,7 +60,7 @@ public class MissingEventBecameSeriousSAEViolationTest {
         when(conceptService.getConceptByName(EndTBConstants.SAE_REPORTING_DATE)).thenReturn(saeReportingDateConcept);
         when(conceptService.getConceptByName(EndTBConstants.SAE_ONSET_DATE)).thenReturn(saeOnsetDateConcept);
         when(missingValuesHelper
-                .getMissingObsInObsSetViolations(any(String.class), any(String.class), any(String.class), any(List.class)))
+                .getMissingObsInObsSetViolations(any(String.class), any(String.class), any(List.class)))
                 .thenReturn(outputMock);
 
         List<RuleResult<PatientProgram>> result = missingEventBecameSeriousSAEViolation.evaluate();
@@ -69,7 +69,6 @@ public class MissingEventBecameSeriousSAEViolationTest {
         verify(missingValuesHelper)
                 .getMissingObsInObsSetViolations(   eq(SAE_ADVERSE_EVENT_TEMPLATE),
                                                     eq(SAE_EVENT_BECAME_SERIOUS_DATE),
-                                                    eq(SAE_DEFAULT_COMMENT),
                                                     argument.capture());
         assertEquals(2, argument.getValue().size());
         assertEquals(1, result.size());

@@ -51,7 +51,7 @@ public class MissingOnsetDateSAEViolationTest {
         outputMock.add(new RuleResult<PatientProgram>());
 
         when(missingValuesHelper
-                .getMissingObsInObsSetViolations(any(String.class), any(String.class), any(String.class), any(List.class)))
+                .getMissingObsInObsSetViolations(any(String.class), any(String.class), any(List.class)))
                 .thenReturn(outputMock);
 
         when(conceptService.getConceptByName(EndTBConstants.SAE_REPORTING_DATE)).thenReturn(saeOnsetDate);
@@ -63,7 +63,6 @@ public class MissingOnsetDateSAEViolationTest {
         verify(missingValuesHelper)
                 .getMissingObsInObsSetViolations(   eq(SAE_ADVERSE_EVENT_TEMPLATE),
                                                     eq(SAE_ONSET_DATE),
-                                                    eq(SAE_DEFAULT_COMMENT),
                                                     argument.capture());
         assertEquals(2, argument.getValue().size());
         assertEquals(1, result.size());

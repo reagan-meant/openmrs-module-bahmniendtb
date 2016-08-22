@@ -54,7 +54,7 @@ public class MissingCaseDefinitionViolationTest {
         outputMock.add(new RuleResult<PatientProgram>());
 
         when(missingValuesHelper
-                .getMissingObsInObsSetViolations(any(String.class), any(String.class), any(String.class), any(List.class)))
+                .getMissingObsInObsSetViolations(any(String.class), any(String.class), any(List.class)))
                 .thenReturn(outputMock);
 
         when(conceptService.getConceptByName(EndTBConstants.BASELINE_CASEDEFINITION_WHO_GROUP)).thenReturn(diseaseSiteConcept);
@@ -68,7 +68,6 @@ public class MissingCaseDefinitionViolationTest {
         verify(missingValuesHelper)
                 .getMissingObsInObsSetViolations(   eq(BASELINE_FORM),
                                                     eq(BASELINE_CASEDEFINITION_WHO_GROUP),
-                                                    eq(BASELINE_DEFAULT_COMMENT),
                                                     argument.capture());
         assertEquals(3, argument.getValue().size());
     }

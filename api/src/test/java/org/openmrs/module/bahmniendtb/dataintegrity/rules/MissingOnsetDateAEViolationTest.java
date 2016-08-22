@@ -53,7 +53,7 @@ public class MissingOnsetDateAEViolationTest {
         when(conceptService.getConceptByName(EndTBConstants.AE_REPORTING_DATE)).thenReturn(aeReportingDateConcept);
         when(conceptService.getConceptByName(EndTBConstants.AE_ONSET_DATE)).thenReturn(aeOnsetDateConcept);
         when(missingValuesHelper
-                .getMissingObsInObsSetViolations(any(String.class), any(String.class), any(String.class), any(List.class)))
+                .getMissingObsInObsSetViolations(any(String.class),  any(String.class), any(List.class)))
                 .thenReturn(outputMock);
 
         List<RuleResult<PatientProgram>> result = missingOnsetDateAEViolation.evaluate();
@@ -62,7 +62,6 @@ public class MissingOnsetDateAEViolationTest {
         verify(missingValuesHelper)
                 .getMissingObsInObsSetViolations(   eq(AE_ADVERSE_EVENT_TEMPLATE),
                                                     eq(AE_ONSET_DATE),
-                                                    eq(AE_DEFAULT_COMMENT),
                                                     argument.capture());
         assertEquals(2, argument.getValue().size());
         assertEquals(1, result.size());
