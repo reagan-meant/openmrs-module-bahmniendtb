@@ -33,7 +33,7 @@ public class EndTBStudyConsentSignedViolation implements RuleDefn<PatientProgram
     @Override
     public List<RuleResult<PatientProgram>> evaluate() {
         List<Concept> unacceptableConsentResponses = new ArrayList<>();
-        addConceptByNameToList(Arrays.asList(FALSE, UNKNOWN), unacceptableConsentResponses);
+        addConceptByNameToList(Arrays.asList(UNKNOWN), unacceptableConsentResponses);
 
         return tiFormInconsistencyHelper.getInconsistenciesForQuestion(FSN_TREATMENT_INITIATION_FORM, FSN_TI_ENDTB_STUDY_CONSENT_QUESTION, unacceptableConsentResponses);
     }

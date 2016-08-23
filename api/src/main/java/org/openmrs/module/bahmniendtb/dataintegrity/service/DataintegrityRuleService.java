@@ -61,7 +61,10 @@ public class DataintegrityRuleService {
 
         List<Episode> consistentEpisodes = criteria.list();
 
-        return new HashSet<>(consistentEpisodes);
+        episodes.removeAll(consistentEpisodes);
+        Set<Episode> filteredEpisodes = new HashSet<>();
+        filteredEpisodes.addAll(episodes);
+        return filteredEpisodes;
     }
 
     public Set<Episode> getEpisodesWithRequiredObs(List<Concept> questionConcepts) {
