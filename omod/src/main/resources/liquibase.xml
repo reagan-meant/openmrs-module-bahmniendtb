@@ -4,8 +4,12 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-
-    <changeSet id="endtb-data-integrity-201608031000" author="Jaya, Deepak">
+    <changeSet id="bahmniendtb-201608221515" author="Swathi">
+        <comment>Cleaning up all Data Integrity Rules</comment>
+        <delete tableName="dataintegrity_result"/>
+        <delete tableName="dataintegrity_rule"/>
+    </changeSet>
+    <changeSet id="bahmniendtb-201608031001" author="Jaya, Deepak">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.NewDrugConsentSignedViolation'</sqlCheck>
         </preConditions>
@@ -18,7 +22,7 @@
             <column name="uuid" valueComputed="uuid()"/>
         </insert>
     </changeSet>
-    <changeSet id="endtb-data-integrity-201608031125" author="Jaya, Deepak">
+    <changeSet id="bahmniendtb-201608031121" author="Jaya, Deepak">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.EndTBStudyConsentSignedViolation'</sqlCheck>
         </preConditions>
@@ -31,7 +35,7 @@
             <column name="uuid" valueComputed="uuid()"/>
         </insert>
     </changeSet>
-    <changeSet id="endtb-data-integrity-201608111120" author="Vikash">
+    <changeSet id="bahmniendtb-201608111121" author="Vikash">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingOutcomeViolation'</sqlCheck>
         </preConditions>
@@ -44,7 +48,7 @@
             <column name="uuid" valueComputed="uuid()"/>
         </insert>
     </changeSet>
-    <changeSet id="endtb-data-integrity-201608111800" author="Vikash">
+    <changeSet id="bahmniendtb-201608111801" author="Vikash">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingTreatmentStartDate'</sqlCheck>
         </preConditions>
@@ -57,7 +61,7 @@
             <column name="uuid" valueComputed="uuid()"/>
         </insert>
     </changeSet>
-    <changeSet id="endtb-data-integrity-201608121100" author="Vikash">
+    <changeSet id="bahmniendtb-201608121101" author="Vikash">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingTreatmentStopDate'</sqlCheck>
         </preConditions>
@@ -71,7 +75,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="endtb-data-integrity-201608121122" author="Deepak">
+    <changeSet id="bahmniendtb-201608121122" author="Deepak">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingOnsetDateAEViolation'</sqlCheck>
         </preConditions>
@@ -85,7 +89,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="endtb-data-integrity-201608121123" author="Deepak">
+    <changeSet id="bahmniendtb-201608121123" author="Deepak">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingOnsetDateSAEViolation'</sqlCheck>
         </preConditions>
@@ -99,7 +103,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="endtb-data-integrity-201608121135" author="Deepak">
+    <changeSet id="bahmniendtb-201608121135" author="Deepak">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where
                 handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingEventBecameSeriousSAEViolation'</sqlCheck>
@@ -114,7 +118,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="endtb-data-integrity-201608121136" author="Deepak">
+    <changeSet id="bahmniendtb-201608121136" author="Deepak">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where
                 handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.MissingCaseDefinitionViolation'</sqlCheck>
@@ -129,7 +133,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="endtb-data-integrity-201608171556" author="Sourav">
+    <changeSet id="bahmniendtb-201608171556" author="Sourav">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where
                 handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.CultureStatusAtStartMissing'</sqlCheck>
@@ -144,13 +148,13 @@
         </insert>
     </changeSet>
 
-    <changeSet id="endtb-data-integrity-201608190100" author="Vikash">
+    <changeSet id="bahmniendtb-201608190100" author="Vikash">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.TreatmentTBDrugRule'</sqlCheck>
         </preConditions>
         <comment>Add Treatment TB Drud Rule to Data Integrity Rule</comment>
         <insert tableName="dataintegrity_rule">
-            <column name="rule_name" value="Less than 4 TB drugs in a patient taking Dlm or Bdq"/>
+            <column name="rule_name" value="Less Than 4 TB drugs in a patient taking Dlm or Bdq"/>
             <column name="rule_category" value="java"/>
             <column name="handler_config" value="java"/>
             <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.TreatmentTBDrugRule"/>
