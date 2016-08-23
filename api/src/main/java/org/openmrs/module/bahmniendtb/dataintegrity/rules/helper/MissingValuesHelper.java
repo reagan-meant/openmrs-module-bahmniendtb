@@ -34,7 +34,6 @@ public class MissingValuesHelper {
     public List<RuleResult<PatientProgram>> getMissingObsInObsSetViolations(String parentTemplateConcept,
                                                                             String targetQuestionForEdit,
                                                                             List<Concept> requiredConcepts) {
-
         List<RuleResult<PatientProgram>> ruleResultList = new ArrayList<>();
         if(requiredConcepts.size() == 0) return null;
 
