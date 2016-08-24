@@ -35,10 +35,11 @@ public class DataintegrityRuleService {
     public List<Episode> getEpisodeForEncountersWithDrugs(List<Concept> conceptsForDrugs) {
         StringBuilder queryString = new StringBuilder("select episode\n" +
                 "from Episode as episode\n" +
-                "    join episode.encounters as encounter\n" +
-                "        join encounter.orders as order\n" +
                 "    join episode.patientPrograms as patientProgram\n" +
-                "where order.voided = false and order.action != 'DISCONTINUE'");
+                "    join episode.encounters as encounter\n" +
+                "    join encounter.orders as order\n" +
+                "    join episode.patientPrograms as patientProgram\n" +
+                "where order.voided = false and order.action != 'DISCONTINUE' and patientProgram.voided = false");
         if (CollectionUtils.isNotEmpty(conceptsForDrugs)) {
             queryString.append(" and order.concept in :conceptsForDrugs ");
         }
@@ -52,9 +53,11 @@ public class DataintegrityRuleService {
 
     public Set<Episode> filterEpisodesForObsWithSpecifiedValue(List<Episode> episodes, Concept questionConcept, List<Concept> valueCodedAnswers) {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Episode.class, "episodes");
-        criteria.createAlias("episodes.encounters", "encounters")
+        criteria.createAlias("episodes.patientPrograms", "patientProgram")
+                .createAlias("episodes.encounters", "encounters")
                 .createAlias("encounters.obs", "parentObs")
                 .add(Restrictions.in("episodes.episodeId", getEpisodeIds(episodes)))
+                .add(Restrictions.eq("patientProgram.voided", false))
                 .add(Restrictions.eq("parentObs.concept", questionConcept))
                 .add(Restrictions.eq("parentObs.voided", false))
                 .add(Restrictions.not(Restrictions.in("parentObs.valueCoded", valueCodedAnswers)));
@@ -71,10 +74,12 @@ public class DataintegrityRuleService {
 
         Criteria criteria = sessionFactory.getCurrentSession()
                 .createCriteria(Episode.class, "episodes")
+                .createAlias("episodes.patientPrograms", "patientProgram")
                 .createAlias("episodes.encounters", "encounters")
                 .createAlias("encounters.obs", "parentObs")
                 .add(Restrictions.in("parentObs.concept", questionConcepts))
                 .add(Restrictions.eq("parentObs.voided", false))
+                .add(Restrictions.eq("patientProgram.voided", false))
                 .add(Restrictions.or(
                         Restrictions.isNotNull("parentObs.valueCoded"),
                         Restrictions.isNotNull("parentObs.valueDatetime")));
@@ -85,9 +90,10 @@ public class DataintegrityRuleService {
     public Set<Episode> getUniqueEpisodeForEncountersWithConceptObs(List<Concept> conceptsForObs) {
         StringBuilder queryString = new StringBuilder("select episode\n" +
                 "   from Episode as episode\n" +
+                "   join episode.patientPrograms as patientProgram\n" +
                 "   join episode.encounters as encounter\n" +
                 "   join encounter.obs as obs\n" +
-                "   where obs.voided = false");
+                "   where obs.voided = false and patientProgram.voided = false");
         if(CollectionUtils.isNotEmpty(conceptsForObs)) {
             queryString.append("   and obs.concept in :conceptsForObs");
         }

@@ -14,10 +14,7 @@ import org.openmrs.module.episodes.service.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.ALL_TB_DRUG;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.DRUG_BDQ;
@@ -32,24 +29,26 @@ public class TIFormInconsistencyHelper {
     private ConceptService conceptService;
     private DataintegrityRuleService dataintegrityRuleService;
     private EpisodeHelper episodeHelper;
-    private EpisodeService episodeService;
 
     @Autowired
     public TIFormInconsistencyHelper(ConceptService conceptService,
                                      DataintegrityRuleService ruleService,
-                                     EpisodeHelper episodeHelper,
-                                     EpisodeService episodeService) {
+                                     EpisodeHelper episodeHelper) {
         this.conceptService = conceptService;
         this.dataintegrityRuleService = ruleService;
         this.episodeHelper = episodeHelper;
-        this.episodeService = episodeService;
     }
 
     public List<RuleResult<PatientProgram>> getInconsistenciesForQuestion(String parentTemplateConcept, String questionConceptName, List<Concept> unacceptableAnswers) {
         Concept question = conceptService.getConcept(questionConceptName);
         List<RuleResult<PatientProgram>> ruleResultList = new ArrayList<>();
         List<Episode> episodes = getEpisodeForEncounterWithDrugs(addConceptByNameToList(Arrays.asList(DRUG_BDQ, DRUG_DELAMANID)));
-        Set<Episode> episodesWithInconsistency = dataintegrityRuleService.filterEpisodesForObsWithSpecifiedValue(episodes, question, unacceptableAnswers);
+        Set<Episode> episodesWithInconsistency;
+        if(CollectionUtils.isNotEmpty(episodes)) {
+            episodesWithInconsistency = dataintegrityRuleService.filterEpisodesForObsWithSpecifiedValue(episodes, question, unacceptableAnswers);
+        } else {
+            episodesWithInconsistency = new HashSet<>();
+        }
         for (Episode episode : episodesWithInconsistency) {
             ruleResultList.add(transformEpisodeToRuleResult(episode, parentTemplateConcept, questionConceptName));
         }
@@ -62,7 +61,7 @@ public class TIFormInconsistencyHelper {
         List<Episode> episodes = getEpisodeForEncounterWithDrugs(allTbDrug);
         for (Episode episode : episodes) {
             Patient patient = episode.getPatientPrograms().iterator().next().getPatient();
-            List<Obs> obsList = dataintegrityRuleService.getObsListForAPatient(patient, new ArrayList<Encounter>(episode.getEncounters()), concepts);;
+            List<Obs> obsList = dataintegrityRuleService.getObsListForAPatient(patient, new ArrayList<Encounter>(episode.getEncounters()), concepts);
             if(CollectionUtils.isEmpty(obsList)) {
                 patientPrograms.add(episodeHelper.mapEpisodeToPatientProgram(episode, FSN_TREATMENT_INITIATION_FORM, TI_IS_TREATMENT_START_DATE, TI_DEFAULT_COMMENT));
             }
