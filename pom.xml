@@ -11,6 +11,7 @@
     <description>Modules to override features in bahmni-core by implementors</description>
 
     <properties>
+        <reportingModuleVersion>0.9.1</reportingModuleVersion>
         <openMRSWebServicesVersion>2.14</openMRSWebServicesVersion>
         <openMRSVersion>1.12.0</openMRSVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -145,6 +146,12 @@
                 <artifactId>dataintegrity-omod</artifactId>
                 <version>4.0</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>reporting-api</artifactId>
+                <version>${reportingModuleVersion}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.openmrs.module</groupId>

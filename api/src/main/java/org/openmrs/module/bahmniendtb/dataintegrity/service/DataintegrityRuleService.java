@@ -183,5 +183,14 @@ public class DataintegrityRuleService {
 
         return episodeIds;
     }
+
+    public Set<Episode> getAllEpisodes() {
+        Criteria criteria = sessionFactory.getCurrentSession()
+                .createCriteria(Episode.class, "episodes")
+                .createAlias("episodes.patientPrograms", "patientProgram")
+                .add(Restrictions.eq("patientProgram.voided", false));
+
+        return new HashSet<>(criteria.list());
+    }
 }
 
