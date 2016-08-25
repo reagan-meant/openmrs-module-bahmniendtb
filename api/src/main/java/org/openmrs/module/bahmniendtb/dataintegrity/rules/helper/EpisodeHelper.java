@@ -150,7 +150,8 @@ public class EpisodeHelper {
     }
 
 
-    private String getNotes(Obs formObs, String notesConceptName) {
+
+    public String getNotes(Obs formObs, String notesConceptName) {
         Concept notesConcept = conceptService.getConcept(notesConceptName);
         String notes = "";
         Obs notesObs = endTBObsService.getChildObsByConcept(formObs, notesConcept);

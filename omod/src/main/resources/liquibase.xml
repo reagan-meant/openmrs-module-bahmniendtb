@@ -162,4 +162,19 @@
         </insert>
     </changeSet>
 
+    <changeSet id="endtb-data-integrity-201608221730" author="Jaya,Shireesha">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where
+                handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.FirstLineDSTViolation'</sqlCheck>
+        </preConditions>
+        <comment>Add First Line DST Violation Rule to Data Integrity Rule</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="Baseline Firstline DST missing"/>
+            <column name="rule_category" value="java"/>
+            <column name="handler_config" value="java"/>
+            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.FirstLineDSTViolation"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
