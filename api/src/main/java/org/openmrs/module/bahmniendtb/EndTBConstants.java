@@ -6,6 +6,7 @@ public class EndTBConstants {
 
     // Baseline
     public static final String BASELINE_FORM = "Baseline Template";
+    public static final String BASELINE_DATE = "Baseline, Date of baseline";
     public static final String BASELINE_CASEDEFINITION_WHO_GROUP = "Baseline, WHO registration group";
     public static final String BASELINE_CASEDEFINITION_DISEASE_SITE = "Baseline, Disease site";
     public static final String BASELINE_CASEDEFINITION_CONFIRMATION_METHOD = "Baseline, Method of MDR-TB confirmation";

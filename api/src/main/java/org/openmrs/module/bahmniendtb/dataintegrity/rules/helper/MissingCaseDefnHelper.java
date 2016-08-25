@@ -56,7 +56,7 @@ public class MissingCaseDefnHelper {
             }
 
             if(form == null || requiredObsForForm.size() != requiredConcepts.size()) {
-                ruleResultList.add(episodeHelper.mapEpisodeToPatientProgram(episode, BASELINE_FORM, BASELINE_FORM, BASELINE_DEFAULT_COMMENT));
+                ruleResultList.add(episodeHelper.mapEpisodeToPatientProgram(episode, BASELINE_FORM, BASELINE_DATE, BASELINE_DEFAULT_COMMENT));
             }
         }
         return ruleResultList;
