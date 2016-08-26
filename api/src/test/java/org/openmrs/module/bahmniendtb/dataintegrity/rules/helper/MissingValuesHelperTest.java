@@ -7,6 +7,7 @@ import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
+import org.openmrs.Program;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.DataintegrityRuleService;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.EndTBObsService;
@@ -37,6 +38,8 @@ public class MissingValuesHelperTest {
     Episode episode;
     @Mock
     PatientProgram patientProgram;
+    @Mock
+    Program program;
     @Mock
     ConceptService conceptService;
     @Mock
@@ -69,6 +72,9 @@ public class MissingValuesHelperTest {
         Set<Episode> episodeSet = new HashSet<>();
         episodeSet.add(episode);
         when(patientProgram.getPatient()).thenReturn(new Patient(0));
+        when(patientProgram.getProgram()).thenReturn(program);
+        when(program.getUuid()).thenReturn("programUuid");
+        when(patientProgram.getUuid()).thenReturn("enrollemntUuid");
         when(conceptService.getConcept(eq("TargetQuestion"))).thenReturn(concept1);
         when(dataintegrityRuleService.getEpisodesWithRequiredObs(Arrays.asList(concept1,  concept2))).thenReturn(episodeSet);
 
@@ -92,6 +98,9 @@ public class MissingValuesHelperTest {
         Set<Episode> episodeSet = new HashSet<>();
         episodeSet.add(episode);
         when(patientProgram.getPatient()).thenReturn(new Patient(0));
+        when(patientProgram.getProgram()).thenReturn(program);
+        when(program.getUuid()).thenReturn("programUuid");
+        when(patientProgram.getUuid()).thenReturn("enrollemntUuid");
         when(conceptService.getConcept(eq("TargetQuestion"))).thenReturn(concept1);
         when(dataintegrityRuleService.getEpisodesWithRequiredObs(Arrays.asList(concept1,  concept2))).thenReturn(episodeSet);
 

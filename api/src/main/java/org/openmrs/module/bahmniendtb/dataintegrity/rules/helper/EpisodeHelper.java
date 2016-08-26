@@ -59,7 +59,7 @@ public class EpisodeHelper {
             notes = defaultNoteComment;
         } else {
             Obs obsData = obsList.iterator().next();
-            actionUrl = "#/default/patient/" + patientUuid + "/dashboard/observation/" + obsData.getUuid();
+            actionUrl = "#/default/patient/" + patientUuid + "/dashboard/observation/" + obsData.getUuid() + "?programUuid=" + patientProgram.getProgram().getUuid() + "&enrollment=" + patientProgram.getUuid();
             notes = getNotes(obsData, notesConceptName);
         }
         patientProgramRuleResult.setActionUrl(actionUrl);

@@ -1,19 +1,19 @@
 package org.openmrs.module.bahmniendtb.dataintegrity.rules.helper;
 
-import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.PatientProgram;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.DataintegrityRuleService;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.EndTBObsService;
+import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.module.episodes.Episode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-
-import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class MissingValuesHelper {
@@ -58,7 +58,7 @@ public class MissingValuesHelper {
                         notes = notesObs.getComment();
                     }
                     String patientUuid = patientProgram.getPatient().getUuid();
-                    String actionUrl = "#/default/patient/" + patientUuid + "/dashboard/observation/" + form.getUuid();
+                    String actionUrl = "#/default/patient/" + patientUuid + "/dashboard/observation/" + form.getUuid() + "?programUuid=" + patientProgram.getProgram().getUuid() + "&enrollment=" + patientProgram.getUuid();
 
                     patientProgramRuleResult.setActionUrl(actionUrl);
                     patientProgramRuleResult.setEntity(patientProgram);
