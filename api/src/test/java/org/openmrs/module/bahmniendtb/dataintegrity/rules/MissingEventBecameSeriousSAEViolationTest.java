@@ -24,9 +24,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openmrs.module.bahmniendtb.EndTBConstants.SAE_ADVERSE_EVENT_TEMPLATE;
-import static org.openmrs.module.bahmniendtb.EndTBConstants.SAE_DEFAULT_COMMENT;
-import static org.openmrs.module.bahmniendtb.EndTBConstants.SAE_EVENT_BECAME_SERIOUS_DATE;
+import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
 
 public class MissingEventBecameSeriousSAEViolationTest {
@@ -57,7 +55,7 @@ public class MissingEventBecameSeriousSAEViolationTest {
         List<RuleResult<PatientProgram>> outputMock = new ArrayList<>();
         outputMock.add(new RuleResult<PatientProgram>());
 
-        when(conceptService.getConceptByName(EndTBConstants.SAE_REPORTING_DATE)).thenReturn(saeReportingDateConcept);
+        when(conceptService.getConceptByName(SAE_REPORTING_DATE)).thenReturn(saeReportingDateConcept);
         when(conceptService.getConceptByName(EndTBConstants.SAE_ONSET_DATE)).thenReturn(saeOnsetDateConcept);
         when(missingValuesHelper
                 .getMissingObsInObsSetViolations(any(String.class), any(String.class), any(List.class)))
@@ -68,7 +66,7 @@ public class MissingEventBecameSeriousSAEViolationTest {
         ArgumentCaptor<List> argument = ArgumentCaptor.forClass(List.class);
         verify(missingValuesHelper)
                 .getMissingObsInObsSetViolations(   eq(SAE_ADVERSE_EVENT_TEMPLATE),
-                                                    eq(SAE_EVENT_BECAME_SERIOUS_DATE),
+                                                    eq(SAE_REPORTING_DATE),
                                                     argument.capture());
         assertEquals(2, argument.getValue().size());
         assertEquals(1, result.size());

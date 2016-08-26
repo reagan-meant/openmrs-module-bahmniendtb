@@ -36,7 +36,7 @@ public class MissingEventBecameSeriousSAEViolation implements RuleDefn<PatientPr
         Concept eventBecameSeriousQuestion = conceptService.getConceptByName(SAE_EVENT_BECAME_SERIOUS_DATE);
 
         return missingValuesHelper
-            .getMissingObsInObsSetViolations(SAE_ADVERSE_EVENT_TEMPLATE, SAE_EVENT_BECAME_SERIOUS_DATE,
+            .getMissingObsInObsSetViolations(SAE_ADVERSE_EVENT_TEMPLATE, SAE_REPORTING_DATE,
                     Arrays.asList(reportingDateQuestion, eventBecameSeriousQuestion));
     }
 }

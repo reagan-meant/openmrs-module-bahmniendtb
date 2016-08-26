@@ -36,7 +36,7 @@ public class MissingOnsetDateSAEViolation implements RuleDefn<PatientProgram> {
         Concept onsetDateQuestion = conceptService.getConceptByName(SAE_ONSET_DATE);
 
         return missingValuesHelper
-            .getMissingObsInObsSetViolations(SAE_ADVERSE_EVENT_TEMPLATE, SAE_ONSET_DATE,
+            .getMissingObsInObsSetViolations(SAE_ADVERSE_EVENT_TEMPLATE, SAE_REPORTING_DATE,
                     Arrays.asList(reportingDateQuestion, onsetDateQuestion));
     }
 }

@@ -62,7 +62,7 @@ public class MissingOnsetDateSAEViolationTest {
         ArgumentCaptor<List> argument = ArgumentCaptor.forClass(List.class);
         verify(missingValuesHelper)
                 .getMissingObsInObsSetViolations(   eq(SAE_ADVERSE_EVENT_TEMPLATE),
-                                                    eq(SAE_ONSET_DATE),
+                                                    eq(SAE_REPORTING_DATE),
                                                     argument.capture());
         assertEquals(2, argument.getValue().size());
         assertEquals(1, result.size());
