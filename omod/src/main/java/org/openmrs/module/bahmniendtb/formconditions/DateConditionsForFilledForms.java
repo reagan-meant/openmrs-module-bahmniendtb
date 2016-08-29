@@ -13,22 +13,34 @@ import java.util.Collection;
 import java.util.Date;
 
 @Component
-public class AdverseEventFormConditionsCommand implements EncounterDataPreSaveCommand {
+public class DateConditionsForFilledForms implements EncounterDataPreSaveCommand {
 
     public static final String ADVERSE_EVENTS_TEMPLATE = "Adverse Events Template";
+    public static final String SERIOUS_ADVERSE_EVENTS_TEMPLATE = "Serious Adverse Events Template";
+    public static final String ADVERSE_EVENTS_DATE_OF_ONSET = "AE Form, Date of AE onset";
+    public static final String ADVERSE_EVENTS_DATE_OF_REPORT = "AE Form, Date of AE report";
+    public static final String SERIOUS_ADVERSE_EVENTS_DATE_OF_ONSET = "SAE Form, Event onset date";
+    public static final String SERIOUS_ADVERSE_EVENTS_DATE_OF_REPORT = "SAE Form, Date of SAE report";
 
     @Override
     public BahmniEncounterTransaction update(BahmniEncounterTransaction bahmniEncounterTransaction) {
-        BahmniObservation dateOfOnsetObservation = getObservationFromAdverseTemplate(bahmniEncounterTransaction.getObservations(), "AE Form, Date of AE onset");
-        BahmniObservation dateOfReportObservation = getObservationFromAdverseTemplate(bahmniEncounterTransaction.getObservations(), "AE Form, Date of AE report");
-
-        Date dateOfOnset = (dateOfOnsetObservation != null && StringUtils.isNotEmpty(dateOfOnsetObservation.getValueAsString())) ? getDate(dateOfOnsetObservation.getValue()) : null;
-        Date dateOfReport = (dateOfReportObservation != null && StringUtils.isNotEmpty(dateOfReportObservation.getValueAsString())) ? getDate(dateOfReportObservation.getValue()) : null;
-
-        if (dateOfOnset != null && dateOfReport != null && dateOfOnset.after(dateOfReport)) {
+        if (isDateOfOnsetAfterDateOfReport(bahmniEncounterTransaction.getObservations(), ADVERSE_EVENTS_TEMPLATE, ADVERSE_EVENTS_DATE_OF_ONSET, ADVERSE_EVENTS_DATE_OF_REPORT)) {
             throw new RuntimeException("\"Date of onset\" should be before \"Date of report\" on adverse events form.");
         }
+        if (isDateOfOnsetAfterDateOfReport(bahmniEncounterTransaction.getObservations(), SERIOUS_ADVERSE_EVENTS_TEMPLATE, SERIOUS_ADVERSE_EVENTS_DATE_OF_ONSET, SERIOUS_ADVERSE_EVENTS_DATE_OF_REPORT)) {
+            throw new RuntimeException("\"Date of onset\" should be before \"Date of report\" on serious adverse events form.");
+        }
         return bahmniEncounterTransaction;
+    }
+
+    private boolean isDateOfOnsetAfterDateOfReport(Collection<BahmniObservation> observations ,String templateConceptName, String dateOfOnsetConceptName, String dateOfReportConceptName) {
+        BahmniObservation dateOfOnset = getObservationFromTemplate(observations, templateConceptName, dateOfOnsetConceptName);
+        BahmniObservation dateOfReport = getObservationFromTemplate(observations, templateConceptName, dateOfReportConceptName);
+
+        Date onsetDate = (dateOfOnset != null && StringUtils.isNotEmpty(dateOfOnset.getValueAsString())) ? getDate(dateOfOnset.getValue()) : null;
+        Date reportDate = (dateOfReport != null && StringUtils.isNotEmpty(dateOfReport.getValueAsString())) ? getDate(dateOfReport.getValue()) : null;
+
+        return dateOfOnset != null && dateOfReport != null && onsetDate.after(reportDate);
     }
 
     private Date getDate(Object value) {
@@ -40,9 +52,9 @@ public class AdverseEventFormConditionsCommand implements EncounterDataPreSaveCo
         }
     }
 
-    private BahmniObservation getObservationFromAdverseTemplate(Collection<BahmniObservation> observations, String conceptName) {
+    private BahmniObservation getObservationFromTemplate(Collection<BahmniObservation> observations, String templateConceptName, String conceptName) {
         for (BahmniObservation observation : observations) {
-            if (ADVERSE_EVENTS_TEMPLATE.equals(observation.getConcept().getName())) {
+            if (templateConceptName.equals(observation.getConcept().getName())) {
                 return getObservationFor(observation.getGroupMembers(), conceptName);
             }
         }

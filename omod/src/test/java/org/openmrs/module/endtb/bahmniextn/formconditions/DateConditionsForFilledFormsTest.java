@@ -6,7 +6,7 @@ import org.junit.rules.ExpectedException;
 import org.openmrs.module.bahmniemrapi.encountertransaction.command.EncounterDataPreSaveCommand;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniEncounterTransaction;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniObservation;
-import org.openmrs.module.bahmniendtb.formconditions.AdverseEventFormConditionsCommand;
+import org.openmrs.module.bahmniendtb.formconditions.DateConditionsForFilledForms;
 import org.openmrs.module.endtb.bahmniextn.builder.BahmniEncounterTransactionBuilder;
 import org.openmrs.module.endtb.bahmniextn.builder.BahmniObservationBuilder;
 
@@ -15,8 +15,8 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
-public class AdverseEventFormConditionsCommandTest {
-    private EncounterDataPreSaveCommand encounterDataPreSaveCommand = new AdverseEventFormConditionsCommand();
+public class DateConditionsForFilledFormsTest {
+    private EncounterDataPreSaveCommand encounterDataPreSaveCommand = new DateConditionsForFilledForms();
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
