@@ -30,7 +30,7 @@ public class DrugDSTViolationHelper {
 
         List<RuleResult<PatientProgram>> ruleResultList = new ArrayList<>();
         for (Episode episode : episodesWithCDRTB) {
-            RuleResult<PatientProgram> patientProgramRuleResult = new RuleResult<>();
+            RuleResult<PatientProgram> patientProgramRuleResult;
             patientProgramRuleResult = episodeHelper.mapEpisodeToPatientProgram(episode, null, null, defaultComment);
 
             List<Obs> obsList = endTBObsService.getObsForEpisode(episode, parentTemplateName);

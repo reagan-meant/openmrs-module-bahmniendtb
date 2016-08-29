@@ -13,8 +13,6 @@ public class EndTBConstants {
     public static final String BASELINE_CASEDEFINITION_MDR_TB_DIAGNOSIS_METHOD = "Baseline, MDR-TB diagnosis method";
     public static final String BASELINE_DRUG_RESISTANCE = "Baseline, Drug resistance";
     public static final String BASELINE_CONFIRMED_DRUG_RESISTANT_TB = "Confirmed drug resistant TB";
-    public static final String BASELINE_PROFILE_UNCONFIRMED="Profile unconfirmed";
-    public static final String BASELINE_CONFIRMED_DRUG_SUSCEPTIBLE="Confirmed drug susceptible";
 
     //Treatment Initiation Template
     public static final String FSN_TREATMENT_INITIATION_FORM = "Treatment Initiation Template";
@@ -61,6 +59,14 @@ public class EndTBConstants {
     public static final String BACTERIOLOGY_DST_RIFAMPICIN = "Bacteriology, Rifampicin result";
     public static final String DETECTED = "Detected";
     public static final String NOT_DETECTED = "Not detected";
+    public static final String BACTERIOLOGY_FLUOROQUINOLONE = "Bacteriology, Fluoroquinolone";
+    public static final String BACTERIOLOGY_MTBDRSL_INJECTABLE = "Bacteriology, MTBDRsl injectable";
+    public static final String BACTERIOLOGY_OFLOXACIN = "Bacteriology, Ofloxacin result";
+    public static final String BACTERIOLOGY_LEVOFLOXACIN = "Bacteriology, Levofloxacin result";
+    public static final String BACTERIOLOGY_MOXIFLOXACIN_5 = "Bacteriology, Moxifloxacin 0.5 µg/ml results";
+    public static final String BACTERIOLOGY_AMIKACIN = "Bacteriology, Amikacin result";
+    public static final String BACTERIOLOGY_KANAMYCIN = "Bacteriology, Kanamycin result";
+    public static final String BACTERIOLOGY_CAPREOMYCIN = "Bacteriology, Capreomycin result";
 
 
     //Default Comments

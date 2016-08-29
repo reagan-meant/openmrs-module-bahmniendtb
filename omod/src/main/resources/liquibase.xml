@@ -177,4 +177,19 @@
         </insert>
     </changeSet>
 
+    <changeSet id="endtb-data-integrity-201608251710" author="Sourav, Vikash">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) from dataintegrity_rule where
+                handler_classname='org.openmrs.module.bahmniendtb.dataintegrity.rules.BaselineSecondlineDSTViolation'</sqlCheck>
+        </preConditions>
+        <comment>Add BaseLine Secondline DST Violation Rule to Data Integrity Rule</comment>
+        <insert tableName="dataintegrity_rule">
+            <column name="rule_name" value="Baseline Secondline DST missing"/>
+            <column name="rule_category" value="java"/>
+            <column name="handler_config" value="java"/>
+            <column name="handler_classname" value="org.openmrs.module.bahmniendtb.dataintegrity.rules.BaselineSecondlineDSTViolation"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
