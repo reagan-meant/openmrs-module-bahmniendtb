@@ -24,30 +24,70 @@ public class PatientMonitoringFlowsheet extends BaseRestController {
         FlowSheet flowSheet = new FlowSheet();
 
         //add dummy flowsheet header
-        flowSheet.addFlowSheetHeader("Milestone 1");
-        flowSheet.addFlowSheetHeader("Milestone 2");
-        flowSheet.addFlowSheetHeader("Milestone 3");
-        flowSheet.addFlowSheetHeader("Milestone 4");
-        flowSheet.addFlowSheetHeader("Milestone 5");
-        flowSheet.addFlowSheetHeader("Milestone 6");
-        flowSheet.addFlowSheetHeader("Milestone 7");
-        flowSheet.addFlowSheetHeader("Milestone 8");
+        flowSheet.addFlowSheetHeader("M1");
+        flowSheet.addFlowSheetHeader("M2");
+        flowSheet.addFlowSheetHeader("M3");
+        flowSheet.addFlowSheetHeader("M4");
+        flowSheet.addFlowSheetHeader("M5");
+        flowSheet.addFlowSheetHeader("M6");
+        flowSheet.addFlowSheetHeader("M7");
+        flowSheet.addFlowSheetHeader("M8");
+        flowSheet.addFlowSheetHeader("M9");
+        flowSheet.addFlowSheetHeader("M10");
+        flowSheet.addFlowSheetHeader("M11");
+        flowSheet.addFlowSheetHeader("M12");
+        flowSheet.addFlowSheetHeader("M13");
+        flowSheet.addFlowSheetHeader("M14");
+        flowSheet.addFlowSheetHeader("M15");
 
         //add dummy flowsheet data
         flowSheet.addFlowSheetData("Weight", "Y");
         flowSheet.addFlowSheetData("Weight", "N");
         flowSheet.addFlowSheetData("Weight", "Y");
-        flowSheet.addFlowSheetData("Weight", "N");
+        flowSheet.addFlowSheetData("Weight", "O");
+        flowSheet.addFlowSheetData("Weight", "F");
+        flowSheet.addFlowSheetData("Weight", "F");
+        flowSheet.addFlowSheetData("Weight", "O");
+        flowSheet.addFlowSheetData("Weight", "F");
+        flowSheet.addFlowSheetData("Weight", "F");
+        flowSheet.addFlowSheetData("Weight", "F");
+        flowSheet.addFlowSheetData("Weight", "F");
+        flowSheet.addFlowSheetData("Weight", "O");
+        flowSheet.addFlowSheetData("Weight", "O");
+        flowSheet.addFlowSheetData("Weight", "F");
+        flowSheet.addFlowSheetData("Weight", "F");
 
         flowSheet.addFlowSheetData("Height", "N");
         flowSheet.addFlowSheetData("Height", "Y");
         flowSheet.addFlowSheetData("Height", "Y");
-        flowSheet.addFlowSheetData("Height", "Y");
+        flowSheet.addFlowSheetData("Height", "O");
+        flowSheet.addFlowSheetData("Height", "F");
+        flowSheet.addFlowSheetData("Height", "F");
+        flowSheet.addFlowSheetData("Height", "F");
+        flowSheet.addFlowSheetData("Height", "F");
+        flowSheet.addFlowSheetData("Height", "F");
+        flowSheet.addFlowSheetData("Height", "O");
+        flowSheet.addFlowSheetData("Height", "O");
+        flowSheet.addFlowSheetData("Height", "F");
+        flowSheet.addFlowSheetData("Height", "O");
+        flowSheet.addFlowSheetData("Height", "O");
+        flowSheet.addFlowSheetData("Height", "F");
 
         flowSheet.addFlowSheetData("BMI", "N");
         flowSheet.addFlowSheetData("BMI", "N");
         flowSheet.addFlowSheetData("BMI", "Y");
-        flowSheet.addFlowSheetData("BMI", "N");
+        flowSheet.addFlowSheetData("BMI", "O");
+        flowSheet.addFlowSheetData("BMI", "O");
+        flowSheet.addFlowSheetData("BMI", "O");
+        flowSheet.addFlowSheetData("BMI", "O");
+        flowSheet.addFlowSheetData("BMI", "O");
+        flowSheet.addFlowSheetData("BMI", "O");
+        flowSheet.addFlowSheetData("BMI", "O");
+        flowSheet.addFlowSheetData("BMI", "F");
+        flowSheet.addFlowSheetData("BMI", "F");
+        flowSheet.addFlowSheetData("BMI", "O");
+        flowSheet.addFlowSheetData("BMI", "O");
+        flowSheet.addFlowSheetData("BMI", "F");
 
         return flowSheet;
     }
