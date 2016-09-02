@@ -1,0 +1,29 @@
+{
+  "milestones": [
+    {
+      "name": "M1",
+      "min": 0,
+      "max": 30,
+      "concepts": {
+        "obs": ["Baseline, Prison"],
+        "bacteriology": ["Bacteriology, Fluoroquinolone"],
+        "drugs": ["Isoniazid"]
+      }
+    },
+    {
+      "name": "M2",
+      "min": 31,
+      "max": 60
+    },
+    {
+      "name": "M3",
+      "min": 61,
+      "max": 90
+    }
+  ],
+  "concepts": {
+    "obs": ["Height (cm)", "Weight (cm)"],
+    "bacteriology": ["Bacteriology, Culture results"],
+    "drugs": ["Delamanid"]
+  }
+}

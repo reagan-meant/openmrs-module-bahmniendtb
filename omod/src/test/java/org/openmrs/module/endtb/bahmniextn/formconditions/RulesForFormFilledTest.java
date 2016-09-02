@@ -60,7 +60,7 @@ public class RulesForFormFilledTest {
         Obs obs = new Obs();
         Encounter encounter = new Encounter();
         obs.setEncounter(encounter);
-        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class))).thenReturn(Arrays.asList(obs));
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs));
         bahmniEncounterTransaction = getBahmniEncounterTransaction(Arrays.asList("Baseline Template"));
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Baseline Template is already filled for this treatment");
@@ -70,7 +70,7 @@ public class RulesForFormFilledTest {
     @Test
     public void shouldReturnBahmniEncounterTransactionIfBaselineFormIsEditied() {
         Obs obs = new Obs();
-        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class))).thenReturn(Arrays.asList(obs));
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs));
         bahmniEncounterTransaction = getBahmniEncounterTransaction(Arrays.asList("Baseline Template"));
         bahmniEncounterTransaction.getObservations().iterator().next().setUuid(obs.getUuid());
         BahmniEncounterTransaction actualResult = rulesForFormFilled.update(bahmniEncounterTransaction);
@@ -80,7 +80,7 @@ public class RulesForFormFilledTest {
 
     @Test
     public void shouldThrowExceptionIfBaselineFormFilledTwiceInSingleSave() {
-        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class))).thenReturn(new ArrayList<Obs>());
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(new ArrayList<Obs>());
         bahmniEncounterTransaction = getBahmniEncounterTransaction(Arrays.asList("Baseline Template", "Baseline Template"));
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Baseline Template is already filled for this treatment");
@@ -91,7 +91,7 @@ public class RulesForFormFilledTest {
     public void shouldReturnBahmniEncounterTransactionIfMonthlyCompletenessFormIsFilledOnlyOnceForMonthYear() {
         Obs obs = new Obs();
         obs.setObsDatetime(DateTime.now().plusMonths(5).toDate());
-        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class))).thenReturn(Arrays.asList(obs));
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs));
         bahmniEncounterTransaction = getBahmniEncounterTransaction(Arrays.asList("Monthly Treatment Completeness Template"));
         bahmniEncounterTransaction.getObservations().iterator().next().setObservationDateTime(new Date());
         BahmniEncounterTransaction actualResult = rulesForFormFilled.update(bahmniEncounterTransaction);
@@ -105,7 +105,7 @@ public class RulesForFormFilledTest {
         obs.setObsDatetime(new Date());
         Encounter encounter = new Encounter();
         obs.setEncounter(encounter);
-        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class))).thenReturn(Arrays.asList(obs));
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs));
         bahmniEncounterTransaction = getBahmniEncounterTransaction(Arrays.asList("Monthly Treatment Completeness Template"));
         bahmniEncounterTransaction.getObservations().iterator().next().setObservationDateTime(new Date());
         expectedEx.expect(RuntimeException.class);
@@ -118,7 +118,7 @@ public class RulesForFormFilledTest {
         Obs obs = new Obs();
         obs.setObsDatetime(new Date());
         obs.setUuid("obsUuid");
-        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class))).thenReturn(Arrays.asList(obs));
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs));
         bahmniEncounterTransaction = getBahmniEncounterTransaction(Arrays.asList("Monthly Treatment Completeness Template"));
         bahmniEncounterTransaction.getObservations().iterator().next().setObservationDateTime(new Date());
         bahmniEncounterTransaction.getObservations().iterator().next().setUuid("obsUuid");
@@ -129,7 +129,7 @@ public class RulesForFormFilledTest {
 
     @Test
     public void shouldThrowExceptionIfMonthlyCompletenessFormIsFilledTwiceInSingleSave() {
-        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class))).thenReturn(new ArrayList<Obs>());
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(new ArrayList<Obs>());
         bahmniEncounterTransaction = getBahmniEncounterTransaction(Arrays.asList("Monthly Treatment Completeness Template", "Monthly Treatment Completeness Template"));
         for (BahmniObservation observation: bahmniEncounterTransaction.getObservations()) {
             observation.setObservationDateTime(new Date());

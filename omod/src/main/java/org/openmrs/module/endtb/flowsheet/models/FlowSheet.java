@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FlowSheet {
+public class Flowsheet {
 
     private List<String> flowsheetHeader = new ArrayList<>();
     private Map<String, List<String>> flowsheetData = new LinkedHashMap<>();
@@ -27,8 +27,9 @@ public class FlowSheet {
         this.flowsheetData = flowsheetData;
     }
 
-    public void addFlowSheetHeader(String header) {
+    public Flowsheet addFlowSheetHeader(String header) {
         flowsheetHeader.add(header);
+        return this;
     }
 
     public void addFlowSheetData(String conceptName, String value) {
