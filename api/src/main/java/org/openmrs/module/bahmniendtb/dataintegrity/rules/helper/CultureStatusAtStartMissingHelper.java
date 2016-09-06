@@ -78,26 +78,54 @@ public class CultureStatusAtStartMissingHelper {
         Date treatmentInitiationStartDate = null;
         Date bacteriologySpecimenCollectionDate = null;
         String mtbConfirmation = null;
-        String bacteriologyCultureResults = null;
+
         for (Obs obs : obsList) {
             if (obs.getConcept().getName().getName().equals(TI_START_DATE)) {
                 treatmentInitiationStartDate = obs.getValueDatetime();
-            } else if (obs.getConcept().getName().getName().equals(BACTERIOLOGY_SPECIMEN_COLLECTION_DATE)) {
-                bacteriologySpecimenCollectionDate = obs.getValueDatetime();
+
             } else if (obs.getConcept().getName().getName().equals(BASELINE_CASEDEFINITION_MDR_TB_DIAGNOSIS_METHOD)) {
                 mtbConfirmation = obs.getValueCoded().getDisplayString();
-            } else if (obs.getConcept().getName().getName().equals(BACTERIOLOGY_CULTURE_RESULTS)) {
-                bacteriologyCultureResults = obs.getValueCoded().getDisplayString();
+            }
+            else if (obs.getConcept().getName().getName().equals(BACTERIOLOGY_SPECIMEN_COLLECTION_DATE)) {
+                bacteriologySpecimenCollectionDate = getEarliestCultureResult(bacteriologySpecimenCollectionDate, obs, obsList);
             }
         }
+        return checkIfInvalidResultExists(mtbConfirmation, bacteriologySpecimenCollectionDate ,treatmentInitiationStartDate);
+    }
+
+    private Date getEarliestCultureResult(Date bacteriologySpecimenCollectionDate, Obs obs, List<Obs> obsList) {
+        if(bacteriologySpecimenCollectionDate == null || getDateDiff(bacteriologySpecimenCollectionDate,obs.getValueDatetime(),TimeUnit.DAYS) < 0) {
+            Obs obsGroup = obs.getObsGroup();
+            String bacteriologyCultureResults = getCultureResultForObsGroup(obsGroup, obsList);
+            if(bacteriologyCultureResults != null){
+                bacteriologySpecimenCollectionDate = obs.getValueDatetime();
+            }
+        }
+        return bacteriologySpecimenCollectionDate;
+    }
+
+    private boolean checkIfInvalidResultExists(String mtbConfirmation, Date bacteriologySpecimenCollectionDate, Date treatmentInitiationStartDate) {
         if(BACTERIOLOGICALLY_CONFIRMED.equals(mtbConfirmation) && treatmentInitiationStartDate != null) {
-            bacteriologySpecimenCollectionDate = bacteriologySpecimenCollectionDate == null ? new Date() : bacteriologySpecimenCollectionDate;
+            if (bacteriologySpecimenCollectionDate == null) {
+                return true;
+            }
             long dayDifference = getDateDiff(treatmentInitiationStartDate, bacteriologySpecimenCollectionDate, TimeUnit.DAYS);
             if (dayDifference >= 30.5) {
                 return true;
             }
         }
         return false;
+    }
+
+    private String getCultureResultForObsGroup(Obs obsGroup, List<Obs> obsList){
+        String bacteriologyCultureResults = null;
+        for (Obs obs : obsList) {
+            if (obs.getConcept().getName().getName().equals(BACTERIOLOGY_CULTURE_RESULTS)
+                    && obs.getObsGroup().getObsGroup().getObsGroup() == obsGroup) {
+                bacteriologyCultureResults = obs.getValueCoded().getDisplayString();
+            }
+        }
+        return  bacteriologyCultureResults;
     }
 
     private long getDateDiff(Date startDate, Date stopDate, TimeUnit timeUnit) {
