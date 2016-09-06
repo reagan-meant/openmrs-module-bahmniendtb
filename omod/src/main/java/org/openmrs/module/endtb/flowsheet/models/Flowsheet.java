@@ -38,4 +38,23 @@ public class Flowsheet {
         }
         flowsheetData.get(conceptName).add(value);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Flowsheet flowsheet = (Flowsheet) o;
+
+        if (!flowsheetHeader.equals(flowsheet.flowsheetHeader)) return false;
+        return flowsheetData.equals(flowsheet.flowsheetData);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = flowsheetHeader.hashCode();
+        result = 31 * result + flowsheetData.hashCode();
+        return result;
+    }
 }

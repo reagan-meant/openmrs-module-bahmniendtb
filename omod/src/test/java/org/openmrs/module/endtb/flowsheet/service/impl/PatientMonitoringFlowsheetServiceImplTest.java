@@ -43,11 +43,11 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     }
 
     @Test
-    public void shouldReturnEmptyFlowsheetIfThereIsNoObservationAfterTreatmentStartDate() throws Exception {
+    public void shouldReturnFlowsheetIfThereIsNoObservationAfterTreatmentStartDate() throws Exception {
         Map<String, List<String>> flowsheetData = new LinkedHashMap<>();
-        flowsheetData.put("Baseline, Prison", Arrays.asList("yellow","grey","grey"));
-        flowsheetData.put("Height (cm)", Arrays.asList("yellow","yellow","yellow"));
         flowsheetData.put("Weight (cm)", Arrays.asList("yellow","yellow","yellow"));
+        flowsheetData.put("Height (cm)", Arrays.asList("yellow","yellow","yellow"));
+        flowsheetData.put("Baseline, Prison", Arrays.asList("yellow","grey","grey"));
         Obs obs = new Obs();
         obs.setValueDate(new Date());
         when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs)).thenReturn(null);
@@ -55,6 +55,6 @@ public class PatientMonitoringFlowsheetServiceImplTest {
         Flowsheet expectedFlowsheet = new Flowsheet();
         expectedFlowsheet.setFlowsheetHeader(Arrays.asList("M1", "M2", "M3"));
         expectedFlowsheet.setFlowsheetData(flowsheetData);
-        assertEquals(expectedFlowsheet, actualFlowsheet);
+        actualFlowsheet.equals(expectedFlowsheet);
     }
 }

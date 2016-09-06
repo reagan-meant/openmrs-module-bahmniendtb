@@ -1,11 +1,8 @@
 package org.openmrs.module.endtb.flowsheet.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.tools.javac.comp.Flow;
 import org.apache.commons.collections.CollectionUtils;
-import java.lang.String;
 import org.bahmni.module.bahmnicore.dao.ObsDao;
-import org.hibernate.type.CalendarType;
 import org.openmrs.Obs;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetConcepts;
@@ -16,13 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringFlowsheetService {
@@ -46,12 +37,16 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         if(treatmentStartDate == null) {
             return null;
         }
-        List<Obs> observations = getAllObservationsAfterTreatmentStartDate(patientProgramUuid, flowsheetConcepts, treatmentStartDate);
-        return new Flowsheet();
+        List<Obs> observations = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, new ArrayList<String>(flowsheetConcepts.getClinicalConcepts()), null, null, treatmentStartDate, null);
+        Map<String, List<Obs>> conceptToObservationMap = getConceptToObservationMap(observations);
+        return getFlowsheetFromObservations(flowsheetConcepts, conceptToObservationMap, configurationJSON, treatmentStartDate);
     }
 
     private Map<String, List<Obs>> getConceptToObservationMap(List<Obs> observations) {
         Map<String, List<Obs>> conceptToObservationMap = new LinkedHashMap<>();
+        if(CollectionUtils.isEmpty(observations)) {
+            return new LinkedHashMap<>();
+        }
         for(Obs obs : observations) {
             List<Obs> observationList = conceptToObservationMap.get(obs.getConcept().getName());
             if(CollectionUtils.isEmpty(observationList)) {
@@ -63,68 +58,35 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         return conceptToObservationMap;
     }
 
-//    private Flowsheet getFlowsheetFromObservations(Map<String, List<Obs>> conceptToObservationMap, FlowsheetConfig flowsheetConfig, Date treatmentStartDate) {
-//        Flowsheet flowsheet = new Flowsheet();
-//        for(FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
-//            flowsheet.addFlowSheetHeader(milestone.getName());
-//            for(String concept : milestone.getFlowsheetConcepts().getClinicalConcepts()) {
-//                for(Obs obs : conceptToObservationMap.get(concept)) {
-//                    if(obs.getObsDatetime().after(addDays(treatmentStartDate, milestone.getMin())) && obs.getObsDatetime().before(addDays(treatmentStartDate, milestone.getMax()))) {
-//                        flowsheet.addFlowSheetData(concept, "green");
-//                    }
-//                }
-//            }
-//        }
-//
-//        return null;
-//    }
-
-    private Flowsheet getFlowsheetFromObservations(List<String> concepts, Map<String, List<Obs>> conceptToObservationMap, FlowsheetConfig flowsheetConfig, Date treatmentStartDate) {
-        Flowsheet flowsheet = new Flowsheet();
-        for(String concept : concepts) {
-            if(flowsheetConfig.getFlowsheetConcepts().getClinicalConcepts().contains(concept)) {
-                List<Obs> observationsForConcept = conceptToObservationMap.get(concept);
-                for(FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
-                    if(isObservationForConceptIsPresentInMilestoneDateRange(observationsForConcept, treatmentStartDate, milestone.getMin(), milestone.getMax())) {
-                        flowsheet.addFlowSheetData(concept, "green");
-                    } else if(dateWithAddedDays(treatmentStartDate, milestone.getMax()).before(new Date())) {
-                        flowsheet.addFlowSheetData(concept, "red");
-                    } else {
-                        flowsheet.addFlowSheetData(concept, "yellow");
-                    }
-                }
-            } else {
-                for(FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
-                    if(milestone.getFlowsheetConcepts().getClinicalConcepts().contains(concept)) {
-
-                    } else {
-                        flowsheet.addFlowSheetData(concept, "grey");
-                    }
+    private Flowsheet getFlowsheetFromObservations(FlowsheetConcepts flowsheetConcepts, Map<String, List<Obs>> conceptToObservationMap, FlowsheetConfig flowsheetConfig, Date treatmentStartDate) {
+        Flowsheet flowsheet = getFlowsheetWithHeader(flowsheetConfig);
+        for(String concept : flowsheetConcepts.getClinicalConcepts()) {
+            List<Obs> observationsForConcept = conceptToObservationMap.get(concept);
+            for(FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
+                if(CollectionUtils.isNotEmpty(flowsheetConfig.getFlowsheetConcepts().getClinicalConcepts()) && flowsheetConfig.getFlowsheetConcepts().getClinicalConcepts().contains(concept)) {
+                    flowsheet = getFlowsheetAfterAddingConceptForAMilestone(flowsheet, milestone, concept, observationsForConcept, treatmentStartDate, true);
+                } else if(milestone.getFlowsheetConcepts()!=null && CollectionUtils.isNotEmpty(milestone.getFlowsheetConcepts().getClinicalConcepts()) && milestone.getFlowsheetConcepts().getClinicalConcepts().contains(concept)) {
+                    flowsheet = getFlowsheetAfterAddingConceptForAMilestone(flowsheet, milestone, concept, observationsForConcept, treatmentStartDate, true);
+                } else {
+                    flowsheet = getFlowsheetAfterAddingConceptForAMilestone(flowsheet, milestone, concept, observationsForConcept, treatmentStartDate, false);
                 }
             }
         }
-
-        return null;
+        return flowsheet;
     }
 
-    private void getMappedFlowsheet(FlowsheetConfig flowsheetConfig, Map<String, List<Obs>> conceptToObservationMap) {
+    private Flowsheet getFlowsheetWithHeader(FlowsheetConfig flowsheetConfig) {
         Flowsheet flowsheet = new Flowsheet();
-
-        for(Map.Entry<String, List<Obs>> entry : conceptToObservationMap.entrySet()) {
-
+        for(FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
+            flowsheet.addFlowSheetHeader(milestone.getName());
         }
-
-        for(FlowsheetMilestone flowsheetMilestone : flowsheetConfig.getFlowsheetMilestones()) {
-            if(null != flowsheetMilestone.getFlowsheetConcepts()) {
-
-            } else {
-
-            }
-            flowsheet.getFlowsheetData()
-        }
+        return flowsheet;
     }
 
     private boolean isObservationForConceptIsPresentInMilestoneDateRange(List<Obs> observationsForConcept, Date treatmentStartDate, Integer min, Integer max) {
+        if(CollectionUtils.isEmpty(observationsForConcept)) {
+            return false;
+        }
         for(Obs observation : observationsForConcept) {
             if(observation.getObsDatetime().after(dateWithAddedDays(treatmentStartDate, min)) && observation.getObsDatetime().before(dateWithAddedDays(treatmentStartDate, max))) {
                 return true;
@@ -133,7 +95,7 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         return false;
     }
 
-    private Flowsheet setColorForConceptData(Flowsheet flowsheet, FlowsheetMilestone milestone, String concept,  List<Obs> observationsForConcept, Date treatmentStartDate, Boolean requiredForMilestone) {
+    private Flowsheet getFlowsheetAfterAddingConceptForAMilestone(Flowsheet flowsheet, FlowsheetMilestone milestone, String concept,  List<Obs> observationsForConcept, Date treatmentStartDate, Boolean requiredForMilestone) {
         if(!requiredForMilestone) {
             flowsheet.addFlowSheetData(concept, "grey");
         } else if(isObservationForConceptIsPresentInMilestoneDateRange(observationsForConcept, treatmentStartDate, milestone.getMin(), milestone.getMax())) {
@@ -168,10 +130,6 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
             flowsheetConcepts.getDrugConcepts().addAll(flowsheetConfig.getFlowsheetConcepts().getDrugConcepts());
         }
         return flowsheetConcepts;
-    }
-
-    private List<Obs> getAllObservationsAfterTreatmentStartDate(String patientProgramUuid, FlowsheetConcepts flowsheetConcepts, Date treatmentStartDate) {
-        return obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, new ArrayList<String>(flowsheetConcepts.getClinicalConcepts()), null, null, treatmentStartDate, null);
     }
 
     private FlowsheetConfig getPatientMonitoringFlowsheetConfigurationJSON(String configFilePath) throws Exception {
