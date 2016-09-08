@@ -1,21 +1,25 @@
 package org.openmrs.module.endtb.flowsheet.models;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Flowsheet {
 
-    private List<String> flowsheetHeader = new ArrayList<>();
+    private Date startDate;
+    private Set<String> flowsheetHeader = new LinkedHashSet<>();
     private Map<String, List<String>> flowsheetData = new LinkedHashMap<>();
 
 
-    public List<String> getFlowsheetHeader() {
+    public Set<String> getFlowsheetHeader() {
         return flowsheetHeader;
     }
 
-    public void setFlowsheetHeader(List<String> flowsheetHeader) {
+    public void setFlowsheetHeader(Set<String> flowsheetHeader) {
         this.flowsheetHeader = flowsheetHeader;
     }
 
@@ -27,13 +31,21 @@ public class Flowsheet {
         this.flowsheetData = flowsheetData;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
     public Flowsheet addFlowSheetHeader(String header) {
         flowsheetHeader.add(header);
         return this;
     }
 
     public void addFlowSheetData(String conceptName, String value) {
-        if(!flowsheetData.containsKey(conceptName)) {
+        if (!flowsheetData.containsKey(conceptName)) {
             flowsheetData.put(conceptName, new ArrayList<String>());
         }
         flowsheetData.get(conceptName).add(value);

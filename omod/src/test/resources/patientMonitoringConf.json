@@ -22,7 +22,7 @@
     }
   ],
   "concepts": {
-    "obs": ["Height (cm)", "Weight (cm)"],
+    "obs": ["Height (cm)", "Weight (kg)"],
     "bacteriology": ["Bacteriology, Culture results"],
     "drugs": ["Delamanid"]
   }
