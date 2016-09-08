@@ -5,6 +5,8 @@ import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.bahmniemrapi.drugorder.contract.BahmniDrugOrder;
+import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
+import org.openmrs.module.endtb.flowsheet.constants.FlowsheetContant;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetConfig;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
@@ -30,7 +32,7 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
 
     @Override
     public void map(Flowsheet flowsheet, FlowsheetConfig flowsheetConfig, String patientUuid, String patientProgramUuid, Date startDate) throws ParseException {
-        Set<String> allDrugConcepts = getUniqueFlowsheetConcepts(flowsheetConfig).getDrugConcepts();
+        Set<String> allDrugConcepts = getAllUniqueFlowsheetConcepts(flowsheetConfig, FlowsheetContant.DRUGS);
         createBasicFlowsheet(flowsheet, flowsheetConfig, allDrugConcepts);
         if (startDate == null) {
             return;
@@ -39,11 +41,11 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
         List<BahmniDrugOrder> drugOrders = bahmniDrugOrderService.getDrugOrders(patientUuid, null, getConceptObjects(allDrugConcepts), null, patientProgramUuid);
         Map<String, List<BahmniDrugOrder>> conceptToDrugMap = getConceptToDrugMap(drugOrders);
 
-        Set<String> commonDrugConcepts = flowsheetConfig.getFlowsheetEntities().getDrugConcepts();
+        Set<String> commonDrugConcepts = getAllFlowsheetConcepts(flowsheetConfig.getFlowsheetEntities().getDrugConcepts());
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
             Set<String> milestoneDrugConcepts = new HashSet<>();
             if (milestone.getFlowsheetEntities() != null) {
-                milestoneDrugConcepts = milestone.getFlowsheetEntities().getDrugConcepts();
+                milestoneDrugConcepts = getAllFlowsheetConcepts(milestone.getFlowsheetEntities().getDrugConcepts());
             }
             for (String concept : allDrugConcepts) {
                 setDrugMilestoneColourCode(flowsheet, milestone, commonDrugConcepts, milestoneDrugConcepts, conceptToDrugMap.get(concept), concept, startDate);
@@ -54,14 +56,14 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
     private void setDrugMilestoneColourCode(Flowsheet flowsheet, FlowsheetMilestone milestone, Set<String> commonDrugConcepts, Set<String> milestoneDrugConcepts, List<BahmniDrugOrder> drugOrderList, String concept, Date startDate) {
         if (commonDrugConcepts.contains(concept) || milestoneDrugConcepts.contains(concept)) {
             if (isDrugPresentInMilestoneRange(milestone, drugOrderList, startDate)) {
-                flowsheet.addFlowSheetData(concept, "green");
+                flowsheet.addFlowSheetData(concept, ColourCode.GREEN.getColourCode());
             } else if (dateWithAddedDays(startDate, milestone.getMax()).after(new Date())) {
-                flowsheet.addFlowSheetData(concept, "yellow");
+                flowsheet.addFlowSheetData(concept, ColourCode.YELLOW.getColourCode());
             } else {
-                flowsheet.addFlowSheetData(concept, "purple");
+                flowsheet.addFlowSheetData(concept, ColourCode.PURPLE.getColourCode());
             }
         } else {
-            flowsheet.addFlowSheetData(concept, "grey");
+            flowsheet.addFlowSheetData(concept, ColourCode.GREY.getColourCode());
         }
     }
 

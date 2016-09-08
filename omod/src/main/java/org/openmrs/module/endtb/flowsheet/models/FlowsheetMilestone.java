@@ -1,6 +1,7 @@
 package org.openmrs.module.endtb.flowsheet.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.openmrs.module.endtb.flowsheet.constants.FlowsheetContant;
 
 public class FlowsheetMilestone {
     private String name;
@@ -12,7 +13,7 @@ public class FlowsheetMilestone {
         return this.name;
     }
 
-    @JsonProperty("name")
+    @JsonProperty(FlowsheetContant.NAME)
     public void setName(String name) {
         this.name = name;
     }
@@ -21,7 +22,7 @@ public class FlowsheetMilestone {
         return this.min;
     }
 
-    @JsonProperty("min")
+    @JsonProperty(FlowsheetContant.MIN)
     public void setMin(int min) {
         this.min = min;
     }
@@ -30,7 +31,7 @@ public class FlowsheetMilestone {
         return this.max;
     }
 
-    @JsonProperty("max")
+    @JsonProperty(FlowsheetContant.MAX)
     public void setMax(int max) {
         this.max = max;
     }
@@ -39,7 +40,7 @@ public class FlowsheetMilestone {
         return this.flowsheetEntities;
     }
 
-    @JsonProperty("entities")
+    @JsonProperty(FlowsheetContant.ENTITIES)
     public void setFlowsheetEntities(FlowsheetEntities flowsheetEntities) {
         this.flowsheetEntities = flowsheetEntities;
     }

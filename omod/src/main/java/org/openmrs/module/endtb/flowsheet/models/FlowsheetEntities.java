@@ -1,7 +1,9 @@
 package org.openmrs.module.endtb.flowsheet.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.org.apache.bcel.internal.generic.SWITCH;
 import org.apache.commons.collections.CollectionUtils;
+import org.openmrs.module.endtb.flowsheet.constants.FlowsheetContant;
 
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +19,7 @@ public class FlowsheetEntities {
         return this.clinicalConcepts;
     }
 
-    @JsonProperty("obs")
+    @JsonProperty(FlowsheetContant.CLINICAL)
     public void setClinicalConcepts(FlowsheetConcept clinicalConcepts) {
         this.clinicalConcepts = clinicalConcepts;
     }
@@ -26,7 +28,7 @@ public class FlowsheetEntities {
         return this.bacteriologyConcepts;
     }
 
-    @JsonProperty("bacteriology")
+    @JsonProperty(FlowsheetContant.BACTERIOLOGY)
     public void setBacteriologyConcepts(FlowsheetConcept bacteriologyConcepts) {
         this.bacteriologyConcepts = bacteriologyConcepts;
     }
@@ -35,8 +37,24 @@ public class FlowsheetEntities {
         return this.drugConcepts;
     }
 
-    @JsonProperty("drugs")
+    @JsonProperty(FlowsheetContant.DRUGS)
     public void setDrugConcepts(FlowsheetConcept drugConcepts) {
         this.drugConcepts = drugConcepts;
+    }
+
+    public FlowsheetConcept getFlowSheetConceptByType(String type) {
+        FlowsheetConcept flowsheetConcept = null;
+        switch (type) {
+            case FlowsheetContant.CLINICAL:
+                flowsheetConcept = getClinicalConcepts();
+                break;
+            case FlowsheetContant.BACTERIOLOGY:
+                flowsheetConcept = getBacteriologyConcepts();
+                break;
+            case FlowsheetContant.DRUGS:
+                flowsheetConcept = getDrugConcepts();
+                break;
+        }
+        return flowsheetConcept;
     }
 }

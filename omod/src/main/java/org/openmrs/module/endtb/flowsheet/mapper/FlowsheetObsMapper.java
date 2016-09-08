@@ -5,6 +5,8 @@ import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
+import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
+import org.openmrs.module.endtb.flowsheet.constants.FlowsheetContant;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetEntities;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetConfig;
@@ -31,7 +33,7 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
 
     @Override
     public void map(Flowsheet flowsheet, FlowsheetConfig flowsheetConfig, String patientUuid, String patientProgramUuid, Date startDate) throws ParseException {
-        Set<String> allObsConcepts = getUniqueFlowsheetConcepts(flowsheetConfig).getClinicalConcepts();
+        Set<String> allObsConcepts = getAllUniqueFlowsheetConcepts(flowsheetConfig, FlowsheetContant.CLINICAL);
         createBasicFlowsheet(flowsheet, flowsheetConfig, allObsConcepts);
         if (startDate == null) {
             return;
@@ -64,10 +66,10 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
         return conceptToObsMap;
     }
 
-    private Set<String> getAllConceptsFromFlowsheetConcepts(FlowsheetEntities flowsheetConcepts) {
+    private Set<String> getAllConceptsFromFlowsheetConcepts(FlowsheetEntities flowsheetEntities) {
         Set<String> concepts = new HashSet<>();
-        if (flowsheetConcepts != null) {
-            concepts.addAll(flowsheetConcepts.getClinicalConcepts());
+        if (flowsheetEntities != null) {
+            concepts.addAll(getAllFlowsheetConcepts(flowsheetEntities.getClinicalConcepts()));
         }
         return concepts;
     }
@@ -77,14 +79,14 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
                                            String concept, List<Obs> obsList, Date startDate) {
         if (flowsheetCommonConcepts.contains(concept) || milestoneConcepts.contains(concept)) {
             if (isConceptPresentInMilestoneRange(milestone, startDate, obsList)) {
-                flowsheet.addFlowSheetData(concept, "green");
+                flowsheet.addFlowSheetData(concept, ColourCode.GREEN.getColourCode());
             } else if (dateWithAddedDays(startDate, milestone.getMax()).before(new Date())) {
-                flowsheet.addFlowSheetData(concept, "purple");
+                flowsheet.addFlowSheetData(concept, ColourCode.PURPLE.getColourCode());
             } else {
-                flowsheet.addFlowSheetData(concept, "yellow");
+                flowsheet.addFlowSheetData(concept, ColourCode.YELLOW.getColourCode());
             }
         } else {
-            flowsheet.addFlowSheetData(concept, "grey");
+            flowsheet.addFlowSheetData(concept, ColourCode.GREY.getColourCode());
         }
     }
 

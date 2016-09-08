@@ -1,12 +1,12 @@
 package org.openmrs.module.endtb.flowsheet.mapper;
 
+import org.apache.commons.collections.MapUtils;
 import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetConcept;
-import org.openmrs.module.endtb.flowsheet.models.FlowsheetEntities;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetConfig;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
 
@@ -50,21 +50,28 @@ public abstract class FlowsheetMapper {
         return calendar.getTime();
     }
 
-    protected FlowsheetEntities getUniqueFlowsheetConcepts(FlowsheetConfig flowsheetConfig) {
-        FlowsheetEntities flowsheetEntities = new FlowsheetEntities();
+    protected Set<String> getAllUniqueFlowsheetConcepts(FlowsheetConfig flowsheetConfig, String type) {
+        Set<String> conceptNames = new HashSet<>();
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
             if (milestone.getFlowsheetEntities() != null) {
-                flowsheetEntities.getClinicalConcepts().addAll(milestone.getFlowsheetEntities().getClinicalConcepts());
-                flowsheetEntities.getBacteriologyConcepts().addAll(milestone.getFlowsheetEntities().getBacteriologyConcepts());
-                flowsheetEntities.getDrugConcepts().addAll(milestone.getFlowsheetEntities().getDrugConcepts());
+                conceptNames.addAll(getAllFlowsheetConcepts(milestone.getFlowsheetEntities().getFlowSheetConceptByType(type)));
             }
         }
         if (flowsheetConfig.getFlowsheetEntities() != null) {
-            flowsheetEntities.getClinicalConcepts().addAll(flowsheetConfig.getFlowsheetEntities().getClinicalConcepts());
-            flowsheetEntities.getBacteriologyConcepts().addAll(flowsheetConfig.getFlowsheetEntities().getBacteriologyConcepts());
-            flowsheetEntities.getDrugConcepts().addAll(flowsheetConfig.getFlowsheetEntities().getDrugConcepts());
+            conceptNames.addAll(getAllFlowsheetConcepts(flowsheetConfig.getFlowsheetEntities().getFlowSheetConceptByType(type)));
         }
-        return flowsheetEntities;
+        return conceptNames;
+    }
+
+    protected Set<String> getAllFlowsheetConcepts(FlowsheetConcept flowsheetConcept) {
+        Set<String> conceptNames = new HashSet<>();
+        conceptNames.addAll(flowsheetConcept.getSingleConcepts());
+        if(MapUtils.isNotEmpty(flowsheetConcept.getGroupConcepts())) {
+            for(Map.Entry<String, Set<String>> entry : flowsheetConcept.getGroupConcepts().entrySet()) {
+                conceptNames.addAll(entry.getValue());
+            }
+        }
+        return conceptNames;
     }
 
     protected void createBasicFlowsheet(Flowsheet flowsheet, FlowsheetConfig flowsheetConfig, Set<String> conceptList) {
