@@ -9,31 +9,34 @@ public class FlowsheetMilestone {
     private FlowsheetEntities flowsheetEntities;
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
+    @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
     }
 
     public int getMin() {
-        return min;
+        return this.min;
     }
 
+    @JsonProperty("min")
     public void setMin(int min) {
         this.min = min;
     }
 
     public int getMax() {
-        return max;
+        return this.max;
     }
 
+    @JsonProperty("max")
     public void setMax(int max) {
         this.max = max;
     }
 
     public FlowsheetEntities getFlowsheetEntities() {
-        return flowsheetEntities;
+        return this.flowsheetEntities;
     }
 
     @JsonProperty("entities")

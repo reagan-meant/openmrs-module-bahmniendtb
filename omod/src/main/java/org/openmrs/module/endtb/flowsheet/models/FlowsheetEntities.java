@@ -14,7 +14,7 @@ public class FlowsheetEntities {
     private FlowsheetConcept drugConcepts;
 
     public FlowsheetConcept getClinicalConcepts() {
-        return clinicalConcepts;
+        return this.clinicalConcepts;
     }
 
     @JsonProperty("obs")
@@ -23,7 +23,7 @@ public class FlowsheetEntities {
     }
 
     public FlowsheetConcept getBacteriologyConcepts() {
-        return bacteriologyConcepts;
+        return this.bacteriologyConcepts;
     }
 
     @JsonProperty("bacteriology")
@@ -32,7 +32,7 @@ public class FlowsheetEntities {
     }
 
     public FlowsheetConcept getDrugConcepts() {
-        return drugConcepts;
+        return this.drugConcepts;
     }
 
     @JsonProperty("drugs")

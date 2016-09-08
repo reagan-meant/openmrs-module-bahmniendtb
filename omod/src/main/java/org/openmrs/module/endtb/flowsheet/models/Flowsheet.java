@@ -11,12 +11,15 @@ import java.util.Set;
 public class Flowsheet {
 
     private Date startDate;
-    private Set<String> flowsheetHeader = new LinkedHashSet<>();
-    private Map<String, List<String>> flowsheetData = new LinkedHashMap<>();
+    private Set<String> flowsheetHeader;
+    private Map<String, List<String>> flowsheetData;
 
 
     public Set<String> getFlowsheetHeader() {
-        return flowsheetHeader;
+        if(null == this.flowsheetHeader) {
+            this.flowsheetHeader = new LinkedHashSet<>();
+        }
+        return this.flowsheetHeader;
     }
 
     public void setFlowsheetHeader(Set<String> flowsheetHeader) {
@@ -24,7 +27,10 @@ public class Flowsheet {
     }
 
     public Map<String, List<String>> getFlowsheetData() {
-        return flowsheetData;
+        if(null == this.flowsheetData) {
+            this.flowsheetData = new LinkedHashMap<>();
+        }
+        return this.flowsheetData;
     }
 
     public void setFlowsheetData(Map<String, List<String>> flowsheetData) {
@@ -32,7 +38,7 @@ public class Flowsheet {
     }
 
     public Date getStartDate() {
-        return startDate;
+        return this.startDate;
     }
 
     public void setStartDate(Date startDate) {
@@ -40,15 +46,15 @@ public class Flowsheet {
     }
 
     public Flowsheet addFlowSheetHeader(String header) {
-        flowsheetHeader.add(header);
+        getFlowsheetHeader().add(header);
         return this;
     }
 
     public void addFlowSheetData(String conceptName, String value) {
-        if (!flowsheetData.containsKey(conceptName)) {
-            flowsheetData.put(conceptName, new ArrayList<String>());
+        if (!getFlowsheetData().containsKey(conceptName)) {
+            getFlowsheetData().put(conceptName, new ArrayList<String>());
         }
-        flowsheetData.get(conceptName).add(value);
+        getFlowsheetData().get(conceptName).add(value);
     }
 
     @Override
@@ -58,15 +64,15 @@ public class Flowsheet {
 
         Flowsheet flowsheet = (Flowsheet) o;
 
-        if (!flowsheetHeader.equals(flowsheet.flowsheetHeader)) return false;
-        return flowsheetData.equals(flowsheet.flowsheetData);
+        if (!getFlowsheetHeader().equals(flowsheet.getFlowsheetHeader())) return false;
+        return getFlowsheetData().equals(flowsheet.getFlowsheetData());
 
     }
 
     @Override
     public int hashCode() {
-        int result = flowsheetHeader.hashCode();
-        result = 31 * result + flowsheetData.hashCode();
+        int result = getFlowsheetHeader().hashCode();
+        result = 31 * result + getFlowsheetData().hashCode();
         return result;
     }
 }

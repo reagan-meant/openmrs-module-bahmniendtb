@@ -2,6 +2,7 @@ package org.openmrs.module.endtb.flowsheet.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FlowsheetConfig {
@@ -10,7 +11,10 @@ public class FlowsheetConfig {
     private String startDateConcept;
 
     public List<FlowsheetMilestone> getFlowsheetMilestones() {
-        return flowsheetMilestones;
+        if(null == this.flowsheetMilestones) {
+            this.flowsheetMilestones = new ArrayList<>();
+        }
+        return this.flowsheetMilestones;
     }
 
     @JsonProperty("milestones")
@@ -28,7 +32,7 @@ public class FlowsheetConfig {
     }
 
     public String getStartDateConcept() {
-        return startDateConcept;
+        return this.startDateConcept;
     }
 
     @JsonProperty("startDateConcept")
