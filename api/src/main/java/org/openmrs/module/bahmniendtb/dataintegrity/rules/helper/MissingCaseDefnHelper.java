@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -46,19 +47,30 @@ public class MissingCaseDefnHelper {
 
         for(Episode episode : episodesOfInterest) {
             Obs form = null;
-            List<Obs> requiredObsForForm = null;
+            int requiredObsForForm = -1;
             List<Obs> formObs
                     = endTBObsService.getObsForEpisode(episode, parentTemplateConcept);
 
             if(formObs.size() > 0) {
                 form = formObs.iterator().next();
-                requiredObsForForm = endTBObsService.getChildObsByConcepts(form, requiredConcepts);
+                requiredObsForForm = getuniqueConceptCount(endTBObsService.getChildObsByConcepts(form, requiredConcepts));
             }
 
-            if(form == null || requiredObsForForm.size() != requiredConcepts.size()) {
+            if(form == null || requiredObsForForm != requiredConcepts.size()) {
                 ruleResultList.add(episodeHelper.mapEpisodeToPatientProgram(episode, BASELINE_FORM, BASELINE_DATE, BASELINE_DEFAULT_COMMENT));
             }
         }
         return ruleResultList;
+    }
+
+    private int getuniqueConceptCount(List<Obs> childObsByConcepts) {
+        Set<Integer> uniqueConcepts = new HashSet<>();
+
+        for (Obs obs : childObsByConcepts){
+            int conceptId = obs.getConcept().getConceptId();
+            if(!uniqueConcepts.contains(conceptId))
+                uniqueConcepts.add(conceptId);
+        }
+        return uniqueConcepts.size();
     }
 }

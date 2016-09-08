@@ -9,7 +9,7 @@ public class EndTBConstants {
     public static final String BASELINE_DATE = "Baseline, Date of baseline";
     public static final String BASELINE_CASEDEFINITION_WHO_GROUP = "Baseline, WHO registration group";
     public static final String BASELINE_CASEDEFINITION_DISEASE_SITE = "Baseline, Disease site";
-    public static final String BASELINE_CASEDEFINITION_CONFIRMATION_METHOD = "Baseline, Method of MDR-TB confirmation";
+    public static final String BASELINE_CASEDEFINITION_CONFIRMATION = "Baseline, MDR-TB diagnosis method";
     public static final String BASELINE_CASEDEFINITION_MDR_TB_DIAGNOSIS_METHOD = "Baseline, MDR-TB diagnosis method";
     public static final String BASELINE_DRUG_RESISTANCE = "Baseline, Drug resistance";
     public static final String BASELINE_CONFIRMED_DRUG_RESISTANT_TB = "Confirmed drug resistant TB";
@@ -72,8 +72,6 @@ public class EndTBConstants {
     //Default Comments
     public static final String TI_DEFAULT_COMMENT = "The Treatment Initiation form is not filled";
     public static final String EOT_DEFAULT_COMMENT = "The Outcome - End of Treatment form is not filled";
-    public static final String AE_DEFAULT_COMMENT = "The Adverse Events form is not filled";
-    public static final String SAE_DEFAULT_COMMENT = "The Serious Adverse Events form is not filled";
     public static final String BASELINE_DEFAULT_COMMENT = "The Baseline form is not filled";
     public static final String CULTURE_STATUS_MISSING_DEFAULT_COMMENT = "Their is no bacteriology culture for this patient in the first month";
     public static final String FIRST_LINE_RESISTANCE_RESULT_COMMENT = "No results by the end of first month of treatment.";

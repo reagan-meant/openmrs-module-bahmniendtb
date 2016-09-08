@@ -59,7 +59,7 @@ public class MissingCaseDefinitionViolationTest {
 
         when(conceptService.getConceptByName(EndTBConstants.BASELINE_CASEDEFINITION_WHO_GROUP)).thenReturn(diseaseSiteConcept);
         when(conceptService.getConceptByName(EndTBConstants.BASELINE_CASEDEFINITION_DISEASE_SITE)).thenReturn(diseaseSiteConcept);
-        when(conceptService.getConceptByName(EndTBConstants.BASELINE_CASEDEFINITION_CONFIRMATION_METHOD)).thenReturn(confirmationMethodConcept);
+        when(conceptService.getConceptByName(EndTBConstants.BASELINE_CASEDEFINITION_CONFIRMATION)).thenReturn(confirmationMethodConcept);
 
 
         List<RuleResult<PatientProgram>> result = missingCaseDefinitionViolation.evaluate();

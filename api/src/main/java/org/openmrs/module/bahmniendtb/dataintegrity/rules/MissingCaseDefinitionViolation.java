@@ -11,7 +11,7 @@ import org.openmrs.module.dataintegrity.rule.RuleResult;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_CASEDEFINITION_CONFIRMATION_METHOD;
+import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_CASEDEFINITION_CONFIRMATION;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_CASEDEFINITION_DISEASE_SITE;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_CASEDEFINITION_WHO_GROUP;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_FORM;
@@ -37,7 +37,7 @@ public class MissingCaseDefinitionViolation implements RuleDefn<PatientProgram> 
 
         Concept whoGroupQuestion = conceptService.getConceptByName(BASELINE_CASEDEFINITION_WHO_GROUP);
         Concept siteDateQuestion = conceptService.getConceptByName(BASELINE_CASEDEFINITION_DISEASE_SITE);
-        Concept methodQuestion = conceptService.getConceptByName(BASELINE_CASEDEFINITION_CONFIRMATION_METHOD);
+        Concept methodQuestion = conceptService.getConceptByName(BASELINE_CASEDEFINITION_CONFIRMATION);
 
         return missingCaseDefnHelper
             .getMissingObsInObsSetViolations(BASELINE_FORM,
