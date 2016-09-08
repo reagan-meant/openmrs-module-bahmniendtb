@@ -39,11 +39,11 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
         List<BahmniDrugOrder> drugOrders = bahmniDrugOrderService.getDrugOrders(patientUuid, null, getConceptObjects(allDrugConcepts), null, patientProgramUuid);
         Map<String, List<BahmniDrugOrder>> conceptToDrugMap = getConceptToDrugMap(drugOrders);
 
-        Set<String> commonDrugConcepts = flowsheetConfig.getFlowsheetConcepts().getDrugConcepts();
+        Set<String> commonDrugConcepts = flowsheetConfig.getFlowsheetEntities().getDrugConcepts();
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
             Set<String> milestoneDrugConcepts = new HashSet<>();
-            if (milestone.getFlowsheetConcepts() != null) {
-                milestoneDrugConcepts = milestone.getFlowsheetConcepts().getDrugConcepts();
+            if (milestone.getFlowsheetEntities() != null) {
+                milestoneDrugConcepts = milestone.getFlowsheetEntities().getDrugConcepts();
             }
             for (String concept : allDrugConcepts) {
                 setDrugMilestoneColourCode(flowsheet, milestone, commonDrugConcepts, milestoneDrugConcepts, conceptToDrugMap.get(concept), concept, startDate);

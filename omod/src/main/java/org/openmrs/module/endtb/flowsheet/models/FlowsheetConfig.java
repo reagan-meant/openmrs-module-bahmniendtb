@@ -6,7 +6,7 @@ import java.util.List;
 
 public class FlowsheetConfig {
     private List<FlowsheetMilestone> flowsheetMilestones;
-    private FlowsheetConcepts flowsheetConcepts;
+    private FlowsheetEntities flowsheetEntities;
     private String startDateConcept;
 
     public List<FlowsheetMilestone> getFlowsheetMilestones() {
@@ -18,19 +18,20 @@ public class FlowsheetConfig {
         this.flowsheetMilestones = flowsheetMilestones;
     }
 
-    public FlowsheetConcepts getFlowsheetConcepts() {
-        return flowsheetConcepts;
+    public FlowsheetEntities getFlowsheetEntities() {
+        return flowsheetEntities;
     }
 
-    @JsonProperty("concepts")
-    public void setFlowsheetConcepts(FlowsheetConcepts flowsheetConcepts) {
-        this.flowsheetConcepts = flowsheetConcepts;
+    @JsonProperty("entities")
+    public void setFlowsheetEntities(FlowsheetEntities flowsheetEntities) {
+        this.flowsheetEntities = flowsheetEntities;
     }
 
     public String getStartDateConcept() {
         return startDateConcept;
     }
 
+    @JsonProperty("startDateConcept")
     public void setStartDateConcept(String startDateConcept) {
         this.startDateConcept = startDateConcept;
     }

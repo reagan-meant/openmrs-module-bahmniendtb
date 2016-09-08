@@ -6,7 +6,7 @@ import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
-import org.openmrs.module.endtb.flowsheet.models.FlowsheetConcepts;
+import org.openmrs.module.endtb.flowsheet.models.FlowsheetEntities;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetConfig;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +39,9 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
         List<Obs> obsList = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, new ArrayList<String>(allObsConcepts), null, null, startDate, null);
         Map<String, List<Obs>> conceptToObsMap = getConceptToObsMap(obsList);
 
-        Set<String> commonConcepts = getAllConceptsFromFlowsheetConcepts(flowsheetConfig.getFlowsheetConcepts());
+        Set<String> commonConcepts = getAllConceptsFromFlowsheetConcepts(flowsheetConfig.getFlowsheetEntities());
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
-            Set<String> milestoneConcepts = getAllConceptsFromFlowsheetConcepts(milestone.getFlowsheetConcepts());
+            Set<String> milestoneConcepts = getAllConceptsFromFlowsheetConcepts(milestone.getFlowsheetEntities());
             for (String concept : allObsConcepts) {
                 setObsMilestoneColourCode(flowsheet, commonConcepts, milestoneConcepts, milestone, concept, conceptToObsMap.get(concept), startDate);
             }
@@ -64,7 +64,7 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
         return conceptToObsMap;
     }
 
-    private Set<String> getAllConceptsFromFlowsheetConcepts(FlowsheetConcepts flowsheetConcepts) {
+    private Set<String> getAllConceptsFromFlowsheetConcepts(FlowsheetEntities flowsheetConcepts) {
         Set<String> concepts = new HashSet<>();
         if (flowsheetConcepts != null) {
             concepts.addAll(flowsheetConcepts.getClinicalConcepts());

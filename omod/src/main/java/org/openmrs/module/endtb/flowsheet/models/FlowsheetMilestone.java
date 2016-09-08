@@ -6,7 +6,7 @@ public class FlowsheetMilestone {
     private String name;
     private int min;
     private int max;
-    private FlowsheetConcepts flowsheetConcepts;
+    private FlowsheetEntities flowsheetEntities;
 
     public String getName() {
         return name;
@@ -32,12 +32,12 @@ public class FlowsheetMilestone {
         this.max = max;
     }
 
-    public FlowsheetConcepts getFlowsheetConcepts() {
-        return flowsheetConcepts;
+    public FlowsheetEntities getFlowsheetEntities() {
+        return flowsheetEntities;
     }
 
-    @JsonProperty("concepts")
-    public void setFlowsheetConcepts(FlowsheetConcepts flowsheetConcepts) {
-        this.flowsheetConcepts = flowsheetConcepts;
+    @JsonProperty("entities")
+    public void setFlowsheetEntities(FlowsheetEntities flowsheetEntities) {
+        this.flowsheetEntities = flowsheetEntities;
     }
 }
