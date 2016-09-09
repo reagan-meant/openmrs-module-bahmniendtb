@@ -13,6 +13,7 @@ public class Flowsheet {
     private Date startDate;
     private Set<String> flowsheetHeader;
     private Map<String, List<String>> flowsheetData;
+    private String currentMilestoneName;
 
 
     public Set<String> getFlowsheetHeader() {
@@ -43,6 +44,14 @@ public class Flowsheet {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    public String getCurrentMilestoneName() {
+        return currentMilestoneName;
+    }
+
+    public void setCurrentMilestoneName(String currentMilestoneName) {
+        this.currentMilestoneName = currentMilestoneName;
     }
 
     public Flowsheet addFlowSheetHeader(String header) {
