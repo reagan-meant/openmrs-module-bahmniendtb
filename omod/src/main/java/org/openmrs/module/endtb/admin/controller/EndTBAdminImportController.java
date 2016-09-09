@@ -60,7 +60,7 @@ public class EndTBAdminImportController extends BaseRestController {
             String loginUuid = jsonObject.get("uuid").getAsString();
 
             saeEncounterPersister.init(Context.getUserContext(), loginUuid);
-            return importCsv(ENCOUNTER_FILES_DIRECTORY, file, saeEncounterPersister, 5, false, SaeEncounterRow.class);
+            return importCsv(ENCOUNTER_FILES_DIRECTORY, file, saeEncounterPersister, 1, false, SaeEncounterRow.class);
         } catch (Throwable e) {
             logger.error("Could not upload file", e);
             throw e;
