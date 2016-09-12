@@ -113,7 +113,6 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
         if (CollectionUtils.isNotEmpty(obsList)) {
             for (Obs obs : obsList) {
                 if (obs.getObsDatetime().after(dateWithAddedDays(startDate, milestone.getMin())) && obs.getObsDatetime().before(dateWithAddedDays(startDate, milestone.getMax()))) {
-                    obsList.remove(obs);
                     return true;
                 }
             }
