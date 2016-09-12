@@ -6,7 +6,7 @@ import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.bahmniemrapi.drugorder.contract.BahmniDrugOrder;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
-import org.openmrs.module.endtb.flowsheet.constants.FlowsheetContant;
+import org.openmrs.module.endtb.flowsheet.constants.FlowsheetConstant;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetConfig;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
@@ -14,13 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class FlowsheetDrugMapper extends FlowsheetMapper {
@@ -32,39 +26,68 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
 
     @Override
     public void map(Flowsheet flowsheet, FlowsheetConfig flowsheetConfig, String patientUuid, String patientProgramUuid, Date startDate) throws ParseException {
-        Set<String> allDrugConcepts = getAllUniqueFlowsheetConcepts(flowsheetConfig, FlowsheetContant.DRUGS);
-        createBasicFlowsheet(flowsheet, flowsheetConfig, allDrugConcepts);
+        String typeOfConcepts = FlowsheetConstant.DRUGS;
+        Set<String> singleConcepts = getAllSingleConceptsFromFlowsheetConfig(flowsheetConfig, typeOfConcepts);
+        Map<String, Set<String>> groupConcepts = getAllGroupConceptsFromFlowsheetConfig(flowsheetConfig, typeOfConcepts);
+
+        createBasicFlowsheet(flowsheet, flowsheetConfig, typeOfConcepts);
         if (startDate == null) {
             return;
         }
 
-        List<BahmniDrugOrder> drugOrders = bahmniDrugOrderService.getDrugOrders(patientUuid, null, getConceptObjects(allDrugConcepts), null, patientProgramUuid);
-        Map<String, List<BahmniDrugOrder>> conceptToDrugMap = getConceptToDrugMap(drugOrders);
+        Map<String, List<BahmniDrugOrder>> conceptToDrugMap = getConceptToDrugMap(flowsheetConfig, patientUuid, patientProgramUuid);
 
-        Set<String> commonDrugConcepts = getAllFlowsheetConcepts(flowsheetConfig.getFlowsheetEntities().getDrugConcepts());
+        Set<String> commonSingleConcepts = getSingleConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities(), typeOfConcepts);
+        Map<String, Set<String>> commonGroupConcepts = getGroupConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities(), typeOfConcepts);
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
-            Set<String> milestoneDrugConcepts = new HashSet<>();
-            if (milestone.getFlowsheetEntities() != null) {
-                milestoneDrugConcepts = getAllFlowsheetConcepts(milestone.getFlowsheetEntities().getDrugConcepts());
-            }
-            for (String concept : allDrugConcepts) {
-                setDrugMilestoneColourCode(flowsheet, milestone, commonDrugConcepts, milestoneDrugConcepts, conceptToDrugMap.get(concept), concept, startDate);
-            }
+            mapSingleConcept(flowsheet, milestone, singleConcepts, conceptToDrugMap, commonSingleConcepts, typeOfConcepts, startDate);
+            mapGroupConcept(flowsheet, milestone, groupConcepts, conceptToDrugMap, commonGroupConcepts, typeOfConcepts, startDate);
         }
     }
 
-    private void setDrugMilestoneColourCode(Flowsheet flowsheet, FlowsheetMilestone milestone, Set<String> commonDrugConcepts, Set<String> milestoneDrugConcepts, List<BahmniDrugOrder> drugOrderList, String concept, Date startDate) {
-        if (commonDrugConcepts.contains(concept) || milestoneDrugConcepts.contains(concept)) {
+    private void mapGroupConcept(Flowsheet flowsheet, FlowsheetMilestone milestone, Map<String, Set<String>> groupConcepts, Map<String, List<BahmniDrugOrder>> conceptToDrugMap, Map<String, Set<String>> commonGroupConcepts, String typeOfConcepts, Date startDate) {
+        Map<String, Set<String>> groupConceptsRequiredForMilestone = getGroupConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities(), typeOfConcepts);
+        groupConceptsRequiredForMilestone.putAll(commonGroupConcepts);
+        for(Map.Entry<String, Set<String>> groupConceptEntry : groupConcepts.entrySet()) {
+            boolean conceptRequiredForMilestone = groupConceptsRequiredForMilestone.containsKey(groupConceptEntry.getKey());
+            String colorCodeForGroupConcepts = getColorCodeForGroupConcepts(milestone, conceptRequiredForMilestone, groupConceptEntry.getValue(), conceptToDrugMap, startDate);
+            flowsheet.addFlowSheetData(groupConceptEntry.getKey(), colorCodeForGroupConcepts);
+        }
+    }
+
+    private void mapSingleConcept(Flowsheet flowsheet, FlowsheetMilestone milestone, Set<String> singleConcepts, Map<String, List<BahmniDrugOrder>> conceptToDrugMap, Set<String> commonSingleConcepts, String typeOfConcepts, Date startDate) {
+        Set<String> singleConceptsRequiredForMilestone = getSingleConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities(), typeOfConcepts);
+        singleConceptsRequiredForMilestone.addAll(commonSingleConcepts);
+        for (String concept : singleConcepts) {
+            boolean conceptRequiredForMilestone = singleConceptsRequiredForMilestone.contains(concept);
+            String colorCodeForSingleConcepts = getColorCodeForSingleConcepts(milestone, conceptRequiredForMilestone, conceptToDrugMap.get(concept), startDate);
+            flowsheet.addFlowSheetData(concept, colorCodeForSingleConcepts);
+        }
+    }
+
+    private String getColorCodeForSingleConcepts(FlowsheetMilestone milestone, Boolean conceptRequiredForMilestone, List<BahmniDrugOrder> drugOrderList, Date startDate) {
+        if (conceptRequiredForMilestone) {
             if (isDrugPresentInMilestoneRange(milestone, drugOrderList, startDate)) {
-                flowsheet.addFlowSheetData(concept, ColourCode.GREEN.getColourCode());
+                return ColourCode.GREEN.getColourCode();
             } else if (dateWithAddedDays(startDate, milestone.getMax()).after(new Date())) {
-                flowsheet.addFlowSheetData(concept, ColourCode.YELLOW.getColourCode());
+                return ColourCode.YELLOW.getColourCode();
             } else {
-                flowsheet.addFlowSheetData(concept, ColourCode.PURPLE.getColourCode());
+                return ColourCode.PURPLE.getColourCode();
             }
         } else {
-            flowsheet.addFlowSheetData(concept, ColourCode.GREY.getColourCode());
+            return ColourCode.GREY.getColourCode();
         }
+    }
+
+    private String getColorCodeForGroupConcepts(FlowsheetMilestone milestone, Boolean conceptRequiredForMilestone, Set<String> concepts, Map<String, List<BahmniDrugOrder>> conceptToDrugMap, Date startDate) {
+        if(conceptRequiredForMilestone) {
+            Set<String> colorCodes = new HashSet<>();
+            for(String concept : concepts) {
+                colorCodes.add(getColorCodeForSingleConcepts(milestone, true, conceptToDrugMap.get(concept), startDate));
+            }
+            return colorCodeStrategy(colorCodes);
+        }
+        return ColourCode.GREY.getColourCode();
     }
 
     private boolean isDrugPresentInMilestoneRange(FlowsheetMilestone milestone, List<BahmniDrugOrder> drugOrderList, Date startDate) {
@@ -83,7 +106,9 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
         return false;
     }
 
-    private Map<String, List<BahmniDrugOrder>> getConceptToDrugMap(List<BahmniDrugOrder> drugList) {
+    private Map<String, List<BahmniDrugOrder>> getConceptToDrugMap(FlowsheetConfig flowsheetConfig, String patientUuid, String patientProgramUuid) throws ParseException {
+        Set<String> allDrugConcepts = getAllConcepts(flowsheetConfig, FlowsheetConstant.DRUGS);
+        List<BahmniDrugOrder> drugList = bahmniDrugOrderService.getDrugOrders(patientUuid, null, getConceptObjects(allDrugConcepts), null, patientProgramUuid);
         Map<String, List<BahmniDrugOrder>> conceptToDrugMap = new LinkedHashMap<>();
         if (CollectionUtils.isEmpty(drugList)) {
             return new LinkedHashMap<>();

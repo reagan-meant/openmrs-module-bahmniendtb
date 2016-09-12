@@ -6,22 +6,15 @@ import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
-import org.openmrs.module.endtb.flowsheet.constants.FlowsheetContant;
+import org.openmrs.module.endtb.flowsheet.constants.FlowsheetConstant;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
-import org.openmrs.module.endtb.flowsheet.models.FlowsheetEntities;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetConfig;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class FlowsheetObsMapper extends FlowsheetMapper {
@@ -33,24 +26,49 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
 
     @Override
     public void map(Flowsheet flowsheet, FlowsheetConfig flowsheetConfig, String patientUuid, String patientProgramUuid, Date startDate) throws ParseException {
-        Set<String> allObsConcepts = getAllUniqueFlowsheetConcepts(flowsheetConfig, FlowsheetContant.CLINICAL);
-        createBasicFlowsheet(flowsheet, flowsheetConfig, allObsConcepts);
+        String typeOfConcepts = FlowsheetConstant.CLINICAL;
+        Set<String> singleConcepts = getAllSingleConceptsFromFlowsheetConfig(flowsheetConfig, typeOfConcepts);
+        Map<String, Set<String>> groupConcepts = getAllGroupConceptsFromFlowsheetConfig(flowsheetConfig, typeOfConcepts);
+
+        createBasicFlowsheet(flowsheet, flowsheetConfig, typeOfConcepts);
         if (startDate == null) {
             return;
         }
-        List<Obs> obsList = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, new ArrayList<String>(allObsConcepts), null, null, startDate, null);
-        Map<String, List<Obs>> conceptToObsMap = getConceptToObsMap(obsList);
 
-        Set<String> commonConcepts = getAllConceptsFromFlowsheetConcepts(flowsheetConfig.getFlowsheetEntities());
+        Map<String, List<Obs>> conceptToObsMap = getConceptToObsMap(flowsheetConfig, patientProgramUuid, startDate);
+
+        Set<String> commonSingleConcepts = getSingleConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities(), typeOfConcepts);
+        Map<String, Set<String>> commonGroupConcepts = getGroupConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities(), typeOfConcepts);
+
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
-            Set<String> milestoneConcepts = getAllConceptsFromFlowsheetConcepts(milestone.getFlowsheetEntities());
-            for (String concept : allObsConcepts) {
-                setObsMilestoneColourCode(flowsheet, commonConcepts, milestoneConcepts, milestone, concept, conceptToObsMap.get(concept), startDate);
-            }
+            mapSingleConcept(flowsheet, milestone, singleConcepts, conceptToObsMap, commonSingleConcepts, typeOfConcepts, startDate);
+            mapGroupConcept(flowsheet, milestone, groupConcepts, conceptToObsMap, commonGroupConcepts, typeOfConcepts, startDate);
         }
     }
 
-    private Map<String, List<Obs>> getConceptToObsMap(List<Obs> obsList) {
+    private void mapGroupConcept(Flowsheet flowsheet, FlowsheetMilestone milestone, Map<String, Set<String>> groupConcepts, Map<String, List<Obs>> conceptToObsMap, Map<String, Set<String>> commonGroupConcepts, String typeOfConcepts, Date startDate) {
+        Map<String, Set<String>> groupConceptsRequiredForMilestone = getGroupConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities(), typeOfConcepts);
+        groupConceptsRequiredForMilestone.putAll(commonGroupConcepts);
+        for (Map.Entry<String, Set<String>> groupConceptEntry : groupConcepts.entrySet()) {
+            boolean conceptRequiredForMilestone = groupConceptsRequiredForMilestone.containsKey(groupConceptEntry.getKey());
+            String colorCodeForGroupConcept = getColorCodeForGroupConcept(milestone, conceptRequiredForMilestone, groupConceptEntry.getValue(), conceptToObsMap, startDate);
+            flowsheet.addFlowSheetData(groupConceptEntry.getKey(), colorCodeForGroupConcept);
+        }
+    }
+
+    private void mapSingleConcept(Flowsheet flowsheet, FlowsheetMilestone milestone, Set<String> singleConcepts, Map<String, List<Obs>> conceptToObsMap, Set<String> commonSingleConcepts, String typeOfConcepts, Date startDate) {
+        Set<String> singleConceptsRequiredForMilestone = getSingleConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities(), typeOfConcepts);
+        singleConceptsRequiredForMilestone.addAll(commonSingleConcepts);
+        for (String concept : singleConcepts) {
+            boolean conceptRequiredForMilestone = singleConceptsRequiredForMilestone.contains(concept);
+            String colorCodeForSingleConcept = getColorCodeForSingleConcept(milestone, conceptRequiredForMilestone, conceptToObsMap.get(concept), startDate);
+            flowsheet.addFlowSheetData(concept, colorCodeForSingleConcept);
+        }
+    }
+
+    private Map<String, List<Obs>> getConceptToObsMap(FlowsheetConfig flowsheetConfig, String patientProgramUuid, Date startDate) {
+        Set<String> allObsConcepts = getAllConcepts(flowsheetConfig, FlowsheetConstant.CLINICAL);
+        List<Obs> obsList = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, new ArrayList<>(allObsConcepts), null, null, startDate, null);
         Map<String, List<Obs>> conceptToObsMap = new LinkedHashMap<>();
         if (CollectionUtils.isEmpty(obsList)) {
             return new LinkedHashMap<>();
@@ -66,28 +84,29 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
         return conceptToObsMap;
     }
 
-    private Set<String> getAllConceptsFromFlowsheetConcepts(FlowsheetEntities flowsheetEntities) {
-        Set<String> concepts = new HashSet<>();
-        if (flowsheetEntities != null) {
-            concepts.addAll(getAllFlowsheetConcepts(flowsheetEntities.getClinicalConcepts()));
-        }
-        return concepts;
-    }
-
-    private void setObsMilestoneColourCode(Flowsheet flowsheet, Set<String> flowsheetCommonConcepts,
-                                           Set<String> milestoneConcepts, FlowsheetMilestone milestone,
-                                           String concept, List<Obs> obsList, Date startDate) {
-        if (flowsheetCommonConcepts.contains(concept) || milestoneConcepts.contains(concept)) {
+    private String getColorCodeForSingleConcept(FlowsheetMilestone milestone, Boolean conceptRequiredForMilestone, List<Obs> obsList, Date startDate) {
+        if (conceptRequiredForMilestone) {
             if (isConceptPresentInMilestoneRange(milestone, startDate, obsList)) {
-                flowsheet.addFlowSheetData(concept, ColourCode.GREEN.getColourCode());
+                return ColourCode.GREEN.getColourCode();
             } else if (dateWithAddedDays(startDate, milestone.getMax()).before(new Date())) {
-                flowsheet.addFlowSheetData(concept, ColourCode.PURPLE.getColourCode());
+                return ColourCode.PURPLE.getColourCode();
             } else {
-                flowsheet.addFlowSheetData(concept, ColourCode.YELLOW.getColourCode());
+                return ColourCode.YELLOW.getColourCode();
             }
         } else {
-            flowsheet.addFlowSheetData(concept, ColourCode.GREY.getColourCode());
+            return ColourCode.GREY.getColourCode();
         }
+    }
+
+    private String getColorCodeForGroupConcept(FlowsheetMilestone milestone, Boolean conceptRequiredForMilestone, Set<String> concepts, Map<String, List<Obs>> conceptToObsMap, Date startDate) {
+        if (conceptRequiredForMilestone) {
+            Set<String> colorCodes = new HashSet<>();
+            for (String concept : concepts) {
+                colorCodes.add(getColorCodeForSingleConcept(milestone, true, conceptToObsMap.get(concept), startDate));
+            }
+            return colorCodeStrategy(colorCodes);
+        }
+        return ColourCode.GREY.getColourCode();
     }
 
     private boolean isConceptPresentInMilestoneRange(FlowsheetMilestone milestone, Date startDate, List<Obs> obsList) {

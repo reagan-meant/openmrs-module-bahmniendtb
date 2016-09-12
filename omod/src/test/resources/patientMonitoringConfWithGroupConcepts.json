@@ -9,7 +9,7 @@
           "singleConcepts": [
             "Baseline, Prison"
           ],
-          "groupConcepts": {}
+          "groupConcepts": {"group1" : ["Height (cm)", "Weight (kg)"]}
         },
         "bacteriology": {
           "singleConcepts": [
@@ -57,6 +57,5 @@
       "groupConcepts": {}
     }
   },
-  "startDateConcept": "TUBERCULOSIS DRUG TREATMENT START DATE",
-  "drug": ["Del", "Bel"]
+  "startDateConcept": "TUBERCULOSIS DRUG TREATMENT START DATE"
 }

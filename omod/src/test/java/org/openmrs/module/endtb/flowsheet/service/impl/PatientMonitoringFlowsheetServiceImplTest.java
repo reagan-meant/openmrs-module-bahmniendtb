@@ -6,6 +6,8 @@ import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.openmrs.Concept;
+import org.openmrs.ConceptName;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetDrugMapper;
@@ -14,14 +16,9 @@ import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetObsMapper;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.service.PatientMonitoringFlowsheetService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -90,6 +87,30 @@ public class PatientMonitoringFlowsheetServiceImplTest {
         when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs)).thenReturn(null);
         when(bahmniDrugOrderService.getDrugOrders(any(String.class), any(Boolean.class), any(Set.class), any(Set.class), any(String.class))).thenReturn(null);
         Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", "src/test/resources/patientMonitoringConf.json");
+        Flowsheet expectedFlowsheet = new Flowsheet();
+        expectedFlowsheet.setFlowsheetHeader(flowsheetHeader);
+        expectedFlowsheet.setFlowsheetData(flowsheetData);
+        assertTrue(actualFlowsheet.equals(expectedFlowsheet));
+    }
+
+    @Test
+    public void shouldReturnFlowsheetForBothSingleConceptsAndGroupConcepts() throws Exception {
+        Set<String> flowsheetHeader = new LinkedHashSet<>();
+        flowsheetHeader.add("M1");
+        flowsheetHeader.add("M2");
+        flowsheetHeader.add("M3");
+        Map<String, List<String>> flowsheetData = new LinkedHashMap<>();
+        flowsheetData.put("Weight (kg)", Arrays.asList("yellow", "yellow", "yellow"));
+        flowsheetData.put("Height (cm)", Arrays.asList("yellow", "yellow", "yellow"));
+        flowsheetData.put("Baseline, Prison", Arrays.asList("yellow", "grey", "grey"));
+        flowsheetData.put("group1", Arrays.asList("yellow", "grey", "grey"));
+        flowsheetData.put("Isoniazid", Arrays.asList("yellow", "grey", "grey"));
+        flowsheetData.put("Delamanid", Arrays.asList("yellow", "yellow", "yellow"));
+        Obs obs = new Obs();
+        obs.setValueDate(new Date());
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs)).thenReturn(null);
+        when(bahmniDrugOrderService.getDrugOrders(any(String.class), any(Boolean.class), any(Set.class), any(Set.class), any(String.class))).thenReturn(null);
+        Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", "src/test/resources/patientMonitoringConfWithGroupConcepts.json");
         Flowsheet expectedFlowsheet = new Flowsheet();
         expectedFlowsheet.setFlowsheetHeader(flowsheetHeader);
         expectedFlowsheet.setFlowsheetData(flowsheetData);

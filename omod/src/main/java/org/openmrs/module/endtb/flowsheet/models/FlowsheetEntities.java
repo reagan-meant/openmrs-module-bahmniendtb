@@ -1,14 +1,7 @@
 package org.openmrs.module.endtb.flowsheet.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.org.apache.bcel.internal.generic.SWITCH;
-import org.apache.commons.collections.CollectionUtils;
-import org.openmrs.module.endtb.flowsheet.constants.FlowsheetContant;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.openmrs.module.endtb.flowsheet.constants.FlowsheetConstant;
 
 public class FlowsheetEntities {
     private FlowsheetConcept clinicalConcepts;
@@ -19,7 +12,7 @@ public class FlowsheetEntities {
         return this.clinicalConcepts;
     }
 
-    @JsonProperty(FlowsheetContant.CLINICAL)
+    @JsonProperty(FlowsheetConstant.CLINICAL)
     public void setClinicalConcepts(FlowsheetConcept clinicalConcepts) {
         this.clinicalConcepts = clinicalConcepts;
     }
@@ -28,7 +21,7 @@ public class FlowsheetEntities {
         return this.bacteriologyConcepts;
     }
 
-    @JsonProperty(FlowsheetContant.BACTERIOLOGY)
+    @JsonProperty(FlowsheetConstant.BACTERIOLOGY)
     public void setBacteriologyConcepts(FlowsheetConcept bacteriologyConcepts) {
         this.bacteriologyConcepts = bacteriologyConcepts;
     }
@@ -37,7 +30,7 @@ public class FlowsheetEntities {
         return this.drugConcepts;
     }
 
-    @JsonProperty(FlowsheetContant.DRUGS)
+    @JsonProperty(FlowsheetConstant.DRUGS)
     public void setDrugConcepts(FlowsheetConcept drugConcepts) {
         this.drugConcepts = drugConcepts;
     }
@@ -45,13 +38,13 @@ public class FlowsheetEntities {
     public FlowsheetConcept getFlowSheetConceptByType(String type) {
         FlowsheetConcept flowsheetConcept = null;
         switch (type) {
-            case FlowsheetContant.CLINICAL:
+            case FlowsheetConstant.CLINICAL:
                 flowsheetConcept = getClinicalConcepts();
                 break;
-            case FlowsheetContant.BACTERIOLOGY:
+            case FlowsheetConstant.BACTERIOLOGY:
                 flowsheetConcept = getBacteriologyConcepts();
                 break;
-            case FlowsheetContant.DRUGS:
+            case FlowsheetConstant.DRUGS:
                 flowsheetConcept = getDrugConcepts();
                 break;
         }

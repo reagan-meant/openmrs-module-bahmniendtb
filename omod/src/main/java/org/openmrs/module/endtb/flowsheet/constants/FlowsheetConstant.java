@@ -1,7 +1,7 @@
 package org.openmrs.module.endtb.flowsheet.constants;
 
-public class FlowsheetContant {
-    private FlowsheetContant() {
+public class FlowsheetConstant {
+    private FlowsheetConstant() {
     }
 
     public static final String MILESTONES = "milestones";

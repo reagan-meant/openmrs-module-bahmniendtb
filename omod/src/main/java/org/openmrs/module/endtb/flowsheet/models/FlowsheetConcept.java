@@ -2,7 +2,7 @@ package org.openmrs.module.endtb.flowsheet.models;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.openmrs.module.endtb.flowsheet.constants.FlowsheetContant;
+import org.openmrs.module.endtb.flowsheet.constants.FlowsheetConstant;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -21,7 +21,7 @@ public class FlowsheetConcept {
         return this.singleConcepts;
     }
 
-    @JsonProperty(FlowsheetContant.SINGLE_CONCEPTS)
+    @JsonProperty(FlowsheetConstant.SINGLE_CONCEPTS)
     public void setSingleConcepts(Set<String> singleConcepts) {
         this.singleConcepts = singleConcepts;
     }
@@ -33,7 +33,7 @@ public class FlowsheetConcept {
         return this.groupConcepts;
     }
 
-    @JsonProperty(FlowsheetContant.GROUP_CONCEPTS)
+    @JsonProperty(FlowsheetConstant.GROUP_CONCEPTS)
     public void setGroupConcepts(Map<String, Set<String>> groupConcepts) {
         this.groupConcepts = groupConcepts;
     }
