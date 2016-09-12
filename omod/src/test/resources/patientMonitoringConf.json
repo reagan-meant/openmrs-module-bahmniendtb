@@ -57,6 +57,5 @@
       "groupConcepts": {}
     }
   },
-  "startDateConcept": "TUBERCULOSIS DRUG TREATMENT START DATE",
-  "drug": ["Del", "Bel"]
+  "startDateConcept": "TUBERCULOSIS DRUG TREATMENT START DATE"
 }
