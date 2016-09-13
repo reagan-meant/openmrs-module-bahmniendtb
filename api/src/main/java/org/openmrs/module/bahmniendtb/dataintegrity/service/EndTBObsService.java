@@ -12,6 +12,8 @@ public interface EndTBObsService {
 
     List<Obs> getObsForEpisode(Episode episode, String concepTname);
 
+    List<Obs> getAllObsForEpisode(Episode episode, String conceptName);
+
     Obs getChildObsByConcept(Obs parentObs, Concept childConceptName);
 
     List<Obs> getChildObsByConcepts(Obs parentObs, List<Concept> childConcept);

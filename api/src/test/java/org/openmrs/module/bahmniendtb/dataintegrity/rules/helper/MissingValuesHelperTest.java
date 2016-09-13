@@ -78,7 +78,7 @@ public class MissingValuesHelperTest {
         when(conceptService.getConcept(eq("TargetQuestion"))).thenReturn(concept1);
         when(dataintegrityRuleService.getEpisodesWithRequiredObs(Arrays.asList(concept1,  concept2))).thenReturn(episodeSet);
 
-        when(endTBObsService.getObsForEpisode(eq(episode), any(String.class))).thenReturn(Arrays.asList(obs));
+        when(endTBObsService.getAllObsForEpisode(eq(episode), any(String.class))).thenReturn(Arrays.asList(obs));
 
         when(endTBObsService.getChildObsByConcepts(any(Obs.class), any(List.class))).thenReturn(Arrays.asList(obs));
 
@@ -104,7 +104,7 @@ public class MissingValuesHelperTest {
         when(conceptService.getConcept(eq("TargetQuestion"))).thenReturn(concept1);
         when(dataintegrityRuleService.getEpisodesWithRequiredObs(Arrays.asList(concept1,  concept2))).thenReturn(episodeSet);
 
-        when(endTBObsService.getObsForEpisode(eq(episode), any(String.class))).thenReturn(Arrays.asList(obs, obs, obs, obs));
+        when(endTBObsService.getAllObsForEpisode(eq(episode), any(String.class))).thenReturn(Arrays.asList(obs, obs, obs, obs));
 
         when(endTBObsService.getChildObsByConcepts(any(Obs.class), any(List.class))).thenReturn(Arrays.asList(obs));
 

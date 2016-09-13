@@ -43,6 +43,23 @@ public class EndTBObsServiceImpl implements EndTBObsService {
     }
 
     @Override
+    public List<Obs> getAllObsForEpisode(Episode episode, String conceptName) {
+        List<Obs> obsList = new ArrayList<>();
+
+        for (Encounter encounter : episode.getEncounters()) {
+            Set<Obs> obsTopLevelList = encounter.getObsAtTopLevel(false);
+            List<Obs> obsForEncounter = new ArrayList<>();
+
+            for (Obs obs : obsTopLevelList)
+                if (obs.getConcept().getName().getName().equals(conceptName))
+                    obsForEncounter.add(obs);
+
+            if (obsForEncounter != null) obsList.addAll(obsForEncounter);
+        }
+        return obsList;
+    }
+
+    @Override
     public Obs getChildObsByConcept(Obs parentObs, Concept childConcept) {
         Set<Obs> groupMembers = parentObs.getGroupMembers();
         if (groupMembers == null) return null;

@@ -42,7 +42,7 @@ public class MissingValuesHelper {
 
         for(Episode episode : episodesOfInterest) {
             List<Obs> formObs
-                    = endTBObsService.getObsForEpisode(episode, parentTemplateConcept);
+                    = endTBObsService.getAllObsForEpisode(episode, parentTemplateConcept);
 
             for(Obs form : formObs) {
                 List<Obs> requiredObsForForm = endTBObsService.getChildObsByConcepts(form, requiredConcepts);
