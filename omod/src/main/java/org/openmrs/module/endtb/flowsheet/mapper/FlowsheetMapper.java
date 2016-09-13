@@ -1,6 +1,5 @@
 package org.openmrs.module.endtb.flowsheet.mapper;
 
-import org.apache.commons.collections.MapUtils;
 import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Concept;
@@ -17,6 +16,14 @@ public abstract class FlowsheetMapper {
     protected BahmniDrugOrderService bahmniDrugOrderService;
     protected ConceptService conceptService;
 
+    protected FlowsheetConfig flowsheetConfig;
+    protected Flowsheet flowsheet;
+    protected String patientUuid;
+    protected String patientProgramUuid;
+    protected String conceptType;
+    protected Date startDate;
+    protected Date endDate;
+
     public FlowsheetMapper(ObsDao obsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
         this.obsDao = obsDao;
         this.bahmniDrugOrderService = bahmniDrugOrderService;
@@ -24,8 +31,18 @@ public abstract class FlowsheetMapper {
     }
 
 
-    public abstract void map(Flowsheet flowsheet, FlowsheetConfig flowsheetConfig, String patientUuid, String patientProgramUuid, Date startDate) throws ParseException;
+    protected abstract void createFlowSheet() throws ParseException;
 
+    public void map(Flowsheet flowsheet, FlowsheetConfig flowsheetConfig, String patientUuid, String patientProgramUuid, Date startDate, Date endDate) throws ParseException {
+        this.flowsheet = flowsheet;
+        this.flowsheetConfig = flowsheetConfig;
+        this.patientUuid = patientUuid;
+        this.patientProgramUuid = patientProgramUuid;
+        this.startDate = startDate;
+        this.endDate = endDate;
+
+        createFlowSheet();
+    }
 
     protected Set<Concept> getConceptObjects(Set<String> conceptNames) {
         Set<Concept> conceptsList = new HashSet<>();
@@ -42,51 +59,51 @@ public abstract class FlowsheetMapper {
         return calendar.getTime();
     }
 
-    protected Set<String> getAllConcepts(FlowsheetConfig flowsheetConfig, String type) {
+    protected Set<String> getAllConcepts() {
         Set<String> concepts = new HashSet<>();
-        concepts.addAll(getAllSingleConceptsFromFlowsheetConfig(flowsheetConfig, type));
-        for (Map.Entry<String, Set<String>> entry : getAllGroupConceptsFromFlowsheetConfig(flowsheetConfig, type).entrySet()) {
+        concepts.addAll(getAllSingleConceptsFromFlowsheetConfig());
+        for (Map.Entry<String, Set<String>> entry : getAllGroupConceptsFromFlowsheetConfig().entrySet()) {
            concepts.addAll(entry.getValue());
         }
         return concepts;
     }
 
-    protected Set<String> getAllSingleConceptsFromFlowsheetConfig(FlowsheetConfig flowsheetConfig, String type) {
+    protected Set<String> getAllSingleConceptsFromFlowsheetConfig() {
         Set<String> concepts = new HashSet<>();
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
-            concepts.addAll(getSingleConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities(), type));
+            concepts.addAll(getSingleConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities()));
         }
-        concepts.addAll(getSingleConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities(), type));
+        concepts.addAll(getSingleConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities()));
         return concepts;
     }
 
-    protected Set<String> getSingleConceptsFromFlowsheetEntities(FlowsheetEntities flowsheetEntities, String type) {
+    protected Set<String> getSingleConceptsFromFlowsheetEntities(FlowsheetEntities flowsheetEntities) {
         if(flowsheetEntities != null) {
-            return flowsheetEntities.getFlowSheetConceptByType(type).getSingleConcepts();
+            return flowsheetEntities.getFlowSheetConceptByType(conceptType).getSingleConcepts();
         }
         return new LinkedHashSet<>();
     }
 
-    protected Map<String, Set<String>> getAllGroupConceptsFromFlowsheetConfig(FlowsheetConfig flowsheetConfig, String type) {
+    protected Map<String, Set<String>> getAllGroupConceptsFromFlowsheetConfig() {
         Map<String, Set<String>> concepts = new LinkedHashMap<>();
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
-            concepts.putAll(getGroupConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities(), type));
+            concepts.putAll(getGroupConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities()));
         }
-        concepts.putAll(getGroupConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities(), type));
+        concepts.putAll(getGroupConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities()));
         return concepts;
     }
 
-    protected Map<String, Set<String>> getGroupConceptsFromFlowsheetEntities(FlowsheetEntities flowsheetEntities, String type) {
+    protected Map<String, Set<String>> getGroupConceptsFromFlowsheetEntities(FlowsheetEntities flowsheetEntities) {
         if(flowsheetEntities != null) {
-            return flowsheetEntities.getFlowSheetConceptByType(type).getGroupConcepts();
+            return flowsheetEntities.getFlowSheetConceptByType(conceptType).getGroupConcepts();
         }
         return new LinkedHashMap<>();
     }
 
-    protected FlowsheetConcept getFlowsheetConceptFromFlowsheetConfig(FlowsheetConfig flowsheetConfig, String type) {
+    protected FlowsheetConcept getFlowsheetConceptFromFlowsheetConfig() {
         FlowsheetConcept flowsheetConcept = new FlowsheetConcept();
-        flowsheetConcept.setSingleConcepts(getAllSingleConceptsFromFlowsheetConfig(flowsheetConfig, type));
-        flowsheetConcept.setGroupConcepts(getAllGroupConceptsFromFlowsheetConfig(flowsheetConfig, type));
+        flowsheetConcept.setSingleConcepts(getAllSingleConceptsFromFlowsheetConfig());
+        flowsheetConcept.setGroupConcepts(getAllGroupConceptsFromFlowsheetConfig());
         return flowsheetConcept;
     }
 
@@ -100,8 +117,8 @@ public abstract class FlowsheetMapper {
         }
     }
 
-    protected void createBasicFlowsheet(Flowsheet flowsheet, FlowsheetConfig flowsheetConfig, String type) {
-        FlowsheetConcept flowsheetConcept = getFlowsheetConceptFromFlowsheetConfig(flowsheetConfig, type);
+    protected void createBasicFlowsheet() {
+        FlowsheetConcept flowsheetConcept = getFlowsheetConceptFromFlowsheetConfig();
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
             flowsheet.addFlowSheetHeader(milestone.getName());
         }

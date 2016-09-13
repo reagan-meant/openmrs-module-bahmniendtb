@@ -39,20 +39,26 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         if (CollectionUtils.isNotEmpty(startDateConceptObs)) {
             startDate = startDateConceptObs.get(0).getValueDate();
         }
+        List<Obs> endDateConceptObs = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getEndDateConcept()), null, null, null, null);
+        Date endDate = new Date();
+        if(CollectionUtils.isNotEmpty(endDateConceptObs)) {
+            endDate = endDateConceptObs.get(0).getValueDatetime();
+        }
+
         flowsheet.setStartDate(startDate);
         for (FlowsheetMapper flowsheetMapper : flowsheetMappers) {
-            flowsheetMapper.map(flowsheet, flowsheetConfig, patientUuid, patientProgramUuid, startDate);
+            flowsheetMapper.map(flowsheet, flowsheetConfig, patientUuid, patientProgramUuid, startDate, endDate);
         }
-        flowsheet.setCurrentMilestoneName(findCurrentMilestone(flowsheetConfig, startDate));
+        flowsheet.setCurrentMilestoneName(findCurrentMilestone(flowsheetConfig, startDate, endDate));
         return flowsheet;
     }
 
-    private String findCurrentMilestone(FlowsheetConfig flowsheetConfig, Date startDate) {
+    private String findCurrentMilestone(FlowsheetConfig flowsheetConfig, Date startDate, Date endDate) {
         String currentMilestone = "";
         if(null != startDate && CollectionUtils.isNotEmpty(flowsheetConfig.getFlowsheetMilestones())) {
             for(FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
-                if(dateWithAddedDays(startDate, milestone.getMin()).before(new Date()) &&
-                        dateWithAddedDays(startDate, milestone.getMax()).after(new Date())) {
+                if(dateWithAddedDays(startDate, milestone.getMin()).before(endDate) &&
+                        dateWithAddedDays(startDate, milestone.getMax()).after(endDate)) {
                     currentMilestone = milestone.getName();
                     break;
                 }

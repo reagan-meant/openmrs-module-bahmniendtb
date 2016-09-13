@@ -192,4 +192,12 @@
         </insert>
     </changeSet>
 
+    <changeSet id="endtb-patientMonitoring-201609131630" author="Vikash, Sourav">
+        <comment>Configure URL for patientMonitoringTool</comment>
+        <sql>
+            INSERT INTO global_property(property, property_value, description, uuid)
+            VALUES('endtb.patientMonitoring.configLocation', '/var/www/bahmni_config/openmrs/apps/clinical/patientMonitoringConf.json', 'config url for patientMonitoring', uuid())
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

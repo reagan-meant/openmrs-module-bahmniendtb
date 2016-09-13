@@ -10,6 +10,7 @@ public class FlowsheetConfig {
     private List<FlowsheetMilestone> flowsheetMilestones;
     private FlowsheetEntities flowsheetEntities;
     private String startDateConcept;
+    private String endDateConcept;
 
     public List<FlowsheetMilestone> getFlowsheetMilestones() {
         if(null == this.flowsheetMilestones) {
@@ -39,5 +40,14 @@ public class FlowsheetConfig {
     @JsonProperty(FlowsheetConstant.START_DATE_CONCEPT)
     public void setStartDateConcept(String startDateConcept) {
         this.startDateConcept = startDateConcept;
+    }
+
+    public String getEndDateConcept() {
+        return endDateConcept;
+    }
+
+    @JsonProperty(FlowsheetConstant.END_DATE_CONCEPT)
+    public void setEndDateConcept(String endDateConcept) {
+        this.endDateConcept = endDateConcept;
     }
 }
