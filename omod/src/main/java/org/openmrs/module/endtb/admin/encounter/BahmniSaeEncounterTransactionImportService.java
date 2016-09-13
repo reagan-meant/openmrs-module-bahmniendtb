@@ -64,10 +64,10 @@ public class BahmniSaeEncounterTransactionImportService {
                                 && groupMembers.get(SAETemplateConstants.OTHER_SAE_TERM).equals(saeEncounterRow.otherSaeTerm)) {
                             observation = bahmniObservation;
                         }
+                    } else {
+                        observation = bahmniObservation;
                         break;
                     }
-                    observation = bahmniObservation;
-                    break;
                 }
             }
         }

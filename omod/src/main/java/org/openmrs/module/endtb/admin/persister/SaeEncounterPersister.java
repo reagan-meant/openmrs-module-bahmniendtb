@@ -162,6 +162,10 @@ public class SaeEncounterPersister implements EntityPersister<SaeEncounterRow> {
     }
 
     private Messages noMatchingSaeFormFound(SaeEncounterRow saeEncounterRow) {
-        return new Messages("No matching sae form found with sae term:'" + saeEncounterRow.saeTerm + "' and sae onset date: '" + saeEncounterRow.dateOfSaeOnset + "'");
+        if(saeEncounterRow.saeTerm.equalsIgnoreCase("Other")) {
+            return new Messages("No matching sae form found with 'sae term' as 'Other' and 'other sae term' as '" + saeEncounterRow.otherSaeTerm + "' and 'sae onset date' as '" + saeEncounterRow.dateOfSaeOnset + "'");
+        } else {
+            return new Messages("No matching sae form found 'with sae term' as '" + saeEncounterRow.saeTerm + "' and 'sae onset date' as '" + saeEncounterRow.dateOfSaeOnset + "'");
+        }
     }
 }
