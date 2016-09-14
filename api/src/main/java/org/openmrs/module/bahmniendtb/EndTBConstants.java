@@ -75,4 +75,7 @@ public class EndTBConstants {
     public static final String BASELINE_DEFAULT_COMMENT = "The Baseline form is not filled";
     public static final String CULTURE_STATUS_MISSING_DEFAULT_COMMENT = "Their is no bacteriology culture for this patient in the first month";
     public static final String FIRST_LINE_RESISTANCE_RESULT_COMMENT = "No results by the end of first month of treatment.";
+
+
+    public static final String PROGRAM_ATTRIBUTE_REG_NO = "Registration Number";
 }

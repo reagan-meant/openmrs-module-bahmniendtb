@@ -1,13 +1,12 @@
 package org.openmrs.module.endtb.flowsheet.service.impl;
 
 import org.bahmni.module.bahmnicore.dao.ObsDao;
+import org.bahmni.module.bahmnicore.dao.OrderDao;
 import org.bahmni.module.bahmnicore.dao.impl.ObsDaoImpl;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.openmrs.Concept;
-import org.openmrs.ConceptName;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetDrugMapper;
@@ -16,9 +15,14 @@ import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetObsMapper;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.service.PatientMonitoringFlowsheetService;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -34,6 +38,8 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     private BahmniDrugOrderService bahmniDrugOrderService;
     @Mock
     private ConceptService conceptService;
+    @Mock
+    private OrderDao orderDao;
 
     private FlowsheetObsMapper flowsheetObsMapper;
     private FlowsheetDrugMapper flowsheetDrugMapper;
@@ -45,7 +51,7 @@ public class PatientMonitoringFlowsheetServiceImplTest {
         flowsheetObsMapper = new FlowsheetObsMapper(obsDao, bahmniDrugOrderService, conceptService);
         flowsheetDrugMapper = new FlowsheetDrugMapper(obsDao, bahmniDrugOrderService, conceptService);
         flowsheetMappers = Arrays.asList(flowsheetObsMapper, flowsheetDrugMapper);
-        patientMonitoringFlowsheetService = new PatientMonitoringFlowsheetServiceImpl(obsDao, flowsheetMappers);
+        patientMonitoringFlowsheetService = new PatientMonitoringFlowsheetServiceImpl(obsDao, flowsheetMappers , orderDao);
     }
 
     @Test
