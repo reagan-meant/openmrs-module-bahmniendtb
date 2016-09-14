@@ -9,12 +9,20 @@ import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
 import org.openmrs.module.endtb.flowsheet.constants.FlowsheetConstant;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
+@Scope("prototype")
 public class FlowsheetDrugMapper extends FlowsheetMapper {
 
     @Autowired
@@ -43,7 +51,7 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
         }
     }
 
-    private void mapGroupConcept(FlowsheetMilestone milestone, Map<String, Set<String>> groupConcepts, Map<String, List<BahmniDrugOrder>> conceptToDrugMap, Map<String, Set<String>> commonGroupConcepts) {
+    private void mapGroupConcept(FlowsheetMilestone milestone, Map<String, Set<String>> groupConcepts, Map<String, List<BahmniDrugOrder>> conceptToDrugMap, Map<String, Set<String>> commonGroupConcepts) throws ParseException {
         Map<String, Set<String>> groupConceptsRequiredForMilestone = getGroupConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities());
         groupConceptsRequiredForMilestone.putAll(commonGroupConcepts);
         for(Map.Entry<String, Set<String>> groupConceptEntry : groupConcepts.entrySet()) {
@@ -53,35 +61,23 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
         }
     }
 
-    private void mapSingleConcept(FlowsheetMilestone milestone, Set<String> singleConcepts, Map<String, List<BahmniDrugOrder>> conceptToDrugMap, Set<String> commonSingleConcepts) {
+    private void mapSingleConcept(FlowsheetMilestone milestone, Set<String> singleConcepts, Map<String, List<BahmniDrugOrder>> conceptToDrugMap, Set<String> commonSingleConcepts) throws ParseException {
         Set<String> singleConceptsRequiredForMilestone = getSingleConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities());
         singleConceptsRequiredForMilestone.addAll(commonSingleConcepts);
         for (String concept : singleConcepts) {
             boolean conceptRequiredForMilestone = singleConceptsRequiredForMilestone.contains(concept);
-            String colorCodeForSingleConcepts = getColorCodeForSingleConcepts(milestone, conceptRequiredForMilestone, conceptToDrugMap.get(concept));
+            boolean drugPresentInMilestoneRange = isDrugPresentInMilestoneRange(milestone, conceptToDrugMap.get(concept));
+            String colorCodeForSingleConcepts = getColorCodeForSingleConcepts(milestone, conceptRequiredForMilestone, drugPresentInMilestoneRange);
             flowsheet.addFlowSheetData(concept, colorCodeForSingleConcepts);
         }
     }
 
-    private String getColorCodeForSingleConcepts(FlowsheetMilestone milestone, Boolean conceptRequiredForMilestone, List<BahmniDrugOrder> drugOrderList) {
-        if (conceptRequiredForMilestone) {
-            if (isDrugPresentInMilestoneRange(milestone, drugOrderList)) {
-                return ColourCode.GREEN.getColourCode();
-            } else if (dateWithAddedDays(startDate, milestone.getMax()).after(endDate)) {
-                return ColourCode.YELLOW.getColourCode();
-            } else {
-                return ColourCode.PURPLE.getColourCode();
-            }
-        } else {
-            return ColourCode.GREY.getColourCode();
-        }
-    }
-
-    private String getColorCodeForGroupConcepts(FlowsheetMilestone milestone, Boolean conceptRequiredForMilestone, Set<String> concepts, Map<String, List<BahmniDrugOrder>> conceptToDrugMap) {
+    private String getColorCodeForGroupConcepts(FlowsheetMilestone milestone, Boolean conceptRequiredForMilestone, Set<String> concepts, Map<String, List<BahmniDrugOrder>> conceptToDrugMap) throws ParseException {
         if(conceptRequiredForMilestone) {
             Set<String> colorCodes = new HashSet<>();
             for(String concept : concepts) {
-                colorCodes.add(getColorCodeForSingleConcepts(milestone, true, conceptToDrugMap.get(concept)));
+                boolean drugPresentInMilestoneRange = isDrugPresentInMilestoneRange(milestone, conceptToDrugMap.get(concept));
+                colorCodes.add(getColorCodeForSingleConcepts(milestone, true, drugPresentInMilestoneRange));
             }
             return colorCodeStrategy(colorCodes);
         }

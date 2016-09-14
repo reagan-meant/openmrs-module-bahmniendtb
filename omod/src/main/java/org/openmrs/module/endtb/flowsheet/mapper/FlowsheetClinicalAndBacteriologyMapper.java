@@ -9,16 +9,23 @@ import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
 import org.openmrs.module.endtb.flowsheet.constants.FlowsheetConstant;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
-public class FlowsheetObsMapper extends FlowsheetMapper {
+@Scope("prototype")
+public class FlowsheetClinicalAndBacteriologyMapper extends FlowsheetMapper {
 
     @Autowired
-    public FlowsheetObsMapper(ObsDao obsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
+    public FlowsheetClinicalAndBacteriologyMapper(ObsDao obsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
         super(obsDao, bahmniDrugOrderService, conceptService);
         this.conceptTypes = new String[]{FlowsheetConstant.CLINICAL, FlowsheetConstant.BACTERIOLOGY};
     }
@@ -44,7 +51,7 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
         }
     }
 
-    private void mapGroupConcept(FlowsheetMilestone milestone, Map<String, Set<String>> groupConcepts, Map<String, List<Obs>> conceptToObsMap, Map<String, Set<String>> commonGroupConcepts) {
+    private void mapGroupConcept(FlowsheetMilestone milestone, Map<String, Set<String>> groupConcepts, Map<String, List<Obs>> conceptToObsMap, Map<String, Set<String>> commonGroupConcepts) throws ParseException {
         Map<String, Set<String>> groupConceptsRequiredForMilestone = getGroupConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities());
         groupConceptsRequiredForMilestone.putAll(commonGroupConcepts);
         for (Map.Entry<String, Set<String>> groupConceptEntry : groupConcepts.entrySet()) {
@@ -54,12 +61,13 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
         }
     }
 
-    private void mapSingleConcept(FlowsheetMilestone milestone, Set<String> singleConcepts, Map<String, List<Obs>> conceptToObsMap, Set<String> commonSingleConcepts) {
+    private void mapSingleConcept(FlowsheetMilestone milestone, Set<String> singleConcepts, Map<String, List<Obs>> conceptToObsMap, Set<String> commonSingleConcepts) throws ParseException {
         Set<String> singleConceptsRequiredForMilestone = getSingleConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities());
         singleConceptsRequiredForMilestone.addAll(commonSingleConcepts);
         for (String concept : singleConcepts) {
             boolean conceptRequiredForMilestone = singleConceptsRequiredForMilestone.contains(concept);
-            String colorCodeForSingleConcept = getColorCodeForSingleConcept(milestone, conceptRequiredForMilestone, conceptToObsMap.get(concept));
+            boolean conceptPresentInMilestoneRange = isConceptPresentInMilestoneRange(milestone, conceptToObsMap.get(concept));
+            String colorCodeForSingleConcept = getColorCodeForSingleConcepts(milestone, conceptRequiredForMilestone, conceptPresentInMilestoneRange);
             flowsheet.addFlowSheetData(concept, colorCodeForSingleConcept);
         }
     }
@@ -82,25 +90,12 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
         return conceptToObsMap;
     }
 
-    private String getColorCodeForSingleConcept(FlowsheetMilestone milestone, Boolean conceptRequiredForMilestone, List<Obs> obsList) {
-        if (conceptRequiredForMilestone) {
-            if (isConceptPresentInMilestoneRange(milestone, obsList)) {
-                return ColourCode.GREEN.getColourCode();
-            } else if (dateWithAddedDays(startDate, milestone.getMax()).before(endDate)) {
-                return ColourCode.PURPLE.getColourCode();
-            } else {
-                return ColourCode.YELLOW.getColourCode();
-            }
-        } else {
-            return ColourCode.GREY.getColourCode();
-        }
-    }
-
-    private String getColorCodeForGroupConcept(FlowsheetMilestone milestone, Boolean conceptRequiredForMilestone, Set<String> concepts, Map<String, List<Obs>> conceptToObsMap) {
+    private String getColorCodeForGroupConcept(FlowsheetMilestone milestone, Boolean conceptRequiredForMilestone, Set<String> concepts, Map<String, List<Obs>> conceptToObsMap) throws ParseException {
         if (conceptRequiredForMilestone) {
             Set<String> colorCodes = new HashSet<>();
             for (String concept : concepts) {
-                colorCodes.add(getColorCodeForSingleConcept(milestone, true, conceptToObsMap.get(concept)));
+                boolean conceptPresentInMilestoneRange = isConceptPresentInMilestoneRange(milestone, conceptToObsMap.get(concept));
+                colorCodes.add(getColorCodeForSingleConcepts(milestone, true, conceptPresentInMilestoneRange));
             }
             return colorCodeStrategy(colorCodes);
         }

@@ -11,7 +11,7 @@ import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetDrugMapper;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetMapper;
-import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetObsMapper;
+import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetClinicalAndBacteriologyMapper;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.service.PatientMonitoringFlowsheetService;
 
@@ -41,14 +41,14 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     @Mock
     private OrderDao orderDao;
 
-    private FlowsheetObsMapper flowsheetObsMapper;
+    private FlowsheetClinicalAndBacteriologyMapper flowsheetObsMapper;
     private FlowsheetDrugMapper flowsheetDrugMapper;
     private List<FlowsheetMapper> flowsheetMappers;
 
     @Before
     public void setUp() {
         initMocks(this);
-        flowsheetObsMapper = new FlowsheetObsMapper(obsDao, bahmniDrugOrderService, conceptService);
+        flowsheetObsMapper = new FlowsheetClinicalAndBacteriologyMapper(obsDao, bahmniDrugOrderService, conceptService);
         flowsheetDrugMapper = new FlowsheetDrugMapper(obsDao, bahmniDrugOrderService, conceptService);
         flowsheetMappers = Arrays.asList(flowsheetObsMapper, flowsheetDrugMapper);
         patientMonitoringFlowsheetService = new PatientMonitoringFlowsheetServiceImpl(obsDao, flowsheetMappers , orderDao);

@@ -5,10 +5,24 @@ import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
-import org.openmrs.module.endtb.flowsheet.models.*;
+import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
+import org.openmrs.module.endtb.flowsheet.models.FlowsheetConcept;
+import org.openmrs.module.endtb.flowsheet.models.FlowsheetConfig;
+import org.openmrs.module.endtb.flowsheet.models.FlowsheetEntities;
+import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
 
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class FlowsheetMapper {
 
@@ -50,6 +64,11 @@ public abstract class FlowsheetMapper {
             conceptsList.add(conceptService.getConcept(concept));
         }
         return conceptsList;
+    }
+
+    protected boolean isSameDate(Date date1, Date date2) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(date1).equals(dateFormat.format(date2));
     }
 
     protected Date dateWithAddedDays(Date date, Integer days) {
@@ -120,6 +139,21 @@ public abstract class FlowsheetMapper {
             return ColourCode.YELLOW.getColourCode();
         } else {
             return ColourCode.GREEN.getColourCode();
+        }
+    }
+
+    protected String getColorCodeForSingleConcepts(FlowsheetMilestone milestone, Boolean conceptRequiredForMilestone, Boolean conceptValueRecorded) throws ParseException {
+        if (conceptRequiredForMilestone) {
+            if (conceptValueRecorded) {
+                return ColourCode.GREEN.getColourCode();
+            } else if (dateWithAddedDays(startDate, milestone.getMax()).before(endDate) ||
+                    (dateWithAddedDays(startDate, milestone.getMin()).before(endDate) && !isSameDate(endDate, new Date()))) {
+                return ColourCode.PURPLE.getColourCode();
+            } else {
+                return ColourCode.YELLOW.getColourCode();
+            }
+        } else {
+            return ColourCode.GREY.getColourCode();
         }
     }
 
