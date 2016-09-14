@@ -1,10 +1,10 @@
 package org.openmrs.module.endtb.flowsheet.mapper;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.bahmniemrapi.drugorder.contract.BahmniDrugOrder;
+import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
 import org.openmrs.module.endtb.flowsheet.constants.FlowsheetConstant;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
@@ -26,8 +26,8 @@ import java.util.Set;
 public class FlowsheetDrugMapper extends FlowsheetMapper {
 
     @Autowired
-    public FlowsheetDrugMapper(ObsDao obsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
-        super(obsDao, bahmniDrugOrderService, conceptService);
+    public FlowsheetDrugMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
+        super(endTbObsDao, bahmniDrugOrderService, conceptService);
         this.conceptTypes = new String[]{FlowsheetConstant.DRUGS};
     }
 

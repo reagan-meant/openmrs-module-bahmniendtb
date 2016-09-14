@@ -1,10 +1,10 @@
 package org.openmrs.module.endtb.flowsheet.mapper;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
+import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
 import org.openmrs.module.endtb.flowsheet.constants.FlowsheetConstant;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
@@ -25,8 +25,8 @@ import java.util.Set;
 public class FlowsheetClinicalAndBacteriologyMapper extends FlowsheetMapper {
 
     @Autowired
-    public FlowsheetClinicalAndBacteriologyMapper(ObsDao obsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
-        super(obsDao, bahmniDrugOrderService, conceptService);
+    public FlowsheetClinicalAndBacteriologyMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
+        super(endTbObsDao, bahmniDrugOrderService, conceptService);
         this.conceptTypes = new String[]{FlowsheetConstant.CLINICAL, FlowsheetConstant.BACTERIOLOGY};
     }
 
@@ -74,7 +74,7 @@ public class FlowsheetClinicalAndBacteriologyMapper extends FlowsheetMapper {
 
     private Map<String, List<Obs>> getConceptToObsMap() {
         Set<String> allObsConcepts = getAllConcepts();
-        List<Obs> obsList = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, new ArrayList<>(allObsConcepts), null, null, startDate, null);
+        List<Obs> obsList = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, new ArrayList<>(allObsConcepts), null, null, startDate, null);
         Map<String, List<Obs>> conceptToObsMap = new LinkedHashMap<>();
         if (CollectionUtils.isEmpty(obsList)) {
             return new LinkedHashMap<>();

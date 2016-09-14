@@ -2,12 +2,16 @@ package org.openmrs.module.endtb.flowsheet.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections.CollectionUtils;
-import org.openmrs.*;
-import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.dao.OrderDao;
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.BahmniPatientProgram;
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.PatientProgramAttribute;
+import org.openmrs.Concept;
+import org.openmrs.Obs;
+import org.openmrs.Order;
+import org.openmrs.OrderType;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.module.bahmniendtb.EndTBConstants;
+import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetMapper;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetAttribute;
@@ -26,27 +30,28 @@ import java.util.Set;
 
 @Service
 public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringFlowsheetService {
-    private  OrderDao orderDao;
-    private ObsDao obsDao;
+
+    private OrderDao orderDao;
+    private EndTbObsDaoImpl endTbObsDao;
     private List<FlowsheetMapper> flowsheetMappers;
 
     @Autowired
-    public PatientMonitoringFlowsheetServiceImpl(ObsDao obsDao, List<FlowsheetMapper> flowsheetMappers, OrderDao orderDao) {
-        this.obsDao = obsDao;
-        this.orderDao = orderDao;
+    public PatientMonitoringFlowsheetServiceImpl(OrderDao orderDao, EndTbObsDaoImpl endTbObsDao, List<FlowsheetMapper> flowsheetMappers) {
+        this.endTbObsDao = endTbObsDao;
         this.flowsheetMappers = flowsheetMappers;
+        this.orderDao = orderDao;
     }
 
     @Override
     public Flowsheet getFlowsheetForPatientProgram(String patientUuid, String patientProgramUuid, String configFilePath) throws Exception {
         Flowsheet flowsheet = new Flowsheet();
         FlowsheetConfig flowsheetConfig = getPatientMonitoringFlowsheetConfiguration(configFilePath);
-        List<Obs> startDateConceptObs = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getStartDateConcept()), null, null, null, null);
+        List<Obs> startDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getStartDateConcept()), null, null, null, null);
         Date startDate = null;
         if (CollectionUtils.isNotEmpty(startDateConceptObs)) {
             startDate = startDateConceptObs.get(0).getValueDate();
         }
-        List<Obs> endDateConceptObs = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getEndDateConcept()), null, null, null, null);
+        List<Obs> endDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getEndDateConcept()), null, null, null, null);
         Date endDate = new Date();
         if(CollectionUtils.isNotEmpty(endDateConceptObs)) {
             endDate = endDateConceptObs.get(0).getValueDatetime();
@@ -63,7 +68,7 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
     @Override
     public FlowsheetAttribute getFlowsheetAttributesForPatientProgram(BahmniPatientProgram bahmniPatientProgram, PatientIdentifierType primaryIdentifierType, OrderType orderType, Set<Concept> concepts) {
         FlowsheetAttribute flowsheetAttribute = new FlowsheetAttribute();
-        List<Obs> startDateConceptObs = obsDao.getObsByPatientProgramUuidAndConceptNames(bahmniPatientProgram.getUuid(), Arrays.asList(EndTBConstants.TI_TREATMENT_START_DATE), null, null, null, null);
+        List<Obs> startDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(bahmniPatientProgram.getUuid(), Arrays.asList(EndTBConstants.TI_TREATMENT_START_DATE), null, null, null, null);
         Date startDate = null;
         if (CollectionUtils.isNotEmpty(startDateConceptObs)) {
             startDate = startDateConceptObs.get(0).getValueDate();

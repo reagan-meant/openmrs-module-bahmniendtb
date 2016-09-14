@@ -69,7 +69,7 @@ public class RulesForFormFilled implements EncounterDataPreSaveCommand {
 
     private boolean isFormFilledAlready(List<BahmniObservation> newObservations, String conceptName, String patientProgramUuid) {
         if (newObservations.size() > 1) return true;
-        List<Obs> obsList = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(conceptName), null, null, null, null);
+        List<Obs> obsList = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(conceptName), null, null);
         for (BahmniObservation newObservation : newObservations) {
             if (obsList.size() > 0) {
                 for(Obs obs : obsList){
@@ -88,7 +88,7 @@ public class RulesForFormFilled implements EncounterDataPreSaveCommand {
         if(patientProgramUuid == null) {
             patientProgramUuid = getPatientProgramUuidByEncounterUuid(bahmniEncounterTransaction.getEncounterUuid());
         }
-        List<Obs> existingObs = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(conceptName), null, null, null, null);
+        List<Obs> existingObs = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(conceptName), null, null);
         for (int i=0; i<newObservations.size(); i++) {
             BahmniObservation newObservation = newObservations.get(i);
             String monthYear = dateFormat.format(newObservation.getObservationDateTime());

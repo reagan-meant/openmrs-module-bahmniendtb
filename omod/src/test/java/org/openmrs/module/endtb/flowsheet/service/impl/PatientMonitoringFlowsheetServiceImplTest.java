@@ -1,6 +1,5 @@
 package org.openmrs.module.endtb.flowsheet.service.impl;
 
-import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.dao.OrderDao;
 import org.bahmni.module.bahmnicore.dao.impl.ObsDaoImpl;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
@@ -9,9 +8,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
+import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
+import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetClinicalAndBacteriologyMapper;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetDrugMapper;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetMapper;
-import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetClinicalAndBacteriologyMapper;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.service.PatientMonitoringFlowsheetService;
 
@@ -33,7 +33,7 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     private PatientMonitoringFlowsheetService patientMonitoringFlowsheetService;
 
     @Mock
-    private ObsDao obsDao;
+    private EndTbObsDaoImpl endTbObsDao;
     @Mock
     private BahmniDrugOrderService bahmniDrugOrderService;
     @Mock
@@ -48,10 +48,11 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        flowsheetObsMapper = new FlowsheetClinicalAndBacteriologyMapper(obsDao, bahmniDrugOrderService, conceptService);
-        flowsheetDrugMapper = new FlowsheetDrugMapper(obsDao, bahmniDrugOrderService, conceptService);
+        flowsheetObsMapper = new FlowsheetClinicalAndBacteriologyMapper(endTbObsDao, bahmniDrugOrderService, conceptService);
+        flowsheetDrugMapper = new FlowsheetDrugMapper(endTbObsDao, bahmniDrugOrderService, conceptService);
         flowsheetMappers = Arrays.asList(flowsheetObsMapper, flowsheetDrugMapper);
-        patientMonitoringFlowsheetService = new PatientMonitoringFlowsheetServiceImpl(obsDao, flowsheetMappers , orderDao);
+
+        patientMonitoringFlowsheetService = new PatientMonitoringFlowsheetServiceImpl(orderDao, endTbObsDao, flowsheetMappers);
     }
 
     @Test
@@ -69,7 +70,7 @@ public class PatientMonitoringFlowsheetServiceImplTest {
         flowsheetData.put("Bacteriology, Fluoroquinolone", new ArrayList<String>());
         flowsheetData.put("Bacteriology, Culture results", new ArrayList<String>());
 
-        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(null);
+        when(endTbObsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(EndTbObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(null);
         Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", "src/test/resources/patientMonitoringConf.json");
         Flowsheet expectedFlowsheet = new Flowsheet();
         expectedFlowsheet.setFlowsheetHeader(flowsheetHeader);
@@ -94,7 +95,7 @@ public class PatientMonitoringFlowsheetServiceImplTest {
         flowsheetData.put("Bacteriology, Culture results", Arrays.asList("yellow", "yellow", "yellow"));
         Obs obs = new Obs();
         obs.setValueDate(new Date());
-        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs)).thenReturn(null);
+        when(endTbObsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(EndTbObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs)).thenReturn(null);
         when(bahmniDrugOrderService.getDrugOrders(any(String.class), any(Boolean.class), any(Set.class), any(Set.class), any(String.class))).thenReturn(null);
         Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", "src/test/resources/patientMonitoringConf.json");
         Flowsheet expectedFlowsheet = new Flowsheet();
@@ -120,7 +121,7 @@ public class PatientMonitoringFlowsheetServiceImplTest {
         flowsheetData.put("Bacteriology, Culture results", Arrays.asList("yellow", "yellow", "yellow"));
         Obs obs = new Obs();
         obs.setValueDate(new Date());
-        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs)).thenReturn(null);
+        when(endTbObsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(EndTbObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs)).thenReturn(null);
         when(bahmniDrugOrderService.getDrugOrders(any(String.class), any(Boolean.class), any(Set.class), any(Set.class), any(String.class))).thenReturn(null);
         Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", "src/test/resources/patientMonitoringConfWithGroupConcepts.json");
         Flowsheet expectedFlowsheet = new Flowsheet();

@@ -1,9 +1,9 @@
 package org.openmrs.module.endtb.flowsheet.mapper;
 
-import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
+import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetConcept;
@@ -26,7 +26,7 @@ import java.util.Set;
 
 public abstract class FlowsheetMapper {
 
-    protected ObsDao obsDao;
+    protected EndTbObsDaoImpl endTbObsDao;
     protected BahmniDrugOrderService bahmniDrugOrderService;
     protected ConceptService conceptService;
 
@@ -38,8 +38,8 @@ public abstract class FlowsheetMapper {
     protected Date startDate;
     protected Date endDate;
 
-    public FlowsheetMapper(ObsDao obsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
-        this.obsDao = obsDao;
+    public FlowsheetMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
+        this.endTbObsDao = endTbObsDao;
         this.bahmniDrugOrderService = bahmniDrugOrderService;
         this.conceptService = conceptService;
     }
