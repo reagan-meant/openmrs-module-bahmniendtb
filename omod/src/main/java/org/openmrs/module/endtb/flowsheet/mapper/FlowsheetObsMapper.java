@@ -12,12 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class FlowsheetObsMapper extends FlowsheetMapper {
@@ -25,7 +20,7 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
     @Autowired
     public FlowsheetObsMapper(ObsDao obsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
         super(obsDao, bahmniDrugOrderService, conceptService);
-        this.conceptType = FlowsheetConstant.CLINICAL;
+        this.conceptTypes = new String[]{FlowsheetConstant.CLINICAL, FlowsheetConstant.BACTERIOLOGY};
     }
 
     @Override
@@ -77,7 +72,7 @@ public class FlowsheetObsMapper extends FlowsheetMapper {
             return new LinkedHashMap<>();
         }
         for (Obs obs : obsList) {
-            List<Obs> observations = conceptToObsMap.get(obs.getConcept().getName());
+            List<Obs> observations = conceptToObsMap.get(obs.getConcept().getName().getName());
             if (CollectionUtils.isEmpty(observations)) {
                 observations = new ArrayList<>();
                 conceptToObsMap.put(obs.getConcept().getName().getName(), observations);

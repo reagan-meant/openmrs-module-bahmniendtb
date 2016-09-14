@@ -20,7 +20,7 @@ public abstract class FlowsheetMapper {
     protected Flowsheet flowsheet;
     protected String patientUuid;
     protected String patientProgramUuid;
-    protected String conceptType;
+    protected String[] conceptTypes;
     protected Date startDate;
     protected Date endDate;
 
@@ -78,10 +78,13 @@ public abstract class FlowsheetMapper {
     }
 
     protected Set<String> getSingleConceptsFromFlowsheetEntities(FlowsheetEntities flowsheetEntities) {
+        Set<String> singleConcepts = new LinkedHashSet<>();
         if(flowsheetEntities != null) {
-            return flowsheetEntities.getFlowSheetConceptByType(conceptType).getSingleConcepts();
+            for(String type : conceptTypes) {
+                singleConcepts.addAll(flowsheetEntities.getFlowSheetConceptByType(type).getSingleConcepts());
+            }
         }
-        return new LinkedHashSet<>();
+        return singleConcepts;
     }
 
     protected Map<String, Set<String>> getAllGroupConceptsFromFlowsheetConfig() {
@@ -94,10 +97,13 @@ public abstract class FlowsheetMapper {
     }
 
     protected Map<String, Set<String>> getGroupConceptsFromFlowsheetEntities(FlowsheetEntities flowsheetEntities) {
+        Map<String, Set<String>> groupConcepts = new LinkedHashMap<>();
         if(flowsheetEntities != null) {
-            return flowsheetEntities.getFlowSheetConceptByType(conceptType).getGroupConcepts();
+            for(String type : conceptTypes) {
+                groupConcepts.putAll(flowsheetEntities.getFlowSheetConceptByType(type).getGroupConcepts());
+            }
         }
-        return new LinkedHashMap<>();
+        return groupConcepts;
     }
 
     protected FlowsheetConcept getFlowsheetConceptFromFlowsheetConfig() {

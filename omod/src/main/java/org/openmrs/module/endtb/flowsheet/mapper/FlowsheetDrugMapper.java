@@ -12,13 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class FlowsheetDrugMapper extends FlowsheetMapper {
@@ -26,7 +20,7 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
     @Autowired
     public FlowsheetDrugMapper(ObsDao obsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
         super(obsDao, bahmniDrugOrderService, conceptService);
-        this.conceptType = FlowsheetConstant.DRUGS;
+        this.conceptTypes = new String[]{FlowsheetConstant.DRUGS};
     }
 
     @Override

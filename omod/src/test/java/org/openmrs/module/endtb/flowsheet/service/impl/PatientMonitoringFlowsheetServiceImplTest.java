@@ -60,6 +60,8 @@ public class PatientMonitoringFlowsheetServiceImplTest {
         flowsheetData.put("Baseline, Prison", new ArrayList<String>());
         flowsheetData.put("Isoniazid", new ArrayList<String>());
         flowsheetData.put("Delamanid", new ArrayList<String>());
+        flowsheetData.put("Bacteriology, Fluoroquinolone", new ArrayList<String>());
+        flowsheetData.put("Bacteriology, Culture results", new ArrayList<String>());
 
         when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(null);
         Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", "src/test/resources/patientMonitoringConf.json");
@@ -82,6 +84,8 @@ public class PatientMonitoringFlowsheetServiceImplTest {
         flowsheetData.put("Baseline, Prison", Arrays.asList("yellow", "grey", "grey"));
         flowsheetData.put("Isoniazid", Arrays.asList("yellow", "grey", "grey"));
         flowsheetData.put("Delamanid", Arrays.asList("yellow", "yellow", "yellow"));
+        flowsheetData.put("Bacteriology, Fluoroquinolone", Arrays.asList("yellow", "grey", "grey"));
+        flowsheetData.put("Bacteriology, Culture results", Arrays.asList("yellow", "yellow", "yellow"));
         Obs obs = new Obs();
         obs.setValueDate(new Date());
         when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs)).thenReturn(null);
@@ -106,6 +110,8 @@ public class PatientMonitoringFlowsheetServiceImplTest {
         flowsheetData.put("group1", Arrays.asList("yellow", "grey", "grey"));
         flowsheetData.put("Isoniazid", Arrays.asList("yellow", "grey", "grey"));
         flowsheetData.put("Delamanid", Arrays.asList("yellow", "yellow", "yellow"));
+        flowsheetData.put("Bacteriology, Fluoroquinolone", Arrays.asList("yellow", "grey", "grey"));
+        flowsheetData.put("Bacteriology, Culture results", Arrays.asList("yellow", "yellow", "yellow"));
         Obs obs = new Obs();
         obs.setValueDate(new Date());
         when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs)).thenReturn(null);
