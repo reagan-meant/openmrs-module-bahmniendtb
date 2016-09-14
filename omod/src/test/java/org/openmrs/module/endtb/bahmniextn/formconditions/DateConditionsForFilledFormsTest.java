@@ -64,6 +64,19 @@ public class DateConditionsForFilledFormsTest {
     }
 
     @Test
+    public void shouldNotThrowExcpetionIfDateOfOnSetIsNotSelected() throws Exception {
+        Date date = new Date();
+        BahmniObservation dateOfOnset = new BahmniObservationBuilder().withConcept("AE Form, Date of AE onset", false, "Date").withValue(null).build();
+        BahmniObservation dateOfReport = new BahmniObservationBuilder().withConcept("AE Form, Date of AE report", false, "Date").withValue("2016-03-07").build();
+        BahmniObservation adverseEventsTemplate = new BahmniObservationBuilder().withConcept("Adverse Events Template", true, "N/A").withMember(dateOfOnset).withMember(dateOfReport).build();
+        BahmniEncounterTransaction bahmniEncounterTransaction = new BahmniEncounterTransactionBuilder().withObservations(Collections.singletonList(adverseEventsTemplate)).build();
+
+        BahmniEncounterTransaction encounterTransaction = encounterDataPreSaveCommand.update(bahmniEncounterTransaction);
+
+        assertEquals(bahmniEncounterTransaction, encounterTransaction);
+    }
+
+    @Test
     public void shouldNotThrowExceptionIfOneOfTheFieldIsNotEntered() throws Exception {
         Date date = new Date();
         BahmniObservation dateOfReport = new BahmniObservationBuilder().withConcept("AE Form, Date of AE report", false, "Date").withValue("2016-03-07").build();

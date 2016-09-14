@@ -40,7 +40,7 @@ public class DateConditionsForFilledForms implements EncounterDataPreSaveCommand
         Date onsetDate = (dateOfOnset != null && StringUtils.isNotEmpty(dateOfOnset.getValueAsString())) ? getDate(dateOfOnset.getValue()) : null;
         Date reportDate = (dateOfReport != null && StringUtils.isNotEmpty(dateOfReport.getValueAsString())) ? getDate(dateOfReport.getValue()) : null;
 
-        return dateOfOnset != null && dateOfReport != null && onsetDate.after(reportDate);
+        return dateOfOnset != null && dateOfReport != null && onsetDate!= null && reportDate!= null && onsetDate.after(reportDate);
     }
 
     private Date getDate(Object value) {
