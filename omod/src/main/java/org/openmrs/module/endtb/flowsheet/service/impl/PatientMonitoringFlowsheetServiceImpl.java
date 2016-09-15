@@ -63,10 +63,14 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         Date endDate = getFlowsheetEndDate(flowsheetConfig, patientProgramUuid);
 
         flowsheet.setStartDate(startDate);
+        if(endDate == null) {
+            flowsheet.setTreatmentStopped(false);
+            endDate = new Date();
+        }
         for (FlowsheetMapper flowsheetMapper : flowsheetMappers) {
             flowsheetMapper.map(flowsheet, flowsheetConfig, patientUuid, patientProgramUuid, startDate, endDate);
         }
-        flowsheet.setCurrentMilestoneName(findCurrentMilestone(flowsheetConfig, startDate, endDate));
+        flowsheet.setHighlightedMilestone(findHighlightedMilestone(flowsheetConfig, startDate, endDate));
         return flowsheet;
     }
 
@@ -101,7 +105,7 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
     }
 
     private Date getFlowsheetEndDate(FlowsheetConfig flowsheetConfig, String patientProgramUuid) {
-        Date endDate = new Date();
+        Date endDate = null;
         List<Obs> endDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getEndDateConcept()), null, null, null, null);
         if(CollectionUtils.isNotEmpty(endDateConceptObs)) {
             endDate = endDateConceptObs.get(0).getValueDatetime();
@@ -141,7 +145,7 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         return "";
     }
 
-    private String findCurrentMilestone(FlowsheetConfig flowsheetConfig, Date startDate, Date endDate) {
+    private String findHighlightedMilestone(FlowsheetConfig flowsheetConfig, Date startDate, Date endDate) {
         String currentMilestone = "";
         if(null != startDate && CollectionUtils.isNotEmpty(flowsheetConfig.getFlowsheetMilestones())) {
             for(FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
