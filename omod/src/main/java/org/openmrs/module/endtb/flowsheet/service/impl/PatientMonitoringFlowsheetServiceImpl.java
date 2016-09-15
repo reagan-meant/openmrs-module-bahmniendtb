@@ -101,7 +101,7 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
     }
 
     private Date getFlowsheetEndDate(FlowsheetConfig flowsheetConfig, String patientProgramUuid) {
-        Date endDate = null;
+        Date endDate = new Date();
         List<Obs> endDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getEndDateConcept()), null, null, null, null);
         if(CollectionUtils.isNotEmpty(endDateConceptObs)) {
             endDate = endDateConceptObs.get(0).getValueDatetime();
