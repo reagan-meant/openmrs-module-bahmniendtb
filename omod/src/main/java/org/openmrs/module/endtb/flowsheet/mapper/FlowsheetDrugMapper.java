@@ -1,8 +1,9 @@
 package org.openmrs.module.endtb.flowsheet.mapper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.bahmni.module.bahmnicore.service.BahmniConceptService;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
-import org.openmrs.api.ConceptService;
 import org.openmrs.module.bahmniemrapi.drugorder.contract.BahmniDrugOrder;
 import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
@@ -26,8 +27,8 @@ import java.util.Set;
 public class FlowsheetDrugMapper extends FlowsheetMapper {
 
     @Autowired
-    public FlowsheetDrugMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
-        super(endTbObsDao, bahmniDrugOrderService, conceptService);
+    public FlowsheetDrugMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, BahmniConceptService bahmniConceptService) {
+        super(endTbObsDao, bahmniDrugOrderService, bahmniConceptService);
         this.conceptTypes = new String[]{FlowsheetConstant.DRUGS};
     }
 
@@ -68,7 +69,7 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
             boolean conceptRequiredForMilestone = singleConceptsRequiredForMilestone.contains(concept);
             boolean drugPresentInMilestoneRange = isDrugPresentInMilestoneRange(milestone, conceptToDrugMap.get(concept));
             String colorCodeForSingleConcepts = getColorCodeForSingleConcepts(milestone, conceptRequiredForMilestone, drugPresentInMilestoneRange);
-            flowsheet.addFlowSheetData(concept, colorCodeForSingleConcepts);
+            flowsheet.addFlowSheetData(fullySpecifiedNameToShortNameMap.get(concept), colorCodeForSingleConcepts);
         }
     }
 
@@ -86,8 +87,8 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
 
     private boolean isDrugPresentInMilestoneRange(FlowsheetMilestone milestone, List<BahmniDrugOrder> drugOrderList) {
         if (CollectionUtils.isNotEmpty(drugOrderList)) {
-            Date milestoneStartDate = dateWithAddedDays(startDate, milestone.getMin());
-            Date milestoneEndDate = dateWithAddedDays(startDate, milestone.getMax());
+            Date milestoneStartDate = DateUtils.addDays(startDate, milestone.getMin());
+            Date milestoneEndDate = DateUtils.addDays(startDate, milestone.getMax());
             for (BahmniDrugOrder drug : drugOrderList) {
                 Date drugStartDate = drug.getEffectiveStartDate();
                 Date drugStopDate = drug.getEffectiveStopDate() != null ? drug.getEffectiveStopDate() : new Date();

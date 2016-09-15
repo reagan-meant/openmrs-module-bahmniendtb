@@ -1,8 +1,11 @@
 package org.openmrs.module.endtb.flowsheet.mapper;
 
+import org.apache.commons.lang3.time.DateUtils;
+import org.bahmni.module.bahmnicore.service.BahmniConceptService;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Concept;
-import org.openmrs.api.ConceptService;
+import org.openmrs.ConceptName;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
@@ -11,12 +14,10 @@ import org.openmrs.module.endtb.flowsheet.models.FlowsheetConfig;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetEntities;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -28,7 +29,7 @@ public abstract class FlowsheetMapper {
 
     protected EndTbObsDaoImpl endTbObsDao;
     protected BahmniDrugOrderService bahmniDrugOrderService;
-    protected ConceptService conceptService;
+    protected BahmniConceptService bahmniConceptService;
 
     protected FlowsheetConfig flowsheetConfig;
     protected Flowsheet flowsheet;
@@ -37,11 +38,12 @@ public abstract class FlowsheetMapper {
     protected String[] conceptTypes;
     protected Date startDate;
     protected Date endDate;
+    protected Map<String, String> fullySpecifiedNameToShortNameMap;
 
-    public FlowsheetMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
+    public FlowsheetMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, BahmniConceptService bahmniConceptService) {
         this.endTbObsDao = endTbObsDao;
         this.bahmniDrugOrderService = bahmniDrugOrderService;
-        this.conceptService = conceptService;
+        this.bahmniConceptService = bahmniConceptService;
     }
 
 
@@ -54,6 +56,7 @@ public abstract class FlowsheetMapper {
         this.patientProgramUuid = patientProgramUuid;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.fullySpecifiedNameToShortNameMap = new HashMap<>();
 
         createFlowSheet();
     }
@@ -61,21 +64,9 @@ public abstract class FlowsheetMapper {
     protected Set<Concept> getConceptObjects(Set<String> conceptNames) {
         Set<Concept> conceptsList = new HashSet<>();
         for (String concept : conceptNames) {
-            conceptsList.add(conceptService.getConcept(concept));
+            conceptsList.add(bahmniConceptService.getConceptByFullySpecifiedName(concept));
         }
         return conceptsList;
-    }
-
-    protected boolean isSameDate(Date date1, Date date2) throws ParseException {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return dateFormat.format(date1).equals(dateFormat.format(date2));
-    }
-
-    protected Date dateWithAddedDays(Date date, Integer days) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, days);
-        return calendar.getTime();
     }
 
     protected Set<String> getAllConcepts() {
@@ -146,8 +137,8 @@ public abstract class FlowsheetMapper {
         if (conceptRequiredForMilestone) {
             if (conceptValueRecorded) {
                 return ColourCode.GREEN.getColourCode();
-            } else if (dateWithAddedDays(startDate, milestone.getMax()).before(endDate) ||
-                    (dateWithAddedDays(startDate, milestone.getMin()).before(endDate) && !isSameDate(endDate, new Date()))) {
+            } else if (DateUtils.addDays(startDate, milestone.getMax()).before(endDate) ||
+                    (DateUtils.addDays(startDate, milestone.getMin()).before(endDate) && !DateUtils.isSameDay(endDate, new Date()))) {
                 return ColourCode.PURPLE.getColourCode();
             } else {
                 return ColourCode.YELLOW.getColourCode();
@@ -163,8 +154,11 @@ public abstract class FlowsheetMapper {
             flowsheet.addFlowSheetHeader(milestone.getName());
         }
         Map<String, List<String>> flowsheetData = flowsheet.getFlowsheetData();
-        for (String conceptName : flowsheetConcept.getSingleConcepts()) {
-            flowsheetData.put(conceptName, new ArrayList<String>());
+        for (String fullySpecifiedConceptName : flowsheetConcept.getSingleConcepts()) {
+            ConceptName conceptShortName = bahmniConceptService.getConceptByFullySpecifiedName(fullySpecifiedConceptName).getShortNameInLocale(Context.getLocale());
+            String shortName = null != conceptShortName ? conceptShortName.getName() : fullySpecifiedConceptName;
+            fullySpecifiedNameToShortNameMap.put(fullySpecifiedConceptName, shortName);
+            flowsheetData.put(shortName, new ArrayList<String>());
         }
         for (Map.Entry<String, Set<String>> entry : flowsheetConcept.getGroupConcepts().entrySet()) {
             flowsheetData.put(entry.getKey(), new ArrayList<String>());

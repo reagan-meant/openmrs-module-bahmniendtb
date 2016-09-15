@@ -2,14 +2,18 @@ package org.openmrs.module.endtb.flowsheet.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.bahmni.module.bahmnicore.dao.OrderDao;
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.BahmniPatientProgram;
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.PatientProgramAttribute;
+import org.bahmni.module.bahmnicore.service.BahmniConceptService;
 import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.PatientIdentifierType;
+import org.openmrs.api.APIException;
+import org.openmrs.api.OrderService;
 import org.openmrs.module.bahmniendtb.EndTBConstants;
 import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetMapper;
@@ -23,8 +27,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,28 +38,29 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
     private OrderDao orderDao;
     private EndTbObsDaoImpl endTbObsDao;
     private List<FlowsheetMapper> flowsheetMappers;
+    private OrderService orderService;
+    private BahmniConceptService bahmniConceptService;
 
     @Autowired
-    public PatientMonitoringFlowsheetServiceImpl(OrderDao orderDao, EndTbObsDaoImpl endTbObsDao, List<FlowsheetMapper> flowsheetMappers) {
+    public PatientMonitoringFlowsheetServiceImpl(OrderDao orderDao, EndTbObsDaoImpl endTbObsDao, List<FlowsheetMapper> flowsheetMappers, OrderService orderService, BahmniConceptService bahmniConceptService) {
         this.endTbObsDao = endTbObsDao;
         this.flowsheetMappers = flowsheetMappers;
         this.orderDao = orderDao;
+        this.orderService = orderService;
+        this.bahmniConceptService = bahmniConceptService;
     }
 
     @Override
     public Flowsheet getFlowsheetForPatientProgram(String patientUuid, String patientProgramUuid, String configFilePath) throws Exception {
         Flowsheet flowsheet = new Flowsheet();
         FlowsheetConfig flowsheetConfig = getPatientMonitoringFlowsheetConfiguration(configFilePath);
-        List<Obs> startDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getStartDateConcept()), null, null, null, null);
-        Date startDate = null;
-        if (CollectionUtils.isNotEmpty(startDateConceptObs)) {
-            startDate = startDateConceptObs.get(0).getValueDate();
+
+        if(flowsheetConfig.getStartDateConcept()!=null && CollectionUtils.isNotEmpty(flowsheetConfig.getStartDateDrugConcepts())) {
+            throw new APIException("Start Date Concept And Start Date Drugs Concepts Both Are Configured. Please Remove Any One.");
         }
-        List<Obs> endDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getEndDateConcept()), null, null, null, null);
-        Date endDate = new Date();
-        if(CollectionUtils.isNotEmpty(endDateConceptObs)) {
-            endDate = endDateConceptObs.get(0).getValueDatetime();
-        }
+
+        Date startDate = getFlowsheetStartDate(flowsheetConfig, patientProgramUuid);
+        Date endDate = getFlowsheetEndDate(flowsheetConfig, patientProgramUuid);
 
         flowsheet.setStartDate(startDate);
         for (FlowsheetMapper flowsheetMapper : flowsheetMappers) {
@@ -79,6 +84,37 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         flowsheetAttribute.setTreatmentRegistrationNumber(getProgramAttribute(bahmniPatientProgram, EndTBConstants.PROGRAM_ATTRIBUTE_REG_NO));
         flowsheetAttribute.setPatientEMRID(bahmniPatientProgram.getPatient().getPatientIdentifier(primaryIdentifierType).getIdentifier());
         return flowsheetAttribute;
+    }
+
+    private Date getFlowsheetStartDate(FlowsheetConfig flowsheetConfig, String patientProgramUuid) {
+        Date startDate = null;
+        if(flowsheetConfig.getStartDateConcept() != null) {
+            List<Obs> startDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getStartDateConcept()), null, null, null, null);
+            if (CollectionUtils.isNotEmpty(startDateConceptObs)) {
+                startDate = startDateConceptObs.get(0).getValueDate();
+            }
+        } else if(CollectionUtils.isNotEmpty(flowsheetConfig.getStartDateDrugConcepts())) {
+            OrderType orderType = orderService.getOrderTypeByUuid(OrderType.DRUG_ORDER_TYPE_UUID);
+            startDate = getNewDrugTreatmentStartDate(patientProgramUuid, orderType, getConceptObjects(flowsheetConfig.getStartDateDrugConcepts()));
+        }
+        return startDate;
+    }
+
+    private Date getFlowsheetEndDate(FlowsheetConfig flowsheetConfig, String patientProgramUuid) {
+        Date endDate = null;
+        List<Obs> endDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getEndDateConcept()), null, null, null, null);
+        if(CollectionUtils.isNotEmpty(endDateConceptObs)) {
+            endDate = endDateConceptObs.get(0).getValueDatetime();
+        }
+        return endDate;
+    }
+
+    private Set<Concept> getConceptObjects(Set<String> conceptNames) {
+        Set<Concept> conceptsList = new HashSet<>();
+        for (String concept : conceptNames) {
+            conceptsList.add(bahmniConceptService.getConceptByFullySpecifiedName(concept));
+        }
+        return conceptsList;
     }
 
     private Date getNewDrugTreatmentStartDate(String patientProgramUuid, OrderType orderType, Set<Concept> concepts) {
@@ -109,21 +145,14 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         String currentMilestone = "";
         if(null != startDate && CollectionUtils.isNotEmpty(flowsheetConfig.getFlowsheetMilestones())) {
             for(FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
-                if(dateWithAddedDays(startDate, milestone.getMin()).before(endDate) &&
-                        dateWithAddedDays(startDate, milestone.getMax()).after(endDate)) {
+                if(DateUtils.addDays(startDate, milestone.getMin()).before(endDate) &&
+                        DateUtils.addDays(startDate, milestone.getMax()).after(endDate)) {
                     currentMilestone = milestone.getName();
                     break;
                 }
             }
         }
         return currentMilestone;
-    }
-
-    protected Date dateWithAddedDays(Date date, Integer days) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, days);
-        return calendar.getTime();
     }
 
     private FlowsheetConfig getPatientMonitoringFlowsheetConfiguration(String configFilePath) throws Exception {

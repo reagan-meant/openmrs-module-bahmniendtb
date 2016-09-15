@@ -1,9 +1,10 @@
 package org.openmrs.module.endtb.flowsheet.mapper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.bahmni.module.bahmnicore.service.BahmniConceptService;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Obs;
-import org.openmrs.api.ConceptService;
 import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
 import org.openmrs.module.endtb.flowsheet.constants.FlowsheetConstant;
@@ -25,17 +26,17 @@ import java.util.Set;
 public class FlowsheetClinicalAndBacteriologyMapper extends FlowsheetMapper {
 
     @Autowired
-    public FlowsheetClinicalAndBacteriologyMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, ConceptService conceptService) {
-        super(endTbObsDao, bahmniDrugOrderService, conceptService);
+    public FlowsheetClinicalAndBacteriologyMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, BahmniConceptService bahmniConceptService) {
+        super(endTbObsDao, bahmniDrugOrderService, bahmniConceptService);
         this.conceptTypes = new String[]{FlowsheetConstant.CLINICAL, FlowsheetConstant.BACTERIOLOGY};
     }
 
     @Override
     public void createFlowSheet() throws ParseException {
+        createBasicFlowsheet();
         Set<String> singleConcepts = getAllSingleConceptsFromFlowsheetConfig();
         Map<String, Set<String>> groupConcepts = getAllGroupConceptsFromFlowsheetConfig();
 
-        createBasicFlowsheet();
         if (startDate == null) {
             return;
         }
@@ -68,7 +69,7 @@ public class FlowsheetClinicalAndBacteriologyMapper extends FlowsheetMapper {
             boolean conceptRequiredForMilestone = singleConceptsRequiredForMilestone.contains(concept);
             boolean conceptPresentInMilestoneRange = isConceptPresentInMilestoneRange(milestone, conceptToObsMap.get(concept));
             String colorCodeForSingleConcept = getColorCodeForSingleConcepts(milestone, conceptRequiredForMilestone, conceptPresentInMilestoneRange);
-            flowsheet.addFlowSheetData(concept, colorCodeForSingleConcept);
+            flowsheet.addFlowSheetData(fullySpecifiedNameToShortNameMap.get(concept), colorCodeForSingleConcept);
         }
     }
 
@@ -105,7 +106,7 @@ public class FlowsheetClinicalAndBacteriologyMapper extends FlowsheetMapper {
     private boolean isConceptPresentInMilestoneRange(FlowsheetMilestone milestone, List<Obs> obsList) {
         if (CollectionUtils.isNotEmpty(obsList)) {
             for (Obs obs : obsList) {
-                if (obs.getObsDatetime().after(dateWithAddedDays(startDate, milestone.getMin())) && obs.getObsDatetime().before(dateWithAddedDays(startDate, milestone.getMax()))) {
+                if (obs.getObsDatetime().after(DateUtils.addDays(startDate, milestone.getMin())) && obs.getObsDatetime().before(DateUtils.addDays(startDate, milestone.getMax()))) {
                     return true;
                 }
             }

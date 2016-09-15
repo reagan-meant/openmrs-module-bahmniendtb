@@ -15,5 +15,6 @@ public class FlowsheetConstant {
     public static final String SINGLE_CONCEPTS = "singleConcepts";
     public static final String GROUP_CONCEPTS = "groupConcepts";
     public static final String START_DATE_CONCEPT = "startDateConcept";
+    public static final String START_DATE_DRUG_CONCEPTS = "startDateDrugConcepts";
     public static final String END_DATE_CONCEPT = "endDateConcept";
 }
