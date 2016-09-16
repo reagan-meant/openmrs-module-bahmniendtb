@@ -2,6 +2,7 @@ package org.openmrs.module.bahmniendtb.exports;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.openmrs.Privilege;
 import org.openmrs.api.APIAuthenticationException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -32,9 +33,15 @@ public class EndTBExportsController extends BaseRestController implements Resour
 	public void downloadFile(HttpServletResponse response, @RequestParam("filename") String filename) {
 		try {
 			boolean authenticated = Context.isAuthenticated();
-			if(!authenticated){
+			boolean hasReportsPrivilege = false;
+
+			if(authenticated) 
+				for (Privilege privilege : Context.getAuthenticatedUser().getPrivileges())
+					if (privilege.getName().equalsIgnoreCase("app:reports"))
+						hasReportsPrivilege = true;
+
+			if(!authenticated || !hasReportsPrivilege)
 				throw new APIAuthenticationException("Not Logged In");
-			}
 
 			Resource resource = resourceLoader.getResource("file:"+Context.getAdministrationService().getGlobalProperty(ENDTB_EXPORTS_LOCATION)+filename);
 			IOUtils.copy(new FileInputStream(resource.getFile()),response.getOutputStream());
