@@ -25,7 +25,7 @@
 
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>emrapi-api-1.11</artifactId>
+            <artifactId>emrapi-api-1.12</artifactId>
         </dependency>
 
         <!-- End OpenMRS modules -->

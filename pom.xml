@@ -37,7 +37,7 @@
 
             <dependency>
                 <groupId>org.openmrs.module</groupId>
-                <artifactId>emrapi-api-1.11</artifactId>
+                <artifactId>emrapi-api-1.12</artifactId>
                 <version>1.16</version>
                 <scope>provided</scope>
             </dependency>
@@ -111,6 +111,22 @@
                 <version>${openMRSWebServicesVersion}</version>
                 <type>jar</type>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>webservices.rest-omod</artifactId>
+                <version>${openMRSWebServicesVersion}</version>
+                <classifier>tests</classifier>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>webservices.rest-omod-common</artifactId>
+                <version>${openMRSWebServicesVersion}</version>
+                <classifier>tests</classifier>
+                <scope>test</scope>
             </dependency>
 
             <!-- test dependencies -->
