@@ -17,6 +17,7 @@ import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetMapper;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.service.PatientMonitoringFlowsheetService;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -60,29 +61,10 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     }
 
     @Test
-    public void shouldReturnFlowsheetStartDateAsNullForNoStartDateObs() throws Exception {
-        Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", "src/test/resources/patientMonitoringConf.json");
-        assertNull(actualFlowsheet.getStartDate());
-    }
-
-    @Test
-    public void shouldReturnFlowsheetStartDateAsNullForNoStartDateForDrugs() throws Exception {
-        Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", "src/test/resources/patientMonitoringConfWithStartDateDrugConcepts.json");
-        assertNull(actualFlowsheet.getStartDate());
-    }
-
-    @Test(expected=APIException.class)
-    public void shouldThrowExceptionIfBothStartDateObsAndDrugsIsConfigured() throws Exception {
-        patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", "src/test/resources/patientMonitoringConfWithBothStartDateObsAndDrugs.json");
-    }
-
-    @Test
-    public void shouldReturnFlowsheetIfTreatmentStartDateTodayForObsAndDrug() throws Exception {
-        Obs obs = new Obs();
-        obs.setValueDate(new Date());
-        when(endTbObsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(EndTbObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs)).thenReturn(null);
+    public void shouldReturnFlowsheetForTreatmentStartedToday() throws Exception {
+        when(endTbObsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(EndTbObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(null);
         when(bahmniDrugOrderService.getDrugOrders(any(String.class), any(Boolean.class), any(Set.class), any(Set.class), any(String.class))).thenReturn(null);
-        Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", "src/test/resources/patientMonitoringConf.json");
+        Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", getCurrentDate(), null, "src/test/resources/patientMonitoringConf.json");
         Flowsheet expectedFlowsheet = getDummyFlowsheet();
         assertTrue(actualFlowsheet.equals(expectedFlowsheet));
     }
@@ -91,11 +73,9 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     public void shouldReturnFlowsheetForBothSingleConceptsAndGroupConcepts() throws Exception {
         Flowsheet expectedFlowsheet = getDummyFlowsheet();
         expectedFlowsheet.getFlowsheetData().put("group1", Arrays.asList("yellow", "grey", "grey"));
-        Obs obs = new Obs();
-        obs.setValueDate(new Date());
-        when(endTbObsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(EndTbObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs)).thenReturn(null);
+        when(endTbObsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(EndTbObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(null);
         when(bahmniDrugOrderService.getDrugOrders(any(String.class), any(Boolean.class), any(Set.class), any(Set.class), any(String.class))).thenReturn(null);
-        Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", "src/test/resources/patientMonitoringConfWithGroupConcepts.json");
+        Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", getCurrentDate(), null, "src/test/resources/patientMonitoringConfWithGroupConcepts.json");
         assertTrue(actualFlowsheet.equals(expectedFlowsheet));
     }
 
@@ -115,6 +95,13 @@ public class PatientMonitoringFlowsheetServiceImplTest {
         Flowsheet flowsheet = new Flowsheet();
         flowsheet.setFlowsheetHeader(flowsheetHeader);
         flowsheet.setFlowsheetData(flowsheetData);
+        flowsheet.setHighlightedMilestone("M1");
         return flowsheet;
+    }
+
+    private String getCurrentDate() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate = new Date();
+        return simpleDateFormat.format(currentDate);
     }
 }

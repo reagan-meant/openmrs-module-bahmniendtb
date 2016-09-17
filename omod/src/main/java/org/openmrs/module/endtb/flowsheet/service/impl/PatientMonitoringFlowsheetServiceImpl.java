@@ -2,6 +2,7 @@ package org.openmrs.module.endtb.flowsheet.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.bahmni.module.bahmnicore.dao.OrderDao;
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.BahmniPatientProgram;
@@ -12,10 +13,10 @@ import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.PatientIdentifierType;
-import org.openmrs.api.APIException;
 import org.openmrs.api.OrderService;
 import org.openmrs.module.bahmniendtb.EndTBConstants;
 import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
+import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetClinicalAndBacteriologyMapper;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetMapper;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetAttribute;
@@ -24,8 +25,10 @@ import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
 import org.openmrs.module.endtb.flowsheet.service.PatientMonitoringFlowsheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@Transactional
 public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringFlowsheetService {
 
     private OrderDao orderDao;
@@ -51,22 +55,13 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
     }
 
     @Override
-    public Flowsheet getFlowsheetForPatientProgram(String patientUuid, String patientProgramUuid, String configFilePath) throws Exception {
+    public Flowsheet getFlowsheetForPatientProgram(String patientUuid, String patientProgramUuid, String startDateStr, String stopDateStr, String configFilePath) throws Exception {
         Flowsheet flowsheet = new Flowsheet();
         FlowsheetConfig flowsheetConfig = getPatientMonitoringFlowsheetConfiguration(configFilePath);
 
-        if(flowsheetConfig.getStartDateConcept()!=null && CollectionUtils.isNotEmpty(flowsheetConfig.getStartDateDrugConcepts())) {
-            throw new APIException("Start Date Concept And Start Date Drugs Concepts Both Are Configured. Please Remove Any One.");
-        }
+        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
+        Date endDate = StringUtils.isEmpty(stopDateStr) ? new Date() : new SimpleDateFormat("yyyy-MM-dd").parse(stopDateStr);
 
-        Date startDate = getFlowsheetStartDate(flowsheetConfig, patientProgramUuid);
-        Date endDate = getFlowsheetEndDate(flowsheetConfig, patientProgramUuid);
-
-        flowsheet.setStartDate(startDate);
-        if(endDate == null) {
-            flowsheet.setTreatmentStopped(false);
-            endDate = new Date();
-        }
         for (FlowsheetMapper flowsheetMapper : flowsheetMappers) {
             flowsheetMapper.map(flowsheet, flowsheetConfig, patientUuid, patientProgramUuid, startDate, endDate);
         }
@@ -90,27 +85,10 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         return flowsheetAttribute;
     }
 
-    private Date getFlowsheetStartDate(FlowsheetConfig flowsheetConfig, String patientProgramUuid) {
-        Date startDate = null;
-        if(flowsheetConfig.getStartDateConcept() != null) {
-            List<Obs> startDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getStartDateConcept()), null, null, null, null);
-            if (CollectionUtils.isNotEmpty(startDateConceptObs)) {
-                startDate = startDateConceptObs.get(0).getValueDate();
-            }
-        } else if(CollectionUtils.isNotEmpty(flowsheetConfig.getStartDateDrugConcepts())) {
-            OrderType orderType = orderService.getOrderTypeByUuid(OrderType.DRUG_ORDER_TYPE_UUID);
-            startDate = getNewDrugTreatmentStartDate(patientProgramUuid, orderType, getConceptObjects(flowsheetConfig.getStartDateDrugConcepts()));
-        }
-        return startDate;
-    }
-
-    private Date getFlowsheetEndDate(FlowsheetConfig flowsheetConfig, String patientProgramUuid) {
-        Date endDate = null;
-        List<Obs> endDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(flowsheetConfig.getEndDateConcept()), null, null, null, null);
-        if(CollectionUtils.isNotEmpty(endDateConceptObs)) {
-            endDate = endDateConceptObs.get(0).getValueDatetime();
-        }
-        return endDate;
+    @Override
+    public Date getStartDateForDrugConcepts(String patientProgramUuid, Set<String> drugConcepts) {
+        OrderType orderType = orderService.getOrderTypeByUuid(OrderType.DRUG_ORDER_TYPE_UUID);
+        return getNewDrugTreatmentStartDate(patientProgramUuid, orderType, getConceptObjects(drugConcepts));
     }
 
     private Set<Concept> getConceptObjects(Set<String> conceptNames) {

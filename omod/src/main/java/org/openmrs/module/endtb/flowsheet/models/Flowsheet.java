@@ -10,11 +10,9 @@ import java.util.Set;
 
 public class Flowsheet {
 
-    private Date startDate;
     private Set<String> flowsheetHeader;
     private Map<String, List<String>> flowsheetData;
     private String highlightedMilestone;
-    private boolean treatmentStopped = true;
 
 
     public Set<String> getFlowsheetHeader() {
@@ -39,28 +37,12 @@ public class Flowsheet {
         this.flowsheetData = flowsheetData;
     }
 
-    public Date getStartDate() {
-        return this.startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
     public String getHighlightedMilestone() {
         return highlightedMilestone;
     }
 
     public void setHighlightedMilestone(String highlightedMilestone) {
         this.highlightedMilestone = highlightedMilestone;
-    }
-
-    public boolean getTreatmentStopped() {
-        return treatmentStopped;
-    }
-
-    public void setTreatmentStopped(boolean treatmentStopped) {
-        this.treatmentStopped = treatmentStopped;
     }
 
     public Flowsheet addFlowSheetHeader(String header) {

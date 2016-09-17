@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,8 +56,11 @@ public class PatientMonitoringFlowsheetController extends BaseRestController {
 
     @RequestMapping(value = baseUrl + "/patientFlowsheet", method = RequestMethod.GET)
     @ResponseBody
-    public Flowsheet retrievePatientFlowSheet(@RequestParam("patientUuid") String patientUuid, @RequestParam("programUuid") String programUuid) throws Exception {
-        return patientMonitoringFlowsheetService.getFlowsheetForPatientProgram(patientUuid, programUuid, Context.getAdministrationService().getGlobalProperty(PATIENT_MONITORING_CONFIG_LOCATION));
+    public Flowsheet retrievePatientFlowSheet(@RequestParam("patientUuid") String patientUuid,
+                                              @RequestParam("programUuid") String programUuid,
+                                              @RequestParam(value="startDate") String startDate,
+                                              @RequestParam(value="stopDate", required = false) String stopDate) throws Exception {
+        return patientMonitoringFlowsheetService.getFlowsheetForPatientProgram(patientUuid, programUuid, startDate, stopDate, Context.getAdministrationService().getGlobalProperty(PATIENT_MONITORING_CONFIG_LOCATION));
     }
 
     @RequestMapping(value= baseUrl + "/patientFlowsheetAttributes", method = RequestMethod.GET)
@@ -72,6 +76,12 @@ public class PatientMonitoringFlowsheetController extends BaseRestController {
         conceptsForDrugs.add(conceptService.getConceptByName(EndTBConstants.DRUG_DELAMANID));
 
         return patientMonitoringFlowsheetService.getFlowsheetAttributesForPatientProgram(bahmniPatientProgram, primaryIdentifierType, orderType, conceptsForDrugs);
+    }
+
+    @RequestMapping(value= baseUrl + "/startDateForDrugs", method = RequestMethod.GET)
+    @ResponseBody
+    public Date getStartDateForDrugConcepts(@RequestParam("patientProgramUuid") String patientProgramUuid, @RequestParam("drugConcepts") Set<String> drugConcepts) throws Exception {
+        return patientMonitoringFlowsheetService.getStartDateForDrugConcepts(patientProgramUuid, drugConcepts);
     }
 
 }
