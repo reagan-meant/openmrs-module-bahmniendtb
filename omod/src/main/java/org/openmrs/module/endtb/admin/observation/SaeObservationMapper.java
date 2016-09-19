@@ -2,10 +2,9 @@ package org.openmrs.module.endtb.admin.observation;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bahmni.module.admin.observation.ConceptCache;
+import org.bahmni.module.bahmnicore.service.BahmniConceptService;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
-import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniObservation;
 import org.openmrs.module.bahmniemrapi.encountertransaction.mapper.ETObsToBahmniObsMapper;
@@ -18,19 +17,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component(value = "saeObservationMapper")
 public class SaeObservationMapper {
 
-    private final ConceptCache conceptCache;
-    private ConceptService conceptService;
+    private BahmniConceptService bahmniConceptService;
     private ETObsToBahmniObsMapper fromETObsToBahmniObs;
 
     @Autowired
-    public SaeObservationMapper(ConceptService conceptService, ETObsToBahmniObsMapper fromETObsToBahmniObs) {
-        this.conceptCache = new ConceptCache(conceptService);
-        this.conceptService = conceptService;
+    public SaeObservationMapper(BahmniConceptService bahmniConceptService, ETObsToBahmniObsMapper fromETObsToBahmniObs) {
+        this.bahmniConceptService = bahmniConceptService;
         this.fromETObsToBahmniObs = fromETObsToBahmniObs;
     }
 
@@ -135,7 +138,7 @@ public class SaeObservationMapper {
 
     private void convertBahmniObservationsValueFromCodedToString(Collection<BahmniObservation> bahmniObservations) {
         for (BahmniObservation bahmniObservation: bahmniObservations) {
-            if(bahmniObservation.getGroupMembers().size() > 0) {
+            if(CollectionUtils.isNotEmpty(bahmniObservation.getGroupMembers())) {
                 convertBahmniObservationsValueFromCodedToString(bahmniObservation.getGroupMembers());
             }
             if(bahmniObservation.getValue() instanceof EncounterTransaction.Concept) {
@@ -146,7 +149,7 @@ public class SaeObservationMapper {
 
     private EncounterTransaction.Observation createEncounterTransactionObservation(String conceptName, Date encounterDateTime) {
         EncounterTransaction.Observation observation = new EncounterTransaction.Observation();
-        Concept obsConcept = conceptCache.getConcept(conceptName);
+        Concept obsConcept = bahmniConceptService.getConceptByFullySpecifiedName(conceptName);
         EncounterTransaction.Concept concept = new EncounterTransaction.Concept(obsConcept.getUuid(), obsConcept.getName().getName());
         observation.setConcept(concept);
         observation.setObservationDateTime(encounterDateTime);
@@ -154,17 +157,9 @@ public class SaeObservationMapper {
     }
 
     private String getValue(String conceptValue, String conceptName) throws ParseException {
-        Concept obsConcept = conceptCache.getConcept(conceptName);
-        if (obsConcept.getDatatype().isCoded() && conceptValue != null && conceptValue.length() > 0) {
-            List<Concept> valueConcepts = conceptService.getConceptsByName(conceptValue);
-            Concept valueConcept = null;
-            for (Concept concept : valueConcepts) {
-                ConceptName name = concept.getFullySpecifiedName(Context.getLocale()) != null ? concept.getFullySpecifiedName(Context.getLocale()) : concept.getName();
-                if (name.getName().equalsIgnoreCase(conceptValue)) {
-                    valueConcept = concept;
-                    break;
-                }
-            }
+        Concept obsConcept = bahmniConceptService.getConceptByFullySpecifiedName(conceptName);
+        if (StringUtils.isNotEmpty(conceptValue) && obsConcept.getDatatype().isCoded()) {
+            Concept valueConcept = bahmniConceptService.getConceptByFullySpecifiedName(conceptValue);
             if (valueConcept == null)
                 throw new ConceptNotFoundException(conceptValue + " not found");
             return valueConcept.getUuid();
