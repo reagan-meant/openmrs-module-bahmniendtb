@@ -16,7 +16,6 @@ import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.OrderService;
 import org.openmrs.module.bahmniendtb.EndTBConstants;
 import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
-import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetClinicalAndBacteriologyMapper;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetMapper;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetAttribute;
@@ -24,8 +23,8 @@ import org.openmrs.module.endtb.flowsheet.models.FlowsheetConfig;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
 import org.openmrs.module.endtb.flowsheet.service.PatientMonitoringFlowsheetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -36,7 +35,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@Transactional
+@Scope("prototype")
 public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringFlowsheetService {
 
     private OrderDao orderDao;
@@ -59,8 +58,8 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         Flowsheet flowsheet = new Flowsheet();
         FlowsheetConfig flowsheetConfig = getPatientMonitoringFlowsheetConfiguration(configFilePath);
 
-        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
-        Date endDate = StringUtils.isEmpty(stopDateStr) ? new Date() : new SimpleDateFormat("yyyy-MM-dd").parse(stopDateStr);
+        Date startDate = StringUtils.isNotEmpty(startDateStr) ? new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr) : null;
+        Date endDate = StringUtils.isNotEmpty(stopDateStr) ? new SimpleDateFormat("yyyy-MM-dd").parse(stopDateStr) : new Date();
 
         for (FlowsheetMapper flowsheetMapper : flowsheetMappers) {
             flowsheetMapper.map(flowsheet, flowsheetConfig, patientUuid, patientProgramUuid, startDate, endDate);

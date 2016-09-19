@@ -53,8 +53,8 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        flowsheetObsMapper = new FlowsheetClinicalAndBacteriologyMapper(endTbObsDao, bahmniDrugOrderService, bahmniConceptService);
-        flowsheetDrugMapper = new FlowsheetDrugMapper(endTbObsDao, bahmniDrugOrderService, bahmniConceptService);
+        flowsheetObsMapper = new FlowsheetClinicalAndBacteriologyMapper(endTbObsDao, bahmniConceptService);
+        flowsheetDrugMapper = new FlowsheetDrugMapper(bahmniDrugOrderService, bahmniConceptService);
         flowsheetMappers = Arrays.asList(flowsheetObsMapper, flowsheetDrugMapper);
         patientMonitoringFlowsheetService = new PatientMonitoringFlowsheetServiceImpl(orderDao, endTbObsDao, flowsheetMappers, orderService, bahmniConceptService);
         when(bahmniConceptService.getConceptByFullySpecifiedName(any(String.class))).thenReturn(new Concept());

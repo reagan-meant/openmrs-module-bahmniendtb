@@ -2,11 +2,8 @@ package org.openmrs.module.endtb.flowsheet.mapper;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.bahmni.module.bahmnicore.service.BahmniConceptService;
-import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
-import org.openmrs.Concept;
 import org.openmrs.ConceptName;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetConcept;
@@ -27,10 +24,6 @@ import java.util.Set;
 
 public abstract class FlowsheetMapper {
 
-    protected EndTbObsDaoImpl endTbObsDao;
-    protected BahmniDrugOrderService bahmniDrugOrderService;
-    protected BahmniConceptService bahmniConceptService;
-
     protected FlowsheetConfig flowsheetConfig;
     protected Flowsheet flowsheet;
     protected String patientUuid;
@@ -39,12 +32,6 @@ public abstract class FlowsheetMapper {
     protected Date startDate;
     protected Date endDate;
     protected Map<String, String> fullySpecifiedNameToShortNameMap;
-
-    public FlowsheetMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, BahmniConceptService bahmniConceptService) {
-        this.endTbObsDao = endTbObsDao;
-        this.bahmniDrugOrderService = bahmniDrugOrderService;
-        this.bahmniConceptService = bahmniConceptService;
-    }
 
 
     protected abstract void createFlowSheet() throws ParseException;
@@ -61,14 +48,6 @@ public abstract class FlowsheetMapper {
         createFlowSheet();
     }
 
-    protected Set<Concept> getConceptObjects(Set<String> conceptNames) {
-        Set<Concept> conceptsList = new HashSet<>();
-        for (String concept : conceptNames) {
-            conceptsList.add(bahmniConceptService.getConceptByFullySpecifiedName(concept));
-        }
-        return conceptsList;
-    }
-
     protected Set<String> getAllConcepts() {
         Set<String> concepts = new HashSet<>();
         concepts.addAll(getAllSingleConceptsFromFlowsheetConfig());
@@ -80,10 +59,10 @@ public abstract class FlowsheetMapper {
 
     protected Set<String> getAllSingleConceptsFromFlowsheetConfig() {
         Set<String> concepts = new HashSet<>();
+        concepts.addAll(getSingleConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities()));
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
             concepts.addAll(getSingleConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities()));
         }
-        concepts.addAll(getSingleConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities()));
         return concepts;
     }
 
@@ -99,10 +78,10 @@ public abstract class FlowsheetMapper {
 
     protected Map<String, Set<String>> getAllGroupConceptsFromFlowsheetConfig() {
         Map<String, Set<String>> concepts = new LinkedHashMap<>();
+        concepts.putAll(getGroupConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities()));
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
             concepts.putAll(getGroupConceptsFromFlowsheetEntities(milestone.getFlowsheetEntities()));
         }
-        concepts.putAll(getGroupConceptsFromFlowsheetEntities(flowsheetConfig.getFlowsheetEntities()));
         return concepts;
     }
 
@@ -114,13 +93,6 @@ public abstract class FlowsheetMapper {
             }
         }
         return groupConcepts;
-    }
-
-    protected FlowsheetConcept getFlowsheetConceptFromFlowsheetConfig() {
-        FlowsheetConcept flowsheetConcept = new FlowsheetConcept();
-        flowsheetConcept.setSingleConcepts(getAllSingleConceptsFromFlowsheetConfig());
-        flowsheetConcept.setGroupConcepts(getAllGroupConceptsFromFlowsheetConfig());
-        return flowsheetConcept;
     }
 
     protected String colorCodeStrategy(Set<String> colorCodes) {
@@ -148,7 +120,7 @@ public abstract class FlowsheetMapper {
         }
     }
 
-    protected void createBasicFlowsheet() {
+    protected void createBasicFlowsheet(BahmniConceptService bahmniConceptService) {
         FlowsheetConcept flowsheetConcept = getFlowsheetConceptFromFlowsheetConfig();
         for (FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
             flowsheet.addFlowSheetHeader(milestone.getName());
@@ -163,5 +135,12 @@ public abstract class FlowsheetMapper {
         for (Map.Entry<String, Set<String>> entry : flowsheetConcept.getGroupConcepts().entrySet()) {
             flowsheetData.put(entry.getKey(), new ArrayList<String>());
         }
+    }
+
+    private FlowsheetConcept getFlowsheetConceptFromFlowsheetConfig() {
+        FlowsheetConcept flowsheetConcept = new FlowsheetConcept();
+        flowsheetConcept.setSingleConcepts(getAllSingleConceptsFromFlowsheetConfig());
+        flowsheetConcept.setGroupConcepts(getAllGroupConceptsFromFlowsheetConfig());
+        return flowsheetConcept;
     }
 }

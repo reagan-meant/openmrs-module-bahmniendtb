@@ -3,7 +3,6 @@ package org.openmrs.module.endtb.flowsheet.mapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.bahmni.module.bahmnicore.service.BahmniConceptService;
-import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Obs;
 import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
@@ -25,15 +24,19 @@ import java.util.Set;
 @Scope("prototype")
 public class FlowsheetClinicalAndBacteriologyMapper extends FlowsheetMapper {
 
+    private EndTbObsDaoImpl endTbObsDao;
+    private BahmniConceptService bahmniConceptService;
+
     @Autowired
-    public FlowsheetClinicalAndBacteriologyMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, BahmniConceptService bahmniConceptService) {
-        super(endTbObsDao, bahmniDrugOrderService, bahmniConceptService);
+    public FlowsheetClinicalAndBacteriologyMapper(EndTbObsDaoImpl endTbObsDao, BahmniConceptService bahmniConceptService) {
+        this.endTbObsDao = endTbObsDao;
+        this.bahmniConceptService = bahmniConceptService;
         this.conceptTypes = new String[]{FlowsheetConstant.CLINICAL, FlowsheetConstant.BACTERIOLOGY};
     }
 
     @Override
     public void createFlowSheet() throws ParseException {
-        createBasicFlowsheet();
+        createBasicFlowsheet(bahmniConceptService);
         Set<String> singleConcepts = getAllSingleConceptsFromFlowsheetConfig();
         Map<String, Set<String>> groupConcepts = getAllGroupConceptsFromFlowsheetConfig();
 

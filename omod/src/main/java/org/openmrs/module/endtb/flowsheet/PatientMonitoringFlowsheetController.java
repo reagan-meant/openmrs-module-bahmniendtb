@@ -19,6 +19,7 @@ import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Controller
+@Scope("prototype")
 public class PatientMonitoringFlowsheetController extends BaseRestController {
 
     private static Logger logger = Logger.getLogger(PatientMonitoringFlowsheetController.class);
@@ -58,7 +60,7 @@ public class PatientMonitoringFlowsheetController extends BaseRestController {
     @ResponseBody
     public Flowsheet retrievePatientFlowSheet(@RequestParam("patientUuid") String patientUuid,
                                               @RequestParam("programUuid") String programUuid,
-                                              @RequestParam(value="startDate") String startDate,
+                                              @RequestParam(value="startDate", required = false) String startDate,
                                               @RequestParam(value="stopDate", required = false) String stopDate) throws Exception {
         return patientMonitoringFlowsheetService.getFlowsheetForPatientProgram(patientUuid, programUuid, startDate, stopDate, Context.getAdministrationService().getGlobalProperty(PATIENT_MONITORING_CONFIG_LOCATION));
     }

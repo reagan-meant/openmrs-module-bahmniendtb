@@ -4,6 +4,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.bahmni.module.bahmnicore.service.BahmniConceptService;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
+import org.openmrs.Concept;
 import org.openmrs.module.bahmniemrapi.drugorder.contract.BahmniDrugOrder;
 import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
@@ -26,9 +27,13 @@ import java.util.Set;
 @Scope("prototype")
 public class FlowsheetDrugMapper extends FlowsheetMapper {
 
+    private BahmniDrugOrderService bahmniDrugOrderService;
+    private BahmniConceptService bahmniConceptService;
+
     @Autowired
-    public FlowsheetDrugMapper(EndTbObsDaoImpl endTbObsDao, BahmniDrugOrderService bahmniDrugOrderService, BahmniConceptService bahmniConceptService) {
-        super(endTbObsDao, bahmniDrugOrderService, bahmniConceptService);
+    public FlowsheetDrugMapper(BahmniDrugOrderService bahmniDrugOrderService, BahmniConceptService bahmniConceptService) {
+        this.bahmniDrugOrderService = bahmniDrugOrderService;
+        this.bahmniConceptService = bahmniConceptService;
         this.conceptTypes = new String[]{FlowsheetConstant.DRUGS};
     }
 
@@ -37,7 +42,7 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
         Set<String> singleConcepts = getAllSingleConceptsFromFlowsheetConfig();
         Map<String, Set<String>> groupConcepts = getAllGroupConceptsFromFlowsheetConfig();
 
-        createBasicFlowsheet();
+        createBasicFlowsheet(bahmniConceptService);
         if (startDate == null) {
             return;
         }
@@ -117,5 +122,13 @@ public class FlowsheetDrugMapper extends FlowsheetMapper {
             drugs.add(drug);
         }
         return conceptToDrugMap;
+    }
+
+    private Set<Concept> getConceptObjects(Set<String> conceptNames) {
+        Set<Concept> conceptsList = new HashSet<>();
+        for (String concept : conceptNames) {
+            conceptsList.add(bahmniConceptService.getConceptByFullySpecifiedName(concept));
+        }
+        return conceptsList;
     }
 }
