@@ -7,6 +7,8 @@ import org.openmrs.Obs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class EndTbObsDaoImpl {
     public enum OrderBy {ASC, DESC}
 
     public List<Obs> getObsByPatientProgramUuidAndConceptNames(String patientProgramUuid, List<String> conceptNames, Integer limit, OrderBy sortOrder, Date startDate, Date endDate) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         StringBuilder queryString = new StringBuilder("SELECT o.* " +
                 "FROM patient_program pp " +
                 "INNER JOIN episode_patient_program epp " +
@@ -54,10 +57,10 @@ public class EndTbObsDaoImpl {
         queryToGetObs.setParameterList("conceptNames", conceptNames);
         queryToGetObs.setString("patientProgramUuid", patientProgramUuid);
         if(null != startDate) {
-            queryToGetObs.setString("startDate", startDate.toString());
+            queryToGetObs.setString("startDate", dateFormat.format(startDate));
         }
         if(null != endDate) {
-            queryToGetObs.setString("endDate", endDate.toString());
+            queryToGetObs.setString("endDate", dateFormat.format(endDate));
         }
 
         return queryToGetObs.list();

@@ -109,7 +109,8 @@ public class FlowsheetClinicalAndBacteriologyMapper extends FlowsheetMapper {
     private boolean isConceptPresentInMilestoneRange(FlowsheetMilestone milestone, List<Obs> obsList) {
         if (CollectionUtils.isNotEmpty(obsList)) {
             for (Obs obs : obsList) {
-                if (obs.getObsDatetime().after(DateUtils.addDays(startDate, milestone.getMin())) && obs.getObsDatetime().before(DateUtils.addDays(startDate, milestone.getMax()))) {
+                if ((obs.getObsDatetime().after(DateUtils.addDays(startDate, milestone.getMin())) || DateUtils.isSameDay(obs.getObsDatetime(), DateUtils.addDays(startDate, milestone.getMin())))
+                        && (obs.getObsDatetime().before(DateUtils.addDays(startDate, milestone.getMax()))) || DateUtils.isSameDay(obs.getObsDatetime(), DateUtils.addDays(startDate, milestone.getMax()))) {
                     return true;
                 }
             }
