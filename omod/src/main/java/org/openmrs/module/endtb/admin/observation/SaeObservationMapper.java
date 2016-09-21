@@ -4,8 +4,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bahmni.module.bahmnicore.service.BahmniConceptService;
 import org.openmrs.Concept;
-import org.openmrs.ConceptName;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniObservation;
 import org.openmrs.module.bahmniemrapi.encountertransaction.mapper.ETObsToBahmniObsMapper;
 import org.openmrs.module.bahmniemrapi.encountertransaction.mapper.parameters.AdditionalBahmniObservationFields;
@@ -186,7 +184,7 @@ public class SaeObservationMapper {
         saeOtherCasualFactorsPVGroupMembers.put(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS_RELATED_TO_SAE, saeEncounterRow.saeOtherCasualFactors);
         saeOtherCasualFactorsPVGroupMembers.put(SAETemplateConstants.SAE_NON_TB_DRUG, saeEncounterRow.nonTBdrug);
         saeOtherCasualFactorsPVGroupMembers.put(SAETemplateConstants.SAE_COMORBIDITY, saeEncounterRow.coMorbidity);
-        saeOtherCasualFactorsPVGroupMembers.put(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS, saeEncounterRow.otherCasualFactor);
+        saeOtherCasualFactorsPVGroupMembers.put(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS, saeEncounterRow.otherCausalFactor);
 
         Map<String, Object> saeTemplateGroupMembers = new HashMap<>();
         saeTemplateGroupMembers.put(SAETemplateConstants.SAE_TERM, saeEncounterRow.saeTerm);

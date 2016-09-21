@@ -57,8 +57,8 @@ public class SaeEncounterRow extends CSVEntity {
     @CSVHeader(name = "Co-morbidity")
     public String coMorbidity;
 
-    @CSVHeader(name = "Other casual factor")
-    public String otherCasualFactor;
+    @CSVHeader(name = "Other causal factor")
+    public String otherCausalFactor;
 
     public Date getEncounterDate() throws ParseException {
         return getDateFromString(dateOfSaeReport);

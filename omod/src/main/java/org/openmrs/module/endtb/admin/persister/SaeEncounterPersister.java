@@ -129,7 +129,7 @@ public class SaeEncounterPersister implements EntityPersister<SaeEncounterRow> {
         if(!StringUtils.isEmpty(saeEncounterRow.coMorbidity)) {
             setSaeOtherCasualFactors(saeEncounterRow, SAETemplateConstants.COMORBIDITY_CONCEPT);
         }
-        if(!StringUtils.isEmpty(saeEncounterRow.otherCasualFactor)) {
+        if(!StringUtils.isEmpty(saeEncounterRow.otherCausalFactor)) {
             setSaeOtherCasualFactors(saeEncounterRow, SAETemplateConstants.OTHER_CONCEPT);
         }
     }
