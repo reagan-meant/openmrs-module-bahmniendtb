@@ -6,7 +6,6 @@ import org.bahmni.module.bahmnicore.service.BahmniConceptService;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.openmrs.Concept;
 import org.openmrs.module.bahmniemrapi.drugorder.contract.BahmniDrugOrder;
-import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
 import org.openmrs.module.endtb.flowsheet.constants.FlowsheetConstant;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.dao.OrderDao;
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.BahmniPatientProgram;
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.PatientProgramAttribute;
@@ -15,7 +16,6 @@ import org.openmrs.OrderType;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.OrderService;
 import org.openmrs.module.bahmniendtb.EndTBConstants;
-import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetMapper;
 import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetAttribute;
@@ -39,14 +39,14 @@ import java.util.Set;
 public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringFlowsheetService {
 
     private OrderDao orderDao;
-    private EndTbObsDaoImpl endTbObsDao;
+    private ObsDao obsDao;
     private List<FlowsheetMapper> flowsheetMappers;
     private OrderService orderService;
     private BahmniConceptService bahmniConceptService;
 
     @Autowired
-    public PatientMonitoringFlowsheetServiceImpl(OrderDao orderDao, EndTbObsDaoImpl endTbObsDao, List<FlowsheetMapper> flowsheetMappers, OrderService orderService, BahmniConceptService bahmniConceptService) {
-        this.endTbObsDao = endTbObsDao;
+    public PatientMonitoringFlowsheetServiceImpl(OrderDao orderDao, ObsDao obsDao, List<FlowsheetMapper> flowsheetMappers, OrderService orderService, BahmniConceptService bahmniConceptService) {
+        this.obsDao = obsDao;
         this.flowsheetMappers = flowsheetMappers;
         this.orderDao = orderDao;
         this.orderService = orderService;
@@ -71,7 +71,7 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
     @Override
     public FlowsheetAttribute getFlowsheetAttributesForPatientProgram(BahmniPatientProgram bahmniPatientProgram, PatientIdentifierType primaryIdentifierType, OrderType orderType, Set<Concept> concepts) {
         FlowsheetAttribute flowsheetAttribute = new FlowsheetAttribute();
-        List<Obs> startDateConceptObs = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(bahmniPatientProgram.getUuid(), Arrays.asList(EndTBConstants.TI_TREATMENT_START_DATE), null, null, null, null);
+        List<Obs> startDateConceptObs = obsDao.getObsByPatientProgramUuidAndConceptNames(bahmniPatientProgram.getUuid(), Arrays.asList(EndTBConstants.TI_TREATMENT_START_DATE), null, null, null, null);
         Date startDate = null;
         if (CollectionUtils.isNotEmpty(startDateConceptObs)) {
             startDate = startDateConceptObs.get(0).getValueDate();

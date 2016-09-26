@@ -2,9 +2,9 @@ package org.openmrs.module.endtb.flowsheet.mapper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.service.BahmniConceptService;
 import org.openmrs.Obs;
-import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.constants.ColourCode;
 import org.openmrs.module.endtb.flowsheet.constants.FlowsheetConstant;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
@@ -24,12 +24,12 @@ import java.util.Set;
 @Scope("prototype")
 public class FlowsheetClinicalAndBacteriologyMapper extends FlowsheetMapper {
 
-    private EndTbObsDaoImpl endTbObsDao;
+    private ObsDao obsDao;
     private BahmniConceptService bahmniConceptService;
 
     @Autowired
-    public FlowsheetClinicalAndBacteriologyMapper(EndTbObsDaoImpl endTbObsDao, BahmniConceptService bahmniConceptService) {
-        this.endTbObsDao = endTbObsDao;
+    public FlowsheetClinicalAndBacteriologyMapper(ObsDao obsDao, BahmniConceptService bahmniConceptService) {
+        this.obsDao = obsDao;
         this.bahmniConceptService = bahmniConceptService;
         this.conceptTypes = new String[]{FlowsheetConstant.CLINICAL, FlowsheetConstant.BACTERIOLOGY};
     }
@@ -78,7 +78,7 @@ public class FlowsheetClinicalAndBacteriologyMapper extends FlowsheetMapper {
 
     private Map<String, List<Obs>> getConceptToObsMap() {
         Set<String> allObsConcepts = getAllConcepts();
-        List<Obs> obsList = endTbObsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, new ArrayList<>(allObsConcepts), null, null, startDate, null);
+        List<Obs> obsList = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, new ArrayList<>(allObsConcepts), null, null, startDate, null);
         Map<String, List<Obs>> conceptToObsMap = new LinkedHashMap<>();
         if (CollectionUtils.isEmpty(obsList)) {
             return new LinkedHashMap<>();

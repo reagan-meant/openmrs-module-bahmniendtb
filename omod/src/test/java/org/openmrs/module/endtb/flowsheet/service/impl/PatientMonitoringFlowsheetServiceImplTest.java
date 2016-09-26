@@ -1,16 +1,15 @@
 package org.openmrs.module.endtb.flowsheet.service.impl;
 
+import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.dao.OrderDao;
+import org.bahmni.module.bahmnicore.dao.impl.ObsDaoImpl;
 import org.bahmni.module.bahmnicore.service.BahmniConceptService;
 import org.bahmni.module.bahmnicore.service.BahmniDrugOrderService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.openmrs.Concept;
-import org.openmrs.Obs;
-import org.openmrs.api.APIException;
 import org.openmrs.api.OrderService;
-import org.openmrs.module.endtb.bahmniCore.EndTbObsDaoImpl;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetClinicalAndBacteriologyMapper;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetDrugMapper;
 import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetMapper;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -36,7 +34,7 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     private PatientMonitoringFlowsheetService patientMonitoringFlowsheetService;
 
     @Mock
-    private EndTbObsDaoImpl endTbObsDao;
+    private ObsDao obsDao;
     @Mock
     private BahmniDrugOrderService bahmniDrugOrderService;
     @Mock
@@ -53,16 +51,16 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        flowsheetObsMapper = new FlowsheetClinicalAndBacteriologyMapper(endTbObsDao, bahmniConceptService);
+        flowsheetObsMapper = new FlowsheetClinicalAndBacteriologyMapper(obsDao, bahmniConceptService);
         flowsheetDrugMapper = new FlowsheetDrugMapper(bahmniDrugOrderService, bahmniConceptService);
         flowsheetMappers = Arrays.asList(flowsheetObsMapper, flowsheetDrugMapper);
-        patientMonitoringFlowsheetService = new PatientMonitoringFlowsheetServiceImpl(orderDao, endTbObsDao, flowsheetMappers, orderService, bahmniConceptService);
+        patientMonitoringFlowsheetService = new PatientMonitoringFlowsheetServiceImpl(orderDao, obsDao, flowsheetMappers, orderService, bahmniConceptService);
         when(bahmniConceptService.getConceptByFullySpecifiedName(any(String.class))).thenReturn(new Concept());
     }
 
     @Test
     public void shouldReturnFlowsheetForTreatmentStartedToday() throws Exception {
-        when(endTbObsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(EndTbObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(null);
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(null);
         when(bahmniDrugOrderService.getDrugOrders(any(String.class), any(Boolean.class), any(Set.class), any(Set.class), any(String.class))).thenReturn(null);
         Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", getCurrentDate(), null, "src/test/resources/patientMonitoringConf.json");
         Flowsheet expectedFlowsheet = getDummyFlowsheet();
@@ -73,7 +71,7 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     public void shouldReturnFlowsheetForBothSingleConceptsAndGroupConcepts() throws Exception {
         Flowsheet expectedFlowsheet = getDummyFlowsheet();
         expectedFlowsheet.getFlowsheetData().put("group1", Arrays.asList("yellow", "grey", "grey"));
-        when(endTbObsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(EndTbObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(null);
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(null);
         when(bahmniDrugOrderService.getDrugOrders(any(String.class), any(Boolean.class), any(Set.class), any(Set.class), any(String.class))).thenReturn(null);
         Flowsheet actualFlowsheet = patientMonitoringFlowsheetService.getFlowsheetForPatientProgram("patientUuid", "programUuid", getCurrentDate(), null, "src/test/resources/patientMonitoringConfWithGroupConcepts.json");
         assertTrue(actualFlowsheet.equals(expectedFlowsheet));
