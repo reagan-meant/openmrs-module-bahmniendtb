@@ -5,7 +5,7 @@
 
     <groupId>org.bahmni.module</groupId>
     <artifactId>bahmniendtb</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>${bahmniEndTbVersion}</version>
     <packaging>pom</packaging>
     <name>EndTB extension Module</name>
     <description>Modules to override features in bahmni-core by implementors</description>
@@ -18,6 +18,7 @@
         <calculationModuleVersion>1.1</calculationModuleVersion>
         <serializationXstreamModuleVersion>0.2.7</serializationXstreamModuleVersion>
         <bahmniVersion>0.85-SNAPSHOT</bahmniVersion>
+        <bahmniEndTbVersion>1.5-SNAPSHOT</bahmniEndTbVersion>
     </properties>
 
     <organization>

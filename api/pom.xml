@@ -7,13 +7,13 @@
     <parent>
         <groupId>org.bahmni.module</groupId>
         <artifactId>bahmniendtb</artifactId>
-        <version>1.4-SNAPSHOT</version>
+        <version>${bahmniEndTbVersion}</version>
     </parent>
 
 
     <packaging>jar</packaging>
     <artifactId>bahmniendtb-api</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>${bahmniEndTbVersion}</version>
 
     <dependencies>
         <!-- Begin OpenMRS modules -->
