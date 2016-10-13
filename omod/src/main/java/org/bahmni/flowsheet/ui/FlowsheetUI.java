@@ -1,14 +1,13 @@
-package org.openmrs.module.endtb.flowsheet.models;
+package org.bahmni.flowsheet.ui;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Flowsheet {
+public class FlowsheetUI {
 
     private Set<String> flowsheetHeader;
     private Map<String, List<String>> flowsheetData;
@@ -43,36 +42,5 @@ public class Flowsheet {
 
     public void setHighlightedMilestone(String highlightedMilestone) {
         this.highlightedMilestone = highlightedMilestone;
-    }
-
-    public Flowsheet addFlowSheetHeader(String header) {
-        getFlowsheetHeader().add(header);
-        return this;
-    }
-
-    public void addFlowSheetData(String conceptName, String value) {
-        if (!getFlowsheetData().containsKey(conceptName)) {
-            getFlowsheetData().put(conceptName, new ArrayList<String>());
-        }
-        getFlowsheetData().get(conceptName).add(value);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Flowsheet flowsheet = (Flowsheet) o;
-
-        if (!getFlowsheetHeader().equals(flowsheet.getFlowsheetHeader())) return false;
-        return getFlowsheetData().equals(flowsheet.getFlowsheetData());
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getFlowsheetHeader().hashCode();
-        result = 31 * result + getFlowsheetData().hashCode();
-        return result;
     }
 }

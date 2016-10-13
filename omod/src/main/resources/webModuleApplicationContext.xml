@@ -27,6 +27,7 @@
     <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 
     <context:component-scan base-package="org.openmrs.module.bahmniendtb"/>
+    <context:component-scan base-package="org.bahmni.flowsheet"/>
 
 
 </beans>

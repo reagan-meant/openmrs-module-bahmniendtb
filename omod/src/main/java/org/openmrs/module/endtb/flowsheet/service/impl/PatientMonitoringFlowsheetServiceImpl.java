@@ -2,71 +2,133 @@ package org.openmrs.module.endtb.flowsheet.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.bahmni.flowsheet.api.QuestionType;
+import org.bahmni.flowsheet.api.Status;
+import org.bahmni.flowsheet.api.models.Flowsheet;
+import org.bahmni.flowsheet.api.models.Milestone;
+import org.bahmni.flowsheet.api.models.Question;
+import org.bahmni.flowsheet.api.models.Result;
+import org.bahmni.flowsheet.config.Config;
+import org.bahmni.flowsheet.config.FlowsheetConfig;
+import org.bahmni.flowsheet.config.MilestoneConfig;
+import org.bahmni.flowsheet.config.QuestionConfig;
+import org.bahmni.flowsheet.definition.HandlerProvider;
+import org.bahmni.flowsheet.api.models.QuestionEvaluatorFactory;
+import org.bahmni.flowsheet.definition.models.FlowsheetDefinition;
+import org.bahmni.flowsheet.definition.models.MilestoneDefinition;
+import org.bahmni.flowsheet.definition.models.QuestionDefinition;
 import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.dao.OrderDao;
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.BahmniPatientProgram;
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.PatientProgramAttribute;
 import org.bahmni.module.bahmnicore.service.BahmniConceptService;
-import org.openmrs.Concept;
-import org.openmrs.Obs;
-import org.openmrs.Order;
-import org.openmrs.OrderType;
-import org.openmrs.PatientIdentifierType;
-import org.openmrs.api.OrderService;
+import org.openmrs.*;
 import org.openmrs.module.bahmniendtb.EndTBConstants;
-import org.openmrs.module.endtb.flowsheet.mapper.FlowsheetMapper;
-import org.openmrs.module.endtb.flowsheet.models.Flowsheet;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetAttribute;
-import org.openmrs.module.endtb.flowsheet.models.FlowsheetConfig;
-import org.openmrs.module.endtb.flowsheet.models.FlowsheetMilestone;
+import org.bahmni.flowsheet.ui.FlowsheetUI;
 import org.openmrs.module.endtb.flowsheet.service.PatientMonitoringFlowsheetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
-@Scope("prototype")
 public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringFlowsheetService {
 
     private OrderDao orderDao;
     private ObsDao obsDao;
-    private List<FlowsheetMapper> flowsheetMappers;
-    private OrderService orderService;
     private BahmniConceptService bahmniConceptService;
+    private HandlerProvider handlerProvider;
+    private QuestionEvaluatorFactory questionEvaluatorFactory;
+
 
     @Autowired
-    public PatientMonitoringFlowsheetServiceImpl(OrderDao orderDao, ObsDao obsDao, List<FlowsheetMapper> flowsheetMappers, OrderService orderService, BahmniConceptService bahmniConceptService) {
-        this.obsDao = obsDao;
-        this.flowsheetMappers = flowsheetMappers;
+    public PatientMonitoringFlowsheetServiceImpl(OrderDao orderDao, ObsDao obsDao, BahmniConceptService bahmniConceptService, HandlerProvider handlerProvider, QuestionEvaluatorFactory factory) {
         this.orderDao = orderDao;
-        this.orderService = orderService;
+        this.obsDao = obsDao;
         this.bahmniConceptService = bahmniConceptService;
+        this.handlerProvider = handlerProvider;
+        this.questionEvaluatorFactory = factory;
     }
 
     @Override
-    public Flowsheet getFlowsheetForPatientProgram(String patientUuid, String patientProgramUuid, String startDateStr, String stopDateStr, String configFilePath) throws Exception {
-        Flowsheet flowsheet = new Flowsheet();
-        FlowsheetConfig flowsheetConfig = getPatientMonitoringFlowsheetConfiguration(configFilePath);
-
-        Date startDate = StringUtils.isNotEmpty(startDateStr) ? new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr) : null;
-        Date endDate = StringUtils.isNotEmpty(stopDateStr) ? new SimpleDateFormat("yyyy-MM-dd").parse(stopDateStr) : new Date();
-
-        for (FlowsheetMapper flowsheetMapper : flowsheetMappers) {
-            flowsheetMapper.map(flowsheet, flowsheetConfig, patientUuid, patientProgramUuid, startDate, endDate);
+    public FlowsheetUI getFlowsheetForPatientProgram(PatientProgram patientProgram, Date startDate, Date endDate, String configFilePath) throws Exception {
+        FlowsheetUI presentationFlowsheet = new FlowsheetUI();
+        if (startDate == null) {
+            return presentationFlowsheet;
         }
-        flowsheet.setHighlightedMilestone(findHighlightedMilestone(flowsheetConfig, startDate, endDate));
-        return flowsheet;
+        FlowsheetConfig flowsheetConfig = getFlowsheetConfig(configFilePath);
+        FlowsheetDefinition flowsheetDefinition = getFlowsheetDefinitionFromConfig(flowsheetConfig, startDate);
+        Flowsheet flowsheet = flowsheetDefinition.createFlowsheet(patientProgram);
+
+
+        questionEvaluatorFactory.init(patientProgram, flowsheet.getObsFlowsheetConcepts());
+        flowsheet.evaluate(questionEvaluatorFactory);
+
+        Set<Milestone> milestones = flowsheet.getMilestones();
+
+        Set<String> flowsheetHeaders = new LinkedHashSet<>();
+        for (Milestone milestone : milestones) {
+            flowsheetHeaders.add(milestone.getName());
+        }
+
+        Set<String> floatingMilestoneNames = getFloatingMilestoneNames(flowsheetConfig.getMilestoneConfigs());
+        setNotApplicableStatusToFixedMilestones(endDate, milestones, floatingMilestoneNames);
+
+        List<QuestionConfig> questionConfigs = flowsheetConfig.getQuestionConfigs();
+
+        Map<String, List<String>> flowsheetData = new LinkedHashMap<>();
+        for (QuestionConfig questionConfig : questionConfigs) {
+            String questionName = questionConfig.getName();
+            List<String> colorCodes = new LinkedList<>();
+            for (Milestone milestone : milestones) {
+                Question milestoneQuestion = getQuestionFromSet(milestone.getQuestions(), questionName);
+                if (milestoneQuestion == null) {
+                    colorCodes.add("grey");
+                } else {
+                    colorCodes.add(getColorCodeForStatus(milestoneQuestion.getResult().getStatus()));
+                }
+            }
+            flowsheetData.put(questionName, colorCodes);
+        }
+        presentationFlowsheet.setFlowsheetHeader(flowsheetHeaders);
+        presentationFlowsheet.setHighlightedMilestone(findHighlightedMilestoneInFixedMilestones(milestones, endDate, floatingMilestoneNames));
+        presentationFlowsheet.setFlowsheetData(flowsheetData);
+        return presentationFlowsheet;
     }
+
+
+    @Override
+    public FlowsheetDefinition getFlowsheetDefinitionFromConfig(FlowsheetConfig flowsheetConfig, Date startDate) {
+
+        Set<MilestoneDefinition> milestoneDefinitions = new LinkedHashSet<>();
+        List<MilestoneConfig> milestoneConfigs = flowsheetConfig.getMilestoneConfigs();
+        for (MilestoneConfig milestoneConfig : milestoneConfigs) {
+            Config config = milestoneConfig.getConfig();
+            Map<String, String> configMap = new LinkedHashMap<>();
+            configMap.put("min", config.getMin());
+            configMap.put("max", config.getMax());
+            MilestoneDefinition milestoneDefinition = new MilestoneDefinition(milestoneConfig.getName(), configMap, milestoneConfig.getHandler(), handlerProvider);
+
+            Set<QuestionDefinition> questionDefinitions = new LinkedHashSet<>();
+            for (String questionName : milestoneConfig.getQuestionNames()) {
+                QuestionConfig questionConfig = flowsheetConfig.getQuestionConfigByName(questionName);
+                if (questionConfig != null) {
+                    Set<Concept> conceptSet = new LinkedHashSet<>();
+                    for (String conceptName : questionConfig.getConcepts()) {
+                        conceptSet.add(bahmniConceptService.getConceptByFullySpecifiedName(conceptName));
+                    }
+                    questionDefinitions.add(new QuestionDefinition(questionConfig.getName(), conceptSet, getQuestionType(questionConfig.getType())));
+                }
+            }
+            milestoneDefinition.setQuestionDefinitions(questionDefinitions);
+            milestoneDefinitions.add(milestoneDefinition);
+        }
+        return new FlowsheetDefinition(startDate, milestoneDefinitions);
+    }
+
 
     @Override
     public FlowsheetAttribute getFlowsheetAttributesForPatientProgram(BahmniPatientProgram bahmniPatientProgram, PatientIdentifierType primaryIdentifierType, OrderType orderType, Set<Concept> concepts) {
@@ -85,9 +147,24 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
     }
 
     @Override
-    public Date getStartDateForDrugConcepts(String patientProgramUuid, Set<String> drugConcepts) {
-        OrderType orderType = orderService.getOrderTypeByUuid(OrderType.DRUG_ORDER_TYPE_UUID);
+    public Date getStartDateForDrugConcepts(String patientProgramUuid, Set<String> drugConcepts, OrderType orderType) {
         return getNewDrugTreatmentStartDate(patientProgramUuid, orderType, getConceptObjects(drugConcepts));
+    }
+
+    private QuestionType getQuestionType(String type) {
+        if (type.equalsIgnoreCase("Drug")) {
+            return QuestionType.DRUG;
+        }
+        return QuestionType.OBS;
+    }
+
+
+    private Question getQuestionFromSet(Set<Question> questions, String name) {
+        for (Question question : questions) {
+            if (question.getName().equals(name))
+                return question;
+        }
+        return null;
     }
 
     private Set<Concept> getConceptObjects(Set<String> conceptNames) {
@@ -122,24 +199,59 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         return "";
     }
 
-    private String findHighlightedMilestone(FlowsheetConfig flowsheetConfig, Date startDate, Date endDate) {
-        String currentMilestone = "";
-        if(null != startDate && CollectionUtils.isNotEmpty(flowsheetConfig.getFlowsheetMilestones())) {
-            for(FlowsheetMilestone milestone : flowsheetConfig.getFlowsheetMilestones()) {
-                if(DateUtils.addDays(startDate, milestone.getMin()).before(endDate) &&
-                        DateUtils.addDays(startDate, milestone.getMax()).after(endDate)) {
-                    currentMilestone = milestone.getName();
-                    break;
-                }
+    private String findHighlightedMilestoneInFixedMilestones(Set<Milestone> milestones, Date endDate, Set<String> floatingMilestones) {
+        if (endDate == null) {
+            endDate = new Date();
+        }
+        for (Milestone milestone : milestones) {
+            if ((!floatingMilestones.contains(milestone.getName())) && (milestone.getStartDate().before(endDate) || DateUtils.isSameDay(milestone.getStartDate(), endDate)) && (milestone.getEndDate().after(endDate) || DateUtils.isSameDay(milestone.getEndDate(), endDate))) {
+                return milestone.getName();
             }
         }
-        return currentMilestone;
+        return "";
     }
 
-    private FlowsheetConfig getPatientMonitoringFlowsheetConfiguration(String configFilePath) throws Exception {
+    private Set<String> getFloatingMilestoneNames(List<MilestoneConfig> milestoneConfigs) {
+        Set<String> floatingMilestoneNames = new HashSet<>();
+        for (MilestoneConfig milestoneConfig : milestoneConfigs) {
+            if (milestoneConfig.getHandler() != null) {
+                floatingMilestoneNames.add(milestoneConfig.getName());
+            }
+        }
+        return floatingMilestoneNames;
+    }
+
+    private void setNotApplicableStatusToFixedMilestones(Date endDate, Set<Milestone> milestones, Set<String> floatingMilestones) {
+        for (Milestone milestone : milestones) {
+            if (!floatingMilestones.contains(milestone.getName()))
+                for (Question question : milestone.getQuestions()) {
+                    if (endDate != null && milestone.getStartDate().after(endDate) && !question.getResult().getStatus().equals(Status.DATA_ADDED)) {
+                        question.setResult(new Result(Status.NOT_APPLICABLE));
+                    }
+                }
+        }
+    }
+
+    private FlowsheetConfig getFlowsheetConfig(String configFilePath) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         FlowsheetConfig flowsheetConfig = mapper.readValue(new File(configFilePath), FlowsheetConfig.class);
         return flowsheetConfig;
+    }
+
+    private String getColorCodeForStatus(Status status) {
+        if (status.equals(Status.DATA_ADDED)) {
+            return "green";
+        }
+        if (status.equals(Status.PLANNED)) {
+            return "yellow";
+        }
+        if (status.equals(Status.PENDING)) {
+            return "purple";
+        }
+        if (status.equals(Status.NOT_APPLICABLE)) {
+            return "grey";
+        }
+        return "grey";
     }
 
 }

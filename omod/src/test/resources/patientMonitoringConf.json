@@ -1,61 +1,89 @@
 {
+  "questions": [
+    {
+      "name": "New Drugs",
+      "concepts": [
+        "Bedaquiline",
+        "Delamanid"
+      ],
+      "type": "Drug"
+    },
+    {
+      "name": "Blood Pressure",
+      "concepts": [
+        "Systolic",
+        "Diastolic"
+      ],
+      "type": "Obs"
+    }
+  ],
   "milestones": [
     {
       "name": "M1",
-      "min": 0,
-      "max": 30,
-      "entities": {
-        "clinical": {
-          "singleConcepts": [
-            "Baseline, Prison"
-          ],
-          "groupConcepts": {}
-        },
-        "bacteriology": {
-          "singleConcepts": [
-            "Bacteriology, Fluoroquinolone"
-          ],
-          "groupConcepts": {}
-        },
-        "drugs": {
-          "singleConcepts": [
-            "Isoniazid"
-          ],
-          "groupConcepts": {}
-        }
-      }
+      "config": {
+        "min": 0,
+        "max": 30
+      },
+      "questions": [
+        "Blood Pressure"
+      ]
     },
     {
       "name": "M2",
-      "min": 31,
-      "max": 60
+      "config": {
+        "min": 31,
+        "max": 60
+      },
+      "questions": [
+        "Blood Pressure",
+        "New Drugs"
+      ]
     },
     {
       "name": "M3",
-      "min": 61,
-      "max": 90
-    }
-  ],
-  "entities": {
-    "clinical": {
-      "singleConcepts": [
-        "Height (cm)",
-        "Weight (kg)"
-      ],
-      "groupConcepts": {}
+      "config": {
+        "min": 61,
+        "max": 90
+      },
+      "questions": [
+        "Blood Pressure",
+        "New Drugs"
+      ]
     },
-    "bacteriology": {
-      "singleConcepts": [
-        "Bacteriology, Culture results"
-      ],
-      "groupConcepts": {}
+    {
+      "name": "M4",
+      "config": {
+        "min": 91,
+        "max": 120
+      },
+      "questions": [
+        "Blood Pressure",
+        "New Drugs"
+      ]
     },
-    "drugs": {
-      "singleConcepts": [
-        "Delamanid"
-      ],
-      "groupConcepts": {}
+    {
+      "name": "MTx",
+      "config": {
+        "min": -15,
+        "max": 15
+      },
+      "handler": "org.bahmni.flowsheet.definition.impl.TreatmentEndDateHandler",
+      "questions": [
+        "New Drugs"
+      ]
+    },
+    {
+      "name": "M6M",
+      "config": {
+        "min": -30,
+        "max": 15
+      },
+      "handler": "org.bahmni.flowsheet.definition.impl.SixMonthPostTreatmentOutcomeHandler",
+      "questions": [
+        "Blood Pressure",
+        "New Drugs",
+        "UndefinedQuestion"
+      ]
     }
-  },
-  "startDateConcept": "TUBERCULOSIS DRUG TREATMENT START DATE"
+  ]
 }
