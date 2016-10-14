@@ -1,6 +1,7 @@
 package org.openmrs.module.endtb.flowsheet.service.impl;
 
 
+import org.bahmni.flowsheet.api.models.Milestone;
 import org.bahmni.flowsheet.ui.FlowsheetUI;
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.BahmniPatientProgram;
 import org.bahmni.module.bahmnicore.service.BahmniProgramWorkflowService;
@@ -94,8 +95,7 @@ public class PatientMonitoringFlowsheetServiceImplIT extends BaseModuleContextSe
         for (String key : keys) {
             questions.add(key);
         }
-        Set<String> flowsheetHeaders = flowsheetUI.getFlowsheetHeader();
-        List<String> headers = new ArrayList<>(flowsheetHeaders);
+        List<Milestone> flowsheetHeaders = flowsheetUI.getMilestones();
 
         List<String> coloursForNewDrugs = flowsheetData.get("New Drugs");
         List<String> coloursForBloodPressure = flowsheetData.get("Blood Pressure");
@@ -103,12 +103,12 @@ public class PatientMonitoringFlowsheetServiceImplIT extends BaseModuleContextSe
 
         assertEquals("New Drugs", questions.get(0));
         assertEquals("Blood Pressure", questions.get(1));
-        assertEquals("M1", headers.get(0));
-        assertEquals("M2", headers.get(1));
-        assertEquals("M3", headers.get(2));
-        assertEquals("M4", headers.get(3));
-        assertEquals("MTx", headers.get(4));
-        assertEquals("M6M", headers.get(5));
+        assertEquals("M1", flowsheetHeaders.get(0).getName());
+        assertEquals("M2", flowsheetHeaders.get(1).getName());
+        assertEquals("M3", flowsheetHeaders.get(2).getName());
+        assertEquals("M4", flowsheetHeaders.get(3).getName());
+        assertEquals("MTx", flowsheetHeaders.get(4).getName());
+        assertEquals("M6M", flowsheetHeaders.get(5).getName());
         assertEquals("M3", flowsheetUI.getHighlightedMilestone());
         assertEquals(6, flowsheetData.get("New Drugs").size());
         assertEquals(6, flowsheetData.get("Blood Pressure").size());
@@ -124,6 +124,8 @@ public class PatientMonitoringFlowsheetServiceImplIT extends BaseModuleContextSe
         assertEquals("grey", coloursForBloodPressure.get(3));
         assertEquals("grey", coloursForBloodPressure.get(4));
         assertEquals("purple", coloursForBloodPressure.get(5));
+        assertEquals(0, flowsheetHeaders.get(0).getQuestions().size());
+        assertEquals(0, flowsheetHeaders.get(1).getQuestions().size());
     }
 
     @Test
@@ -144,8 +146,9 @@ public class PatientMonitoringFlowsheetServiceImplIT extends BaseModuleContextSe
         for (String key : keys) {
             questions.add(key);
         }
-        Set<String> flowsheetHeaders = flowsheetUI.getFlowsheetHeader();
-        List<String> headers = new ArrayList<>(flowsheetHeaders);
+
+        List<Milestone> flowsheetHeaders = flowsheetUI.getMilestones();
+
 
         List<String> coloursForNewDrugs = flowsheetData.get("New Drugs");
         List<String> coloursForBloodPressure = flowsheetData.get("Blood Pressure");
@@ -153,12 +156,12 @@ public class PatientMonitoringFlowsheetServiceImplIT extends BaseModuleContextSe
 
         assertEquals("New Drugs", questions.get(0));
         assertEquals("Blood Pressure", questions.get(1));
-        assertEquals("M1", headers.get(0));
-        assertEquals("M2", headers.get(1));
-        assertEquals("M3", headers.get(2));
-        assertEquals("M4", headers.get(3));
-        assertEquals("MTx", headers.get(4));
-        assertEquals("M6M", headers.get(5));
+        assertEquals("M1", flowsheetHeaders.get(0).getName());
+        assertEquals("M2", flowsheetHeaders.get(1).getName());
+        assertEquals("M3", flowsheetHeaders.get(2).getName());
+        assertEquals("M4", flowsheetHeaders.get(3).getName());
+        assertEquals("MTx", flowsheetHeaders.get(4).getName());
+        assertEquals("M6M", flowsheetHeaders.get(5).getName());
         assertEquals("", flowsheetUI.getHighlightedMilestone());
         assertEquals(6, flowsheetData.get("New Drugs").size());
         assertEquals(6, flowsheetData.get("Blood Pressure").size());

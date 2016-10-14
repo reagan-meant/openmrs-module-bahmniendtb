@@ -69,13 +69,10 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
 
         Set<Milestone> milestones = flowsheet.getMilestones();
 
-        Set<String> flowsheetHeaders = new LinkedHashSet<>();
-        for (Milestone milestone : milestones) {
-            flowsheetHeaders.add(milestone.getName());
-        }
 
         Set<String> floatingMilestoneNames = getFloatingMilestoneNames(flowsheetConfig.getMilestoneConfigs());
         setNotApplicableStatusToFixedMilestones(endDate, milestones, floatingMilestoneNames);
+        String highlightedMilestoneName = findHighlightedMilestoneInFixedMilestones(milestones, endDate, floatingMilestoneNames);
 
         List<QuestionConfig> questionConfigs = flowsheetConfig.getQuestionConfigs();
 
@@ -93,8 +90,15 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
             }
             flowsheetData.put(questionName, colorCodes);
         }
-        presentationFlowsheet.setFlowsheetHeader(flowsheetHeaders);
-        presentationFlowsheet.setHighlightedMilestone(findHighlightedMilestoneInFixedMilestones(milestones, endDate, floatingMilestoneNames));
+
+        List<Milestone> flowsheetMilestones = new ArrayList<>();
+        for (Milestone milestone : milestones) {
+            milestone.setQuestions(new LinkedHashSet<Question>());
+            flowsheetMilestones.add(milestone);
+        }
+
+        presentationFlowsheet.setMilestones(flowsheetMilestones);
+        presentationFlowsheet.setHighlightedMilestone(highlightedMilestoneName);
         presentationFlowsheet.setFlowsheetData(flowsheetData);
         return presentationFlowsheet;
     }

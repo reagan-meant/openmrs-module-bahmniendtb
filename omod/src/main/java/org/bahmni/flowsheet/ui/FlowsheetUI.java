@@ -1,5 +1,7 @@
 package org.bahmni.flowsheet.ui;
 
+import org.bahmni.flowsheet.api.models.Milestone;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -9,21 +11,9 @@ import java.util.Set;
 
 public class FlowsheetUI {
 
-    private Set<String> flowsheetHeader;
+    private List<Milestone> milestones;
     private Map<String, List<String>> flowsheetData;
     private String highlightedMilestone;
-
-
-    public Set<String> getFlowsheetHeader() {
-        if(null == this.flowsheetHeader) {
-            this.flowsheetHeader = new LinkedHashSet<>();
-        }
-        return this.flowsheetHeader;
-    }
-
-    public void setFlowsheetHeader(Set<String> flowsheetHeader) {
-        this.flowsheetHeader = flowsheetHeader;
-    }
 
     public Map<String, List<String>> getFlowsheetData() {
         if(null == this.flowsheetData) {
@@ -42,5 +32,13 @@ public class FlowsheetUI {
 
     public void setHighlightedMilestone(String highlightedMilestone) {
         this.highlightedMilestone = highlightedMilestone;
+    }
+
+    public List<Milestone> getMilestones() {
+        return milestones;
+    }
+
+    public void setMilestones(List<Milestone> milestones) {
+        this.milestones = milestones;
     }
 }
