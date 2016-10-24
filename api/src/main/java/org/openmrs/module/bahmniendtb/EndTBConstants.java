@@ -78,4 +78,8 @@ public class EndTBConstants {
 
 
     public static final String PROGRAM_ATTRIBUTE_REG_NO = "Registration Number";
+
+    //Handlers
+    public static final String TREATMENT_END_DATE_HANDLER = "org.bahmni.flowsheet.definition.impl.TreatmentEndDateHandler";
+    public static final String SIX_MONTH_POST_TREATMENT_OUTCOME_HANDLER = "org.bahmni.flowsheet.definition.impl.SixMonthPostTreatmentOutcomeHandler";
 }
