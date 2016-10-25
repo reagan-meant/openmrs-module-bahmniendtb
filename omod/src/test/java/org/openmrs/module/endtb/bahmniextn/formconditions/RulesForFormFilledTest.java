@@ -17,6 +17,8 @@ import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.bahmniendtb.formconditions.RulesForFormFilled;
 import org.openmrs.module.episodes.dao.impl.EpisodeDAO;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -139,12 +141,60 @@ public class RulesForFormFilledTest {
         rulesForFormFilled.update(bahmniEncounterTransaction);
     }
 
+
+    @Test
+    public void shouldNotThrowExceptionWhenCorrectingTheExistingMTCFormsFilledOnSameMonth() throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Obs obs1 = new Obs();
+        obs1.setObsDatetime(simpleDateFormat.parse("2015-01-01"));
+        obs1.setUuid("uuid1");
+        Obs obs2 = new Obs();
+        obs2.setObsDatetime(simpleDateFormat.parse("2015-01-01"));
+        obs2.setUuid("uuid2");
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs1, obs2));
+        bahmniEncounterTransaction = getBahmniEncounterTransaction(Arrays.asList("Monthly Treatment Completeness Template", "Monthly Treatment Completeness Template"));
+
+        Iterator<BahmniObservation> iterator = bahmniEncounterTransaction.getObservations().iterator();
+        iterator.next().setUuid("uuid1").setObservationDateTime(simpleDateFormat.parse("2015-01-01"));
+        iterator.next().setUuid("uuid2").setObservationDateTime(simpleDateFormat.parse("2015-03-01"));
+
+        BahmniEncounterTransaction actualResult = rulesForFormFilled.update(bahmniEncounterTransaction);
+        BahmniEncounterTransaction expectedResult = bahmniEncounterTransaction;
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void shouldNotThrowExceptionWhenSavingVoidedFormFilledOnSameMonth() throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Obs obs1 = new Obs();
+        obs1.setObsDatetime(simpleDateFormat.parse("2015-01-01"));
+        obs1.setUuid("uuid1");
+
+        Obs obs2 = new Obs();
+        obs2.setObsDatetime(simpleDateFormat.parse("2015-01-01"));
+        obs2.setUuid("uuid2");
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs1, obs2));
+        bahmniEncounterTransaction = getBahmniEncounterTransaction(Arrays.asList("Monthly Treatment Completeness Template", "Monthly Treatment Completeness Template"));
+
+        BahmniObservation observation1 = new BahmniObservation();
+        observation1.setValue("");
+
+        Iterator<BahmniObservation> iterator = bahmniEncounterTransaction.getObservations().iterator();
+        iterator.next().setUuid("uuid1").setObservationDateTime(simpleDateFormat.parse("2015-01-01")).setGroupMembers(Arrays.asList(observation1));
+        iterator.next().setUuid("uuid2").setObservationDateTime(simpleDateFormat.parse("2015-01-01"));
+
+        BahmniEncounterTransaction actualResult = rulesForFormFilled.update(bahmniEncounterTransaction);
+        BahmniEncounterTransaction expectedResult = bahmniEncounterTransaction;
+        assertEquals(expectedResult, actualResult);
+    }
+
     private BahmniEncounterTransaction getBahmniEncounterTransaction(List<String> conceptNames) {
         BahmniEncounterTransaction bahmniEncounterTransaction = new BahmniEncounterTransaction();
         BahmniObservation bahmniObservation;
         List<BahmniObservation> bahmniObservationList = new ArrayList<BahmniObservation>();
         for (String conceptName: conceptNames) {
             bahmniObservation = new BahmniObservation();
+            bahmniObservation.addGroupMember(new BahmniObservation().setValue("Value"));
             bahmniObservation.setConcept(new EncounterTransaction.Concept("uuid", conceptName, true, null, null, null, null, null));
             bahmniObservationList.add(bahmniObservation);
         }

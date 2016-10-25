@@ -14,6 +14,7 @@ import org.openmrs.module.episodes.dao.impl.EpisodeDAO;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -88,22 +89,42 @@ public class RulesForFormFilled implements EncounterDataPreSaveCommand {
         if(patientProgramUuid == null) {
             patientProgramUuid = getPatientProgramUuidByEncounterUuid(bahmniEncounterTransaction.getEncounterUuid());
         }
-        List<Obs> existingObs = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(conceptName), null, null, null, null);
-        for (int i=0; i<newObservations.size(); i++) {
-            BahmniObservation newObservation = newObservations.get(i);
-            String monthYear = dateFormat.format(newObservation.getObservationDateTime());
-            for(int j=i+1; j<newObservations.size(); j++) {
-                BahmniObservation newOtherObs = newObservations.get(j);
-                if(dateFormat.format(newOtherObs.getObservationDateTime()).equals(monthYear)){
-                    return true;
-                }
+
+        Set<String> dateSet = new HashSet<>();
+        Set<String> processedObservationUuids = new HashSet<>();
+        for (BahmniObservation newObservation : newObservations) {
+            if (!checkIfVoided(newObservation) && isDatePresentInDateSet(dateSet, newObservation.getObservationDateTime())) {
+                return true;
             }
-            for (Obs obs : existingObs) {
-                if (dateFormat.format(obs.getObsDatetime()).equals(monthYear) && !obs.getUuid().equals(newObservation.getUuid())) {
+            processedObservationUuids.add(newObservation.getUuid());
+        }
+
+        List<Obs> existingObs = obsDao.getObsByPatientProgramUuidAndConceptNames(patientProgramUuid, Arrays.asList(conceptName), null, null, null, null);
+        for(Obs obs : existingObs) {
+            if(!processedObservationUuids.contains(obs.getUuid())) {
+                if (isDatePresentInDateSet(dateSet, obs.getObsDatetime())) {
                     return true;
                 }
             }
         }
+        return false;
+    }
+
+    private boolean checkIfVoided(BahmniObservation observation) {
+        for (BahmniObservation bahmniObservation : observation.getGroupMembers()) {
+            if(bahmniObservation.getValue() != null && !StringUtils.isEmpty(bahmniObservation.getValue())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isDatePresentInDateSet(Set<String> dateSet, Date obsDateTime) {
+        String monthYear = dateFormat.format(obsDateTime);
+        if(dateSet.contains(monthYear)) {
+            return true;
+        }
+        dateSet.add(monthYear);
         return false;
     }
 
