@@ -43,6 +43,7 @@ public class EndTBConstants {
     public static final String DRUG_BDQ = "Bedaquiline";
     public static final String FALSE = "False";
     public static final String UNKNOWN = "Unknown";
+    public static final String PENDING_PATIENT_NOT_ASKED_YET_ANSWER_NOT_KNOWN = "pending- patient not asked yet, answer not known";
     public static final String TI_START_DATE = "TUBERCULOSIS DRUG TREATMENT START DATE";
     public static final String BACTERIOLOGICALLY_CONFIRMED = "Bacteriologically Confirmed";
     public static final int TWENTY_SEVEN_MONTHS_IN_DAYS = 821;
