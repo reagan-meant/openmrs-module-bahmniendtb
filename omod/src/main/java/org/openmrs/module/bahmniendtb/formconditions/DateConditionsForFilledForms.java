@@ -21,26 +21,29 @@ public class DateConditionsForFilledForms implements EncounterDataPreSaveCommand
     public static final String ADVERSE_EVENTS_DATE_OF_REPORT = "AE Form, Date of AE report";
     public static final String SERIOUS_ADVERSE_EVENTS_DATE_OF_ONSET = "SAE Form, Event onset date";
     public static final String SERIOUS_ADVERSE_EVENTS_DATE_OF_REPORT = "SAE Form, Date of SAE report";
+    public static final SimpleDateFormat clientSideDateFormat = new SimpleDateFormat("dd MMM yy");
 
     @Override
     public BahmniEncounterTransaction update(BahmniEncounterTransaction bahmniEncounterTransaction) {
-        if (isDateOfOnsetAfterDateOfReport(bahmniEncounterTransaction.getObservations(), ADVERSE_EVENTS_TEMPLATE, ADVERSE_EVENTS_DATE_OF_ONSET, ADVERSE_EVENTS_DATE_OF_REPORT)) {
-            throw new RuntimeException("\"Date of onset\" should be before \"Date of report\" on adverse events form.");
-        }
-        if (isDateOfOnsetAfterDateOfReport(bahmniEncounterTransaction.getObservations(), SERIOUS_ADVERSE_EVENTS_TEMPLATE, SERIOUS_ADVERSE_EVENTS_DATE_OF_ONSET, SERIOUS_ADVERSE_EVENTS_DATE_OF_REPORT)) {
-            throw new RuntimeException("\"Date of onset\" should be before \"Date of report\" on serious adverse events form.");
-        }
+        checkDateOfOnSetReportForTemplates(bahmniEncounterTransaction, ADVERSE_EVENTS_TEMPLATE, ADVERSE_EVENTS_DATE_OF_ONSET, ADVERSE_EVENTS_DATE_OF_REPORT);
+        checkDateOfOnSetReportForTemplates(bahmniEncounterTransaction, SERIOUS_ADVERSE_EVENTS_TEMPLATE, SERIOUS_ADVERSE_EVENTS_DATE_OF_ONSET, SERIOUS_ADVERSE_EVENTS_DATE_OF_REPORT);
         return bahmniEncounterTransaction;
     }
 
-    private boolean isDateOfOnsetAfterDateOfReport(Collection<BahmniObservation> observations ,String templateConceptName, String dateOfOnsetConceptName, String dateOfReportConceptName) {
-        BahmniObservation dateOfOnset = getObservationFromTemplate(observations, templateConceptName, dateOfOnsetConceptName);
-        BahmniObservation dateOfReport = getObservationFromTemplate(observations, templateConceptName, dateOfReportConceptName);
+    private void checkDateOfOnSetReportForTemplates(BahmniEncounterTransaction bahmniEncounterTransaction, String templateConceptName, String dateOfOnsetConceptName, String dateOfReportConceptName) {
+        for (BahmniObservation observation : bahmniEncounterTransaction.getObservations()) {
+            if (templateConceptName.equals(observation.getConcept().getName())) {
+                BahmniObservation dateOfOnset = getObservationFor(observation.getGroupMembers(), dateOfOnsetConceptName);
+                BahmniObservation dateOfReport = getObservationFor(observation.getGroupMembers(), dateOfReportConceptName);
 
-        Date onsetDate = (dateOfOnset != null && StringUtils.isNotEmpty(dateOfOnset.getValueAsString())) ? getDate(dateOfOnset.getValue()) : null;
-        Date reportDate = (dateOfReport != null && StringUtils.isNotEmpty(dateOfReport.getValueAsString())) ? getDate(dateOfReport.getValue()) : null;
+                Date onSetDate = (dateOfOnset != null && StringUtils.isNotEmpty(dateOfOnset.getValueAsString())) ? getDate(dateOfOnset.getValue()) : null;
+                Date reportDate = (dateOfReport != null && StringUtils.isNotEmpty(dateOfReport.getValueAsString())) ? getDate(dateOfReport.getValue()) : null;
 
-        return dateOfOnset != null && dateOfReport != null && onsetDate!= null && reportDate!= null && onsetDate.after(reportDate);
+                if (onSetDate!= null && reportDate!= null && onSetDate.after(reportDate)) {
+                    throw new RuntimeException("Date of onset " + "(" + clientSideDateFormat.format(onSetDate) + ")" + " should be before Date of report " + "(" + clientSideDateFormat.format(reportDate) + ")" + " on " + templateConceptName);
+                }
+            }
+        }
     }
 
     private Date getDate(Object value) {
@@ -50,15 +53,6 @@ public class DateConditionsForFilledForms implements EncounterDataPreSaveCommand
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private BahmniObservation getObservationFromTemplate(Collection<BahmniObservation> observations, String templateConceptName, String conceptName) {
-        for (BahmniObservation observation : observations) {
-            if (templateConceptName.equals(observation.getConcept().getName())) {
-                return getObservationFor(observation.getGroupMembers(), conceptName);
-            }
-        }
-        return null;
     }
 
     private BahmniObservation getObservationFor(Collection<BahmniObservation> groupMembers, String conceptName) {
