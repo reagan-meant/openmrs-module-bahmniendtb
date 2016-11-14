@@ -17,8 +17,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <calculationModuleVersion>1.1</calculationModuleVersion>
         <serializationXstreamModuleVersion>0.2.7</serializationXstreamModuleVersion>
-        <bahmniVersion>0.85-SNAPSHOT</bahmniVersion>
-        <bahmniEndTbVersion>1.5-SNAPSHOT</bahmniEndTbVersion>
+        <bahmniVersion>0.86-SNAPSHOT</bahmniVersion>
+        <bahmniEndTbVersion>1.6-SNAPSHOT</bahmniEndTbVersion>
     </properties>
 
     <organization>
