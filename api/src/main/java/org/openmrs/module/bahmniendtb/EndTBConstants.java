@@ -13,6 +13,7 @@ public class EndTBConstants {
     public static final String BASELINE_CASEDEFINITION_MDR_TB_DIAGNOSIS_METHOD = "Baseline, MDR-TB diagnosis method";
     public static final String BASELINE_DRUG_RESISTANCE = "Baseline, Drug resistance";
     public static final String BASELINE_CONFIRMED_DRUG_RESISTANT_TB = "Confirmed drug resistant TB";
+    public static final String BASLINE_HIV_SEROSTATUS_RESULT = "Baseline, HIV serostatus result";
 
     //Treatment Initiation Template
     public static final String FSN_TREATMENT_INITIATION_FORM = "Treatment Initiation Template";
@@ -36,6 +37,12 @@ public class EndTBConstants {
     public static final String SAE_REPORTING_DATE = "SAE Form, Date of SAE report";
     public static final String SAE_ONSET_DATE = "SAE Form, Event onset date";
     public static final String SAE_EVENT_BECAME_SERIOUS_DATE = "SAE Form, Date event became serious";
+
+    //XRay Template
+    public static final String XRAY_EXTENT_OF_DISEASE = "Xray, Extent of disease";
+
+    //Lab, Serological and other tests
+    public static final String LAB_HIV_TEST_RESULT = "Lab, HIV test result";
 
     //Concept Name
     public static final String ALL_TB_DRUG = "All TB Drugs";
@@ -83,4 +90,5 @@ public class EndTBConstants {
     //Handlers
     public static final String TREATMENT_END_DATE_HANDLER = "org.bahmni.flowsheet.definition.impl.TreatmentEndDateHandler";
     public static final String SIX_MONTH_POST_TREATMENT_OUTCOME_HANDLER = "org.bahmni.flowsheet.definition.impl.SixMonthPostTreatmentOutcomeHandler";
+
 }

@@ -74,6 +74,8 @@ public class PatientMonitoringFlowsheetServiceImplIT extends BaseModuleContextSe
         assertEquals("2016-09-16 00:00:00.0", flowsheetAttribute.getMdrtbTreatmentStartDate().toString());
         assertEquals("2016-01-27 00:30:00.0", flowsheetAttribute.getNewDrugTreatmentStartDate().toString());
         assertEquals("REG12345", flowsheetAttribute.getTreatmentRegistrationNumber());
+        assertEquals("Negative", flowsheetAttribute.getHivStatus());
+        assertEquals("Yes", flowsheetAttribute.getBaselineXRayStatus());
     }
 
 

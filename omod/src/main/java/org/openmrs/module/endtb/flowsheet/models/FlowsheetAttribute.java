@@ -9,6 +9,9 @@ public class FlowsheetAttribute {
     private String treatmentRegistrationNumber;
     private Date newDrugTreatmentStartDate;
     private Date mdrtbTreatmentStartDate;
+    private String consentForEndtbStudy;
+    private String hivStatus;
+    private String baselineXRayStatus;
 
     public String getPatientEMRID() {
         return patientEMRID;
@@ -44,5 +47,27 @@ public class FlowsheetAttribute {
         this.treatmentRegistrationNumber = treatmentRegistrationNumber;
     }
 
+    public String getConsentForEndtbStudy() {
+        return consentForEndtbStudy;
+    }
 
+    public void setConsentForEndtbStudy(String consentForEndtbStudy) {
+        this.consentForEndtbStudy = consentForEndtbStudy;
+    }
+
+    public String getHivStatus() {
+        return hivStatus;
+    }
+
+    public void setHivStatus(String hivStatus) {
+        this.hivStatus = hivStatus;
+    }
+
+    public String getBaselineXRayStatus() {
+        return baselineXRayStatus;
+    }
+
+    public void setBaselineXRayStatus(String baselineXRayStatus) {
+        this.baselineXRayStatus = baselineXRayStatus;
+    }
 }

@@ -24,6 +24,7 @@ import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.BahmniPatientProg
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.PatientProgramAttribute;
 import org.bahmni.module.bahmnicore.service.BahmniConceptService;
 import org.openmrs.*;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.EndTBConstants;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetAttribute;
 import org.bahmni.flowsheet.ui.FlowsheetUI;
@@ -143,11 +144,51 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
             startDate = startDateConceptObs.get(0).getValueDate();
         }
         Date newDrugTreatmentStartDate = getNewDrugTreatmentStartDate(bahmniPatientProgram.getUuid(), orderType, concepts);
+        List<Obs> consentForEndTbStudyObs = obsDao.getObsByPatientProgramUuidAndConceptNames(bahmniPatientProgram.getUuid(), Arrays.asList(EndTBConstants.FSN_TI_ENDTB_STUDY_CONSENT_QUESTION), null, null, null, null);
+        String consentForEndTbStudy = null;
+
+        if (CollectionUtils.isNotEmpty(consentForEndTbStudyObs)) {
+            consentForEndTbStudy = consentForEndTbStudyObs.get(0).getValueCoded().getShortNameInLocale(Context.getUserContext().getLocale()).getName();
+        }
+
+        List<Obs> hivSeroStatusObs = obsDao.getObsByPatientProgramUuidAndConceptNames(bahmniPatientProgram.getUuid(), Arrays.asList(EndTBConstants.BASLINE_HIV_SEROSTATUS_RESULT, EndTBConstants.LAB_HIV_TEST_RESULT), null, null, null, null);
+        String hivStatus = null;
+
+        if (CollectionUtils.isNotEmpty(hivSeroStatusObs)) {
+            hivStatus = hivSeroStatusObs.get(0).getValueCoded().getName().getName();
+        }
+
+        String baselineXRayStatus = null;
+
+
+        if (startDate != null) {
+            Date minDate = DateUtils.addDays(startDate, -90);
+            Date maxDate = DateUtils.addDays(startDate, 30);
+            List<Obs> baslineXrayObs = obsDao.getObsByPatientProgramUuidAndConceptNames(bahmniPatientProgram.getUuid(), Arrays.asList(EndTBConstants.XRAY_EXTENT_OF_DISEASE), null, null, null, null);
+            baselineXRayStatus = isObsDatePresentWithinDateRange(minDate, maxDate, baslineXrayObs);
+        }
+
         flowsheetAttribute.setNewDrugTreatmentStartDate(newDrugTreatmentStartDate);
         flowsheetAttribute.setMdrtbTreatmentStartDate(startDate);
         flowsheetAttribute.setTreatmentRegistrationNumber(getProgramAttribute(bahmniPatientProgram, EndTBConstants.PROGRAM_ATTRIBUTE_REG_NO));
         flowsheetAttribute.setPatientEMRID(bahmniPatientProgram.getPatient().getPatientIdentifier(primaryIdentifierType).getIdentifier());
+        flowsheetAttribute.setConsentForEndtbStudy(consentForEndTbStudy);
+        flowsheetAttribute.setHivStatus(hivStatus);
+        flowsheetAttribute.setBaselineXRayStatus(baselineXRayStatus);
         return flowsheetAttribute;
+    }
+
+    private String isObsDatePresentWithinDateRange(Date minDate, Date maxDate, List<Obs> baslineXrayObs) {
+        for (Obs obs : baslineXrayObs) {
+            Date obsDate = obs.getObsDatetime();
+            if (obsDate.equals(minDate) || obsDate.equals(maxDate)) {
+                return "Yes";
+            }
+            if (obsDate.after(minDate) && obsDate.before(maxDate)) {
+                return "Yes";
+            }
+        }
+        return "No";
     }
 
     @Override

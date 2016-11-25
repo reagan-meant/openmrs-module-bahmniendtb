@@ -69,6 +69,44 @@
     <obs obs_id="998" concept_id="1023" person_id="5190" encounter_id="890" value_numeric="100" obs_datetime="2016-08-18 15:09:05.0" date_created="2016-08-18 15:09:05.0" uuid="6d8f507a-fb899-11e3-0000-996addb6f9we" creator="1" voided="0" />
     <obs obs_id="997" concept_id="1023" person_id="5190" encounter_id="890" value_numeric="100" obs_datetime="2015-08-18 15:09:05.0" date_created="2015-08-18 15:09:05.0" uuid="6d8f507a-fb899-11e3-1111-996addb6f9we" creator="1" voided="0" />
 
+    <!-- Consent for Yes, patient has been asked and accepted -->
+    <concept concept_id="4024" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="d102c80f-1119-4da3-bb88-8122ce889033"/>
+    <concept_name concept_id="4024" concept_name_id="1424" name="Yes, patient has been asked and accepted" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="d102c80f-1129-1121-0099-8122ce886844"/>
+    <concept_name concept_id="4024" concept_name_id="1425" name="Yes" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="SHORT" locale_preferred="1" voided="false" uuid="d102c80f-1129-1121-0099-8122ce116844"/>
+
+    <!-- Status Negative-->
+    <concept concept_id="4025" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="5502c80f-1119-4da3-bb88-8122ce889033"/>
+    <concept_name concept_id="4025" concept_name_id="1426" name="Negative" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="d102c80f-2229-1121-0099-8122ce886844"/>
+
+    <!-- Status Positive-->
+    <concept concept_id="4026" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="2202c80f-1119-4da3-bb88-8122ce889033"/>
+    <concept_name concept_id="4026" concept_name_id="1427" name="Positive" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="9202c80f-2229-1121-0099-8122ce886844"/>
+
+
+    <!-- Consent Form Question -->
+    <concept concept_id="5019" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="d102c80f-1yz9-4da3-bb88-8122ce889999"/>
+    <concept_name concept_id="5019" concept_name_id="1519" name="TI, Has the endTB Observational Study Consent Form been explained and signed" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="1202c80f-1yz9-4da3-0099-8199ce8868eg"/>
+    <obs obs_id="1999" concept_id="5019" person_id="5190" encounter_id="890" value_coded = "4024"  value_numeric="100" value_datetime="2016-09-16 00:00:00.0" obs_datetime="2008-08-18 15:09:05.0" date_created="2008-08-18 15:09:05.0" uuid="6d8f507a-fb899-11e3-bb80-99633db6f9we" creator="1" voided="0" />
+
+    <!-- Baseline HIV Serostatus -->
+    <concept concept_id="5020" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="d102c890-1y99-4da3-bb88-8122ce889999"/>
+    <concept_name concept_id="5020" concept_name_id="1519" name="Baseline, HIV serostatus result" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="1202c99f-1y00-4da3-0099-8199ce8868eg"/>
+    <obs obs_id="2000" concept_id="5020" person_id="5190" encounter_id="890" value_coded="4025"  value_numeric="100" value_datetime="2016-09-16 00:00:00.0" obs_datetime="2016-08-18 15:09:05.0" date_created="2008-08-18 15:09:05.0" uuid="6d8f507a-fb899-1100-bb80-99033db6f9we" creator="1" voided="0" />
+    <obs obs_id="2001" concept_id="5020" person_id="5190" encounter_id="890" value_coded="4026"  value_numeric="100" value_datetime="2016-09-15 00:00:00.0" obs_datetime="2008-08-19 15:09:05.0" date_created="2008-08-18 15:09:05.0" uuid="6d8f507a-fb999-1111-bb80-99033db6f9we" creator="1" voided="0" />
+
+
+    <!-- Lab HIV Serostatus -->
+    <concept concept_id="5021" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="d102c890-1y99-4da3-bb88-8122ce889911"/>
+    <concept_name concept_id="5021" concept_name_id="1520" name="Lab, HIV test result" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="1202c99f-1y00-4da3-0099-8199ce886812"/>
+    <obs obs_id="2002" concept_id="5021" person_id="5190" encounter_id="890" value_coded="4025"  value_numeric="100" value_datetime="2012-09-16 00:00:00.0" obs_datetime="2016-08-18 15:09:05.0" date_created="2008-08-18 15:09:05.0" uuid="6d8f507a-fb899-1100-b110-99033db6f9we" creator="1" voided="0" />
+    <obs obs_id="2003" concept_id="5021" person_id="5190" encounter_id="890" value_coded="4026"  value_numeric="100" value_datetime="2012-09-12 00:00:00.0" obs_datetime="2008-08-19 15:09:05.0" date_created="2008-08-18 15:09:05.0" uuid="6d8f507a-fb119-1111-bb80-99033db6f9we" creator="1" voided="0" />
+
+
+    <!-- XRay ChestXray Date-->
+    <concept concept_id="5022" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="d102c890-1y99-4d11-bb88-8122ce889911"/>
+    <concept_name concept_id="5022" concept_name_id="1521" name="Xray, Extent of disease" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="1202c99f-1y00-4da3-1299-8199ce886812"/>
+    <obs obs_id="2004" concept_id="5022" person_id="5190" encounter_id="890"  value_coded="5021" obs_datetime="2016-09-26 15:09:05.0" date_created="2008-08-18 15:09:05.0" uuid="6d8f507a-fb899-1110-b110-99033db6f9we" creator="1" voided="0" />
+
     <episode episode_id="100" creator="1" date_created="2015-08-24 12:03:38" voided="0" uuid="23255323d-e887-4485-bc19-756cdbf22660"/>
     <episode_patient_program episode_id="100" patient_program_id="456"/>
     <episode_encounter episode_id="100" encounter_id="890"/>
