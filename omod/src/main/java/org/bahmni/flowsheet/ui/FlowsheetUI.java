@@ -13,7 +13,8 @@ public class FlowsheetUI {
 
     private List<Milestone> milestones;
     private Map<String, List<String>> flowsheetData;
-    private String highlightedMilestone;
+    private String highlightedCurrentMilestone;
+    private String endDateMilestone;
 
     public Map<String, List<String>> getFlowsheetData() {
         if(null == this.flowsheetData) {
@@ -27,11 +28,11 @@ public class FlowsheetUI {
     }
 
     public String getHighlightedMilestone() {
-        return highlightedMilestone;
+        return highlightedCurrentMilestone;
     }
 
     public void setHighlightedMilestone(String highlightedMilestone) {
-        this.highlightedMilestone = highlightedMilestone;
+        this.highlightedCurrentMilestone = highlightedMilestone;
     }
 
     public List<Milestone> getMilestones() {
@@ -41,4 +42,13 @@ public class FlowsheetUI {
     public void setMilestones(List<Milestone> milestones) {
         this.milestones = milestones;
     }
+
+	public String getEndDateMilestone() {
+		return endDateMilestone;
+	}
+
+	public void setEndDateMilestone(String endDateMilestone) {
+		this.endDateMilestone = endDateMilestone;
+	}
+    
 }

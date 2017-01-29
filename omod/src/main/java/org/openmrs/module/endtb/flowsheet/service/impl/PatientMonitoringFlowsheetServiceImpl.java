@@ -73,8 +73,9 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
 
         Set<String> floatingMilestoneNames = getFloatingMilestoneNames(flowsheetConfig.getMilestoneConfigs());
         setNotApplicableStatusToFixedMilestones(endDate, milestones, floatingMilestoneNames);
-        String highlightedMilestoneName = findHighlightedMilestoneInFixedMilestones(milestones, endDate, floatingMilestoneNames);
-
+        String highlightedCurrentMilestoneName = findCurrentMonthMilestone(milestones, endDate, floatingMilestoneNames);
+        String treatmentEndMilestoneName = findEndDateMilestone(milestones, endDate, floatingMilestoneNames);
+        
         List<QuestionConfig> questionConfigs = flowsheetConfig.getQuestionConfigs();
 
         Map<String, List<String>> flowsheetData = new LinkedHashMap<>();
@@ -99,7 +100,8 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         }
 
         presentationFlowsheet.setMilestones(flowsheetMilestones);
-        presentationFlowsheet.setHighlightedMilestone(highlightedMilestoneName);
+        presentationFlowsheet.setHighlightedMilestone(highlightedCurrentMilestoneName);
+        presentationFlowsheet.setEndDateMilestone(treatmentEndMilestoneName);
         presentationFlowsheet.setFlowsheetData(flowsheetData);
         return presentationFlowsheet;
     }
@@ -244,17 +246,43 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         return "";
     }
 
-    private String findHighlightedMilestoneInFixedMilestones(Set<Milestone> milestones, Date endDate, Set<String> floatingMilestones) {
+    private String findCurrentMonthMilestone(Set<Milestone> milestones, Date endDate, Set<String> floatingMilestones) {
         if (endDate == null) {
             endDate = new Date();
         }
+        
+        //TODO: Use the following snippet based on Configuration json
+        
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.setTime(endDate);
+        cal.add(6, Calendar.MONTH);
+        endDate = cal.getTime();
+
         for (Milestone milestone : milestones) {
-            if ((!floatingMilestones.contains(milestone.getName())) && (milestone.getStartDate().before(endDate) || DateUtils.isSameDay(milestone.getStartDate(), endDate)) && (milestone.getEndDate().after(endDate) || DateUtils.isSameDay(milestone.getEndDate(), endDate))) {
+            if ((!floatingMilestones.contains(milestone.getName())) 
+            		&& (milestone.getStartDate().before(endDate) || DateUtils.isSameDay(milestone.getStartDate(), endDate))
+            		&& (milestone.getEndDate().after(endDate) || DateUtils.isSameDay(milestone.getEndDate(), endDate))) {
                 return milestone.getName();
             }
         }
         return "";
     }
+    
+    private String findEndDateMilestone(Set<Milestone> milestones, Date endDate, Set<String> floatingMilestones) {
+        if (endDate == null) {
+            endDate = new Date();
+        }
+        
+             for (Milestone milestone : milestones) {
+            if ((!floatingMilestones.contains(milestone.getName())) 
+            		&& (milestone.getStartDate().before(endDate) || DateUtils.isSameDay(milestone.getStartDate(), endDate))
+            		&& (milestone.getEndDate().after(endDate) || DateUtils.isSameDay(milestone.getEndDate(), endDate))) {
+                return milestone.getName();
+            }
+        }
+        return "";
+    }
+    
 
     private Set<String> getFloatingMilestoneNames(List<MilestoneConfig> milestoneConfigs) {
         Set<String> floatingMilestoneNames = new HashSet<>();
@@ -288,10 +316,10 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
             return "green";
         }
         if (status.equals(Status.PLANNED)) {
-            return "yellow";
+            return "grey";
         }
         if (status.equals(Status.PENDING)) {
-            return "purple";
+            return "grey";
         }
         if (status.equals(Status.NOT_APPLICABLE)) {
             return "grey";
