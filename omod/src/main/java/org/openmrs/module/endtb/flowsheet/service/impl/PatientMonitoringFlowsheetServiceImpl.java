@@ -73,7 +73,15 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
 
         Set<String> floatingMilestoneNames = getFloatingMilestoneNames(flowsheetConfig.getMilestoneConfigs());
         setNotApplicableStatusToFixedMilestones(endDate, milestones, floatingMilestoneNames);
-        String highlightedCurrentMilestoneName = findCurrentMonthMilestone(milestones, endDate, floatingMilestoneNames);
+        
+        int monthsPostTreatment=0;
+        if(flowsheetConfig.getMonthsPostTreatEnd()> -1)
+        {
+        	monthsPostTreatment = flowsheetConfig.getMonthsPostTreatEnd();
+        }
+        
+        String highlightedCurrentMilestoneName = findCurrentMonthMilestone(milestones, endDate, floatingMilestoneNames, monthsPostTreatment);
+        
         String treatmentEndMilestoneName = findEndDateMilestone(milestones, endDate, floatingMilestoneNames);
         
         List<QuestionConfig> questionConfigs = flowsheetConfig.getQuestionConfigs();
@@ -83,12 +91,8 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
             String questionName = questionConfig.getName();
             List<String> colorCodes = new LinkedList<>();
             for (Milestone milestone : milestones) {
-                Question milestoneQuestion = getQuestionFromSet(milestone.getQuestions(), questionName);
-                if (milestoneQuestion == null) {
-                    colorCodes.add("grey");
-                } else {
-                    colorCodes.add(getColorCodeForStatus(milestoneQuestion.getResult().getStatus()));
-                }
+	            Question milestoneQuestion = getQuestionFromSet(milestone.getQuestions(), questionName);
+	            colorCodes.add(getColorCodeForStatus(milestoneQuestion, flowsheetConfig));
             }
             flowsheetData.put(questionName, colorCodes);
         }
@@ -100,7 +104,7 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         }
 
         presentationFlowsheet.setMilestones(flowsheetMilestones);
-        presentationFlowsheet.setHighlightedMilestone(highlightedCurrentMilestoneName);
+        presentationFlowsheet.setHighlightedCurrentMilestone(highlightedCurrentMilestoneName);
         presentationFlowsheet.setEndDateMilestone(treatmentEndMilestoneName);
         presentationFlowsheet.setFlowsheetData(flowsheetData);
         return presentationFlowsheet;
@@ -246,26 +250,39 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         return "";
     }
 
-    private String findCurrentMonthMilestone(Set<Milestone> milestones, Date endDate, Set<String> floatingMilestones) {
+    private String findCurrentMonthMilestone(Set<Milestone> milestones, Date endDate, Set<String> floatingMilestones,int monthsPostEndDate) {
+    	Date currentDate = new Date();
+    	Date endDatePlusMonths = null;
+    	Milestone currentMilestone=null;
+    	
         if (endDate == null) {
             endDate = new Date();
         }
+        boolean trackAfterEndDate=false;
         
-        //TODO: Use the following snippet based on Configuration json
-        
+        if(monthsPostEndDate>0)
+        {
+        	trackAfterEndDate = true;
+        }
         Calendar cal = GregorianCalendar.getInstance();
         cal.setTime(endDate);
-        cal.add(6, Calendar.MONTH);
-        endDate = cal.getTime();
-
+        cal.add(Calendar.MONTH, monthsPostEndDate);
+        endDatePlusMonths = cal.getTime();
+        
         for (Milestone milestone : milestones) {
-            if ((!floatingMilestones.contains(milestone.getName())) 
-            		&& (milestone.getStartDate().before(endDate) || DateUtils.isSameDay(milestone.getStartDate(), endDate))
-            		&& (milestone.getEndDate().after(endDate) || DateUtils.isSameDay(milestone.getEndDate(), endDate))) {
-                return milestone.getName();
+            if( (!floatingMilestones.contains(milestone.getName())) 
+            		&& (milestone.getStartDate().before(currentDate) || DateUtils.isSameDay(milestone.getStartDate(), currentDate))
+            			&& (milestone.getEndDate().after(currentDate) || DateUtils.isSameDay(milestone.getEndDate(), currentDate))) {            	
+            	currentMilestone = milestone;
+            	break;
             }
         }
-        return "";
+        if(currentMilestone==null)
+        	return "";
+        if(currentMilestone.getStartDate().before(endDatePlusMonths))
+        	return currentMilestone.getName();
+        else
+        	return "";
     }
     
     private String findEndDateMilestone(Set<Milestone> milestones, Date endDate, Set<String> floatingMilestones) {
@@ -311,20 +328,32 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
         return flowsheetConfig;
     }
 
-    private String getColorCodeForStatus(Status status) {
-        if (status.equals(Status.DATA_ADDED)) {
-            return "green";
+    private String getColorCodeForStatus(Question milestoneQuestion, FlowsheetConfig flowsheetConf) {
+
+    	String result="grey";
+    	if(milestoneQuestion == null || milestoneQuestion.getResult() == null)
+    		return result;
+    	
+    	Status status = milestoneQuestion.getResult().getStatus();
+    	
+    	if (status.equals(Status.DATA_ADDED)) {
+            result = "green";
         }
-        if (status.equals(Status.PLANNED)) {
-            return "grey";
+        
+        if ( status.equals(Status.PLANNED)) {
+        	if(flowsheetConf.getTrackPlanned())
+        		result = "yellow";
         }
+        
         if (status.equals(Status.PENDING)) {
-            return "grey";
+        	if(flowsheetConf.getTrackPending())
+        		result = "purple";
         }
+        
         if (status.equals(Status.NOT_APPLICABLE)) {
-            return "grey";
+            result="grey";
         }
-        return "grey";
+        return result;
     }
 
 }

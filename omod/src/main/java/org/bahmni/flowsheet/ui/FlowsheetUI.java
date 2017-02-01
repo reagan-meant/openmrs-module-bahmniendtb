@@ -27,12 +27,12 @@ public class FlowsheetUI {
         this.flowsheetData = flowsheetData;
     }
 
-    public String getHighlightedMilestone() {
+    public String getHighlightedCurrentMilestone() {
         return highlightedCurrentMilestone;
     }
 
-    public void setHighlightedMilestone(String highlightedMilestone) {
-        this.highlightedCurrentMilestone = highlightedMilestone;
+    public void setHighlightedCurrentMilestone(String highlightedCurrentMilestone) {
+        this.highlightedCurrentMilestone = highlightedCurrentMilestone;
     }
 
     public List<Milestone> getMilestones() {

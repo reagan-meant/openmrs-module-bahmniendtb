@@ -111,7 +111,7 @@ public class PatientMonitoringFlowsheetServiceImplIT extends BaseModuleContextSe
         assertEquals("M4", flowsheetHeaders.get(3).getName());
         assertEquals("MTx", flowsheetHeaders.get(4).getName());
         assertEquals("M6M", flowsheetHeaders.get(5).getName());
-        assertEquals("M3", flowsheetUI.getHighlightedMilestone());
+        assertEquals("M3", flowsheetUI.getHighlightedCurrentMilestone());
         assertEquals(6, flowsheetData.get("New Drugs").size());
         assertEquals(6, flowsheetData.get("Blood Pressure").size());
         assertEquals("grey", coloursForNewDrugs.get(0));
@@ -164,7 +164,7 @@ public class PatientMonitoringFlowsheetServiceImplIT extends BaseModuleContextSe
         assertEquals("M4", flowsheetHeaders.get(3).getName());
         assertEquals("MTx", flowsheetHeaders.get(4).getName());
         assertEquals("M6M", flowsheetHeaders.get(5).getName());
-        assertEquals("", flowsheetUI.getHighlightedMilestone());
+        assertEquals("", flowsheetUI.getHighlightedCurrentMilestone());
         assertEquals(6, flowsheetData.get("New Drugs").size());
         assertEquals(6, flowsheetData.get("Blood Pressure").size());
         assertEquals("grey", coloursForNewDrugs.get(0));

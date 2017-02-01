@@ -15,5 +15,9 @@ public class FlowsheetConstant {
     public static final String MAX = "max";
     public static final String HANDLER = "handler" ;
     public static final String QUESTIONS = "questions";
-    public static final String CONFIG = "config";
+    public static final String CONFIG = "config";    
+    public static final String TRACK_PLANNED = "trackPlanned";
+    public static final String TRACK_PENDING= "trackPending";
+    public static final String MONTHS_POST_TREATMENT_END = "monthsPostTreatmentEnd";
+    
 }
