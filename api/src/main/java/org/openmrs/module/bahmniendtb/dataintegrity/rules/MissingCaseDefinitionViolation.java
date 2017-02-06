@@ -5,18 +5,14 @@ import org.openmrs.PatientProgram;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.dataintegrity.rules.helper.MissingCaseDefnHelper;
-import org.openmrs.module.dataintegrity.rule.RuleDefn;
 import org.openmrs.module.dataintegrity.rule.RuleResult;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_CASEDEFINITION_CONFIRMATION;
-import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_CASEDEFINITION_DISEASE_SITE;
-import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_CASEDEFINITION_WHO_GROUP;
-import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_FORM;
+import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
-public class MissingCaseDefinitionViolation implements RuleDefn<PatientProgram> {
+public class MissingCaseDefinitionViolation extends EndTbRuleDefinition<PatientProgram> {
 
     private ConceptService conceptService;
 

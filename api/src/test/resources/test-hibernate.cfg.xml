@@ -7,5 +7,8 @@
 
     <session-factory>
         <mapping resource="Episode.hbm.xml"/>
+        <mapping resource="DataIntegrityRule.hbm.xml"/>
+        <mapping resource="DataIntegrityResult.hbm.xml"/>
     </session-factory>
+
 </hibernate-configuration>

@@ -7,7 +7,6 @@ import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.dataintegrity.rules.helper.DrugDSTViolationHelper;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.DataintegrityRuleService;
-import org.openmrs.module.dataintegrity.rule.RuleDefn;
 import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.module.episodes.Episode;
 
@@ -18,7 +17,7 @@ import java.util.Set;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
-public class BaselineSecondlineDSTViolation implements RuleDefn<PatientProgram> {
+public class BaselineSecondlineDSTViolation extends EndTbRuleDefinition<PatientProgram> {
 
     private DataintegrityRuleService dataintegrityRuleService;
     private ConceptService conceptService;

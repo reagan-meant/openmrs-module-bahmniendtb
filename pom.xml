@@ -11,7 +11,7 @@
     <description>Modules to override features in bahmni-core by implementors</description>
 
     <properties>
-        <dataintegrityVersion>4.1.0</dataintegrityVersion>
+        <dataintegrityVersion>4.2.3</dataintegrityVersion>
         <emrapiVersion>1.17</emrapiVersion>
         <episodesVersion>0.1-SNAPSHOT</episodesVersion>
         <providermanagementVersion>1.1.3</providermanagementVersion>
