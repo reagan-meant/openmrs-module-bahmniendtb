@@ -11,6 +11,10 @@
     <description>Modules to override features in bahmni-core by implementors</description>
 
     <properties>
+        <dataintegrityVersion>4.1.0</dataintegrityVersion>
+        <emrapiVersion>1.17</emrapiVersion>
+        <episodesVersion>0.1-SNAPSHOT</episodesVersion>
+        <providermanagementVersion>1.1.3</providermanagementVersion>
         <reportingModuleVersion>0.9.1</reportingModuleVersion>
         <openMRSWebServicesVersion>2.14</openMRSWebServicesVersion>
         <openMRSVersion>1.12.0</openMRSVersion>
@@ -34,26 +38,7 @@
     <dependencyManagement>
         <dependencies>
 
-            <!-- Begin OpenMRS modules -->
-
-            <dependency>
-                <groupId>org.openmrs.module</groupId>
-                <artifactId>emrapi-api-1.12</artifactId>
-                <version>1.17</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.openmrs.module</groupId>
-                <artifactId>emrapi-api</artifactId>
-                <version>1.17</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <!-- End OpenMRS modules -->
-
-
-            <!-- Begin OpenMRS core -->
+            <!-- OpenMRS core -->
 
             <dependency>
                 <groupId>org.openmrs.api</groupId>
@@ -95,8 +80,67 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- End OpenMRS core -->
+            <!-- OpenMRS Modules -->
 
+            <dependency>
+                <groupId>org.bahmni.module</groupId>
+                <artifactId>bahmnicore-api</artifactId>
+                <version>${bahmniVersion}</version>
+                <scope>provided</scope>
+                <type>jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.bahmni.module</groupId>
+                <artifactId>bahmnicore-omod</artifactId>
+                <version>${bahmniVersion}</version>
+                <scope>provided</scope>
+                <type>jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.bahmni.module</groupId>
+                <artifactId>bahmni-emr-api</artifactId>
+                <version>${bahmniVersion}</version>
+                <scope>provided</scope>
+                <type>jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>dataintegrity-omod</artifactId>
+                <version>${dataintegrityVersion}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>dataintegrity-api</artifactId>
+                <version>${dataintegrityVersion}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>emrapi-api-1.12</artifactId>
+                <version>${emrapiVersion}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>emrapi-api</artifactId>
+                <version>${emrapiVersion}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>episodes-api</artifactId>
+                <version>${episodesVersion}</version>
+                <scope>provided</scope>
+                <type>jar</type>
+            </dependency>
 
             <dependency>
                 <groupId>org.openmrs.module</groupId>
@@ -130,7 +174,8 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- test dependencies -->
+            <!-- Test Module Dependencies -->
+
             <dependency>
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>calculation-api</artifactId>
@@ -145,38 +190,17 @@
             </dependency>
             <dependency>
                 <groupId>org.openmrs.module</groupId>
-                <artifactId>providermanagement-api</artifactId>
-                <version>1.1.3</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.bahmni.module</groupId>
-                <artifactId>bahmni-emr-api</artifactId>
-                <version>${bahmniVersion}</version>
-                <scope>provided</scope>
-                <type>jar</type>
-            </dependency>
-            <!-- Begin Data Integrity omod -->
-            <dependency>
-                <groupId>org.openmrs.module</groupId>
-                <artifactId>dataintegrity-omod</artifactId>
-                <version>4.1.0</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.openmrs.module</groupId>
                 <artifactId>reporting-api</artifactId>
                 <version>${reportingModuleVersion}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.openmrs.module</groupId>
-                <artifactId>dataintegrity-api</artifactId>
-                <version>4.1.0</version>
-                <scope>provided</scope>
+                <artifactId>providermanagement-api</artifactId>
+                <version>${providermanagementVersion}</version>
+                <scope>test</scope>
             </dependency>
-            <!-- End Data Integrity omod  -->
+
         </dependencies>
     </dependencyManagement>
 
