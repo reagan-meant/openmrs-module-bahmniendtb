@@ -6,9 +6,13 @@
 <hibernate-configuration>
 
     <session-factory>
+        <mapping resource="EntityMapping.hbm.xml"/>
+        <mapping resource="EntityMappingType.hbm.xml"/>
         <mapping resource="Episode.hbm.xml"/>
         <mapping resource="DataIntegrityRule.hbm.xml"/>
         <mapping resource="DataIntegrityResult.hbm.xml"/>
+        <mapping resource="LocationEncounterTypeMap.hbm.xml"/>
+        <mapping resource="ProgramAttributeType.hbm.xml"/>
     </session-factory>
 
 </hibernate-configuration>

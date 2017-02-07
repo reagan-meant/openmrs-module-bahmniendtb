@@ -11,6 +11,7 @@
     <description>Modules to override features in bahmni-core by implementors</description>
 
     <properties>
+        <atomfeedVersion>2.5.4</atomfeedVersion>
         <dataintegrityVersion>4.2.3</dataintegrityVersion>
         <emrapiVersion>1.17</emrapiVersion>
         <episodesVersion>0.1-SNAPSHOT</episodesVersion>
@@ -177,6 +178,12 @@
             <!-- Test Module Dependencies -->
 
             <dependency>
+                <groupId>org.bahmni.module</groupId>
+                <artifactId>bahmni-mapping</artifactId>
+                <version>${bahmniVersion}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>calculation-api</artifactId>
                 <version>${calculationModuleVersion}</version>
@@ -192,6 +199,12 @@
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>reporting-api</artifactId>
                 <version>${reportingModuleVersion}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.ict4h.openmrs</groupId>
+                <artifactId>openmrs-atomfeed-api</artifactId>
+                <version>${atomfeedVersion}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
