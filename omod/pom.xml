@@ -109,7 +109,7 @@
         </dependency>
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>serialization.xstream-api</artifactId>
+            <artifactId>serialization.xstream-api-2.0</artifactId>
             <version>${serializationXstreamModuleVersion}</version>
             <scope>test</scope>
         </dependency>
@@ -149,7 +149,7 @@
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>episodes-api</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${episodes.version}</version>
             <scope>provided</scope>
             <type>jar</type>
         </dependency>
@@ -174,15 +174,16 @@
             <version>${bahmniVersion}</version>
             <scope>provided</scope>
         </dependency>
-        
         <dependency>
             <groupId>org.bahmni.module</groupId>
             <artifactId>reference-data-api</artifactId>
             <version>${bahmniVersion}</version>
             <scope>test</scope>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>legacyui-omod</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -199,6 +200,11 @@
             <artifactId>dataintegrity-api</artifactId>
             <version>4.1.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
         </dependency>
     </dependencies>
 
@@ -325,14 +331,15 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin><plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-                <source>1.7</source>
-                <target>1.7</target>
-            </configuration>
-        </plugin>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
