@@ -15,7 +15,7 @@ import org.openmrs.api.ConceptService;
 import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.EndTBConstants;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -29,7 +29,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @org.springframework.test.context.ContextConfiguration(locations = {"classpath:TestingApplicationContext.xml"}, inheritLocations = true)
-public class BahmniFlowsheetDefinitionIT extends BaseModuleContextSensitiveTest {
+public class BahmniFlowsheetDefinitionIT extends BaseModuleWebContextSensitiveTest {
 
     public static final String systolic = "Systolic";
     public static final String diastolic = "Diastolic";

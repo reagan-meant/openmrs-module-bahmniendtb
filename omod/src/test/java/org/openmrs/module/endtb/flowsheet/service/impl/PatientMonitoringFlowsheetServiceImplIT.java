@@ -19,7 +19,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.EndTBConstants;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetAttribute;
 import org.openmrs.module.endtb.flowsheet.service.PatientMonitoringFlowsheetService;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @org.springframework.test.context.ContextConfiguration(locations = {"classpath:TestingApplicationContext.xml"}, inheritLocations = true)
-public class PatientMonitoringFlowsheetServiceImplIT extends BaseModuleContextSensitiveTest {
+public class PatientMonitoringFlowsheetServiceImplIT extends BaseModuleWebContextSensitiveTest {
 
 
     private BahmniProgramWorkflowService bahmniProgramWorkflowService;
