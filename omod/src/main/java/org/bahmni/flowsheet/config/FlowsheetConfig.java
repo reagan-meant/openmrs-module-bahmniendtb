@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FlowsheetConfig {
+
 	private boolean trackPending;
 	private boolean trackPlanned;
-	private int monthsPostTreatEnd;
 	
     private List<MilestoneConfig> milestoneConfigs;
     private List<QuestionConfig> questionConfigs = new ArrayList<>();
@@ -62,14 +62,4 @@ public class FlowsheetConfig {
 		this.trackPlanned = trackPlanned;
 	}
 
-    @JsonProperty(FlowsheetConstant.MONTHS_POST_TREATMENT_END)
-	public int getMonthsPostTreatEnd() {
-		return monthsPostTreatEnd;
-	}
-
-    @JsonProperty(FlowsheetConstant.MONTHS_POST_TREATMENT_END)
-	public void setMonthsPostTreatEnd(int monthsPostTreatEnd) {
-		this.monthsPostTreatEnd = monthsPostTreatEnd;
-	}    
-    
 }

@@ -1,13 +1,11 @@
 package org.bahmni.flowsheet.ui;
 
 import org.bahmni.flowsheet.api.models.Milestone;
+import org.bahmni.flowsheet.config.FlowsheetConfig;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class FlowsheetUI {
 
@@ -15,6 +13,7 @@ public class FlowsheetUI {
     private Map<String, List<String>> flowsheetData;
     private String highlightedCurrentMilestone;
     private String endDateMilestone;
+    private FlowsheetConfig flowsheetConfig;
 
     public Map<String, List<String>> getFlowsheetData() {
         if(null == this.flowsheetData) {
@@ -50,5 +49,12 @@ public class FlowsheetUI {
 	public void setEndDateMilestone(String endDateMilestone) {
 		this.endDateMilestone = endDateMilestone;
 	}
-    
+
+    public FlowsheetConfig getFlowsheetConfig() {
+        return flowsheetConfig;
+    }
+
+    public void setFlowsheetConfig(FlowsheetConfig flowsheetConfig) {
+        this.flowsheetConfig = flowsheetConfig;
+    }
 }
