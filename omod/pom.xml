@@ -192,13 +192,13 @@
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>dataintegrity-omod</artifactId>
-            <version>4.1.0</version>
+            <version>${dataintegrityVersion}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>dataintegrity-api</artifactId>
-            <version>4.1.0</version>
+            <version>${dataintegrityVersion}</version>
             <scope>provided</scope>
         </dependency>
 

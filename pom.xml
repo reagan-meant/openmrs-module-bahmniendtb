@@ -22,6 +22,7 @@
         <emrapi-omod.version>1.20</emrapi-omod.version>
         <episodes.version>1.0-SNAPSHOT</episodes.version>
         <legacyuiVersion>1.0</legacyuiVersion>
+        <dataintegrityVersion>4.1.0</dataintegrityVersion>
     </properties>
 
     <organization>
@@ -171,7 +172,7 @@
             <dependency>
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>dataintegrity-omod</artifactId>
-                <version>4.1.0</version>
+                <version>${dataintegrityVersion}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -183,7 +184,7 @@
             <dependency>
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>dataintegrity-api</artifactId>
-                <version>4.1.0</version>
+                <version>${dataintegrityVersion}</version>
                 <scope>provided</scope>
             </dependency>
             <!-- End Data Integrity omod  -->
