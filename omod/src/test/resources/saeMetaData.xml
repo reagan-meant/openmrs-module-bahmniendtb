@@ -1,75 +1,154 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
 
-    <concept concept_id="401" retired="false" datatype_id="4" class_id="11" is_set="true" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid1"/>
-    <concept_name concept_id="401" concept_name_id="1401" name="Serious Adverse Events Template" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid1"/>
+    <!--<concept concept_id="100" retired="0" datatype_id="5" class_id="1" is_set="0" creator="1" date_created="2013-12-04 11:36:42" uuid="True_concept_uuid" />-->
+    <!--<concept_name concept_id="100" name="True" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="10" voided="false" uuid="6d2d4cb7-955b-4837-80f7-0ebb94092afh" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>-->
 
-    <concept concept_id="402" retired="false" datatype_id="6" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid2"/>
-    <concept_name concept_id="402" concept_name_id="1402" name="SAE Form, Event onset date" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid2"/>
-    <concept_set concept_set_id="2" concept_id="402" concept_set="401" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
-
-    <concept concept_id="403" retired="false" datatype_id="6" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid3"/>
-    <concept_name concept_id="403" concept_name_id="1403" name="SAE Form, Date of SAE report" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid3"/>
-    <concept_set concept_set_id="3" concept_id="403" concept_set="401" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
-
-    <concept concept_id="404" retired="false" datatype_id="2" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid4"/>
-    <concept_name concept_id="404" concept_name_id="1404" name="SAE Form, SAE term comprehensive AE list" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid4"/>
-    <concept_set concept_set_id="4" concept_id="404" concept_set="401" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
-
-        <concept concept_id="4041" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid5"/>
-        <concept_name concept_id="4041" concept_name_id="14041" name="Cardiac Rhythm" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid5"/>
-        <concept_answer concept_answer_id="24041" concept_id="404" answer_concept="4041" creator="1" date_created="2004-08-12 00:00:00.0"/>
-
-        <concept concept_id="4042" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid6"/>
-        <concept_name concept_id="4042" concept_name_id="14042" name="Hypertension" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid6"/>
-        <concept_answer concept_answer_id="24042" concept_id="404" answer_concept="4042" creator="1" date_created="2004-08-12 00:00:00.0"/>
+    <!--<concept concept_id="200" retired="0" datatype_id="5" class_id="1" is_set="0" creator="1" date_created="2013-12-04 11:36:42" uuid="False_concept_uuid" />-->
+    <!--<concept_name concept_id="200" name="False" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="11" voided="false" uuid="6d2d4cb7-955b-4837-80f7-0ebb94092afi" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>-->
 
 
-    <concept concept_id="405" retired="false" datatype_id="2" class_id="11" is_set="false" creator="1" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid7"/>
-    <concept_name concept_id="405" concept_name_id="1405" name="SAE Form, SAE severity grade" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid7"/>
-    <concept_set concept_set_id="5" concept_id="405" concept_set="401" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+    <concept concept_id="1" retired="false" datatype_id="4" class_id="11" is_set="FALSE" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid"/>
+    <concept_name concept_id="1" concept_name_id="1" name="Yes" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid"/>
 
-        <concept concept_id="4051" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid8"/>
-        <concept_name concept_id="4051" concept_name_id="14051" name="Number, 1" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid8"/>
-        <concept_answer concept_answer_id="24051" concept_id="405" answer_concept="4051" creator="1" date_created="2004-08-12 00:00:00.0"/>
+    <concept concept_id="501" retired="false" datatype_id="4" class_id="11" is_set="true" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid1"/>
+    <concept_name concept_id="501" concept_name_id="1501" name="Serious Adverse Events Template" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid1"/>
 
-        <concept concept_id="4052" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid9"/>
-        <concept_name concept_id="4052" concept_name_id="14052" name="Number, 2" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid9"/>
-        <concept_answer concept_answer_id="24052" concept_id="405" answer_concept="4052" creator="1" date_created="2004-08-12 00:00:00.0"/>
+    <concept concept_id="502" retired="false" datatype_id="6" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid2"/>
+    <concept_name concept_id="502" concept_name_id="1502" name="SAE Form, Event onset date" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid2"/>
+    <concept_set concept_set_id="2" concept_id="502" concept_set="501" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
 
-    <concept concept_id="406" retired="false" datatype_id="4" class_id="1" is_set="true" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid10"/>
-    <concept_name concept_id="406" concept_name_id="1406" name="SAE Form, SAE outcome ( from PV unit summary)" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid10"/>
-    <concept_set concept_set_id="6" concept_id="406" concept_set="401" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+    <concept concept_id="503" retired="false" datatype_id="6" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid3"/>
+    <concept_name concept_id="503" concept_name_id="1503" name="SAE Form, Date of SAE report" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid3"/>
+    <concept_set concept_set_id="3" concept_id="503" concept_set="501" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
 
-        <concept concept_id="4061" retired="false" datatype_id="6" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid11"/>
-        <concept_name concept_id="4061" concept_name_id="14061" name="SAE Form, Event end date" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid11"/>
-        <concept_set concept_set_id="7" concept_id="4061" concept_set="406" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+    <concept concept_id="504" retired="false" datatype_id="2" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid4"/>
+    <concept_name concept_id="504" concept_name_id="1504" name="SAE Form, SAE term comprehensive AE list" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid4"/>
+    <concept_set concept_set_id="4" concept_id="504" concept_set="501" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
 
-        <concept concept_id="4062" retired="false" datatype_id="2" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid12"/>
-        <concept_name concept_id="4062" concept_name_id="14062" name="SAE Form, SAE outcome" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid12"/>
-        <concept_set concept_set_id="8" concept_id="4062" concept_set="406" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+        <concept concept_id="5041" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid5"/>
+        <concept_name concept_id="5041" concept_name_id="15041" name="Cardiac Rhythm" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid5"/>
+        <concept_answer concept_answer_id="25041" concept_id="504" answer_concept="5041" creator="1" date_created="2004-08-12 00:00:00.0"/>
 
-            <concept concept_id="40621" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid13"/>
-            <concept_name concept_id="40621" concept_name_id="140621" name="Fatal" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid13"/>
-            <concept_answer concept_answer_id="240621" concept_id="4062" answer_concept="40621" creator="1" date_created="2004-08-12 00:00:00.0"/>
+        <concept concept_id="5042" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid6"/>
+        <concept_name concept_id="5042" concept_name_id="15042" name="Hypertension" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid6"/>
+        <concept_answer concept_answer_id="25042" concept_id="504" answer_concept="5042" creator="1" date_created="2004-08-12 00:00:00.0"/>
 
-            <concept concept_id="40622" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid14"/>
-            <concept_name concept_id="40622" concept_name_id="140622" name="Not resolved" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid14"/>
-            <concept_answer concept_answer_id="240622" concept_id="4062" answer_concept="40622" creator="1" date_created="2004-08-12 00:00:00.0"/>
 
-        <concept concept_id="4063" retired="false" datatype_id="2" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid15"/>
-        <concept_name concept_id="4063" concept_name_id="14063" name="SAE Form, Maximum severity of SAE" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid15"/>
-        <concept_set concept_set_id="9" concept_id="4063" concept_set="406" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+    <concept concept_id="505" retired="false" datatype_id="2" class_id="11" is_set="false" creator="1" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid7"/>
+    <concept_name concept_id="505" concept_name_id="1505" name="SAE Form, SAE severity grade" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid7"/>
+    <concept_set concept_set_id="5" concept_id="505" concept_set="501" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
 
-            <concept_answer concept_answer_id="240631" concept_id="4063" answer_concept="4051" creator="1" date_created="2004-08-12 00:00:00.0"/>
-            <concept_answer concept_answer_id="240631" concept_id="4063" answer_concept="4052" creator="1" date_created="2004-08-12 00:00:00.0"/>
+        <concept concept_id="5051" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid8"/>
+        <concept_name concept_id="5051" concept_name_id="15051" name="Number, 1" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid8"/>
+        <concept_answer concept_answer_id="25051" concept_id="505" answer_concept="5051" creator="1" date_created="2004-08-12 00:00:00.0"/>
 
-        <concept concept_id="4064" retired="false" datatype_id="4" class_id="11" is_set="true" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid16"/>
-        <concept_name concept_id="4064" concept_name_id="14064" name="SAE Form, TB drug treatment" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid16"/>
-        <concept_set concept_set_id="10" concept_id="4064" concept_set="406" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+        <concept concept_id="5052" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid9"/>
+        <concept_name concept_id="5052" concept_name_id="15052" name="Number, 2" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid9"/>
+        <concept_answer concept_answer_id="25052" concept_id="505" answer_concept="5052" creator="1" date_created="2004-08-12 00:00:00.0"/>
 
-            <concept concept_id="40641" retired="false" datatype_id="10" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid17"/>
-            <concept_name concept_id="40641" concept_name_id="140641" name="SAE Form, TB Drug Possibly related to SAE" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid17"/>
-            <concept_set concept_set_id="11" concept_id="40641" concept_set="4064" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+    <concept concept_id="506" retired="false" datatype_id="4" class_id="1" is_set="true" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid10"/>
+    <concept_name concept_id="506" concept_name_id="1506" name="SAE Form, SAE outcome ( from PV unit summary)" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid10"/>
+    <concept_set concept_set_id="6" concept_id="506" concept_set="501" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+        <concept concept_id="5061" retired="false" datatype_id="6" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid11"/>
+        <concept_name concept_id="5061" concept_name_id="15061" name="SAE Form, Event end date" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid11"/>
+        <concept_set concept_set_id="7" concept_id="5061" concept_set="506" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+        <concept concept_id="5062" retired="false" datatype_id="2" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid12"/>
+        <concept_name concept_id="5062" concept_name_id="15062" name="SAE Form, SAE outcome" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid12"/>
+        <concept_set concept_set_id="8" concept_id="5062" concept_set="506" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+            <concept concept_id="50621" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid13"/>
+            <concept_name concept_id="50621" concept_name_id="150621" name="Fatal" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid13"/>
+            <concept_answer concept_answer_id="250621" concept_id="5062" answer_concept="50621" creator="1" date_created="2004-08-12 00:00:00.0"/>
+
+            <concept concept_id="50622" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid14"/>
+            <concept_name concept_id="50622" concept_name_id="150622" name="Not resolved" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid14"/>
+            <concept_answer concept_answer_id="250622" concept_id="5062" answer_concept="50622" creator="1" date_created="2004-08-12 00:00:00.0"/>
+
+        <concept concept_id="5063" retired="false" datatype_id="2" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid15"/>
+        <concept_name concept_id="5063" concept_name_id="15063" name="SAE Form, Maximum severity of SAE" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid15"/>
+        <concept_set concept_set_id="9" concept_id="5063" concept_set="506" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+            <concept_answer concept_answer_id="250631" concept_id="5063" answer_concept="5051" creator="1" date_created="2004-08-12 00:00:00.0"/>
+            <concept_answer concept_answer_id="250631" concept_id="5063" answer_concept="5052" creator="1" date_created="2004-08-12 00:00:00.0"/>
+
+        <concept concept_id="5064" retired="false" datatype_id="4" class_id="11" is_set="true" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid16"/>
+        <concept_name concept_id="5064" concept_name_id="15064" name="SAE Form, TB drug treatment" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid16"/>
+        <concept_set concept_set_id="10" concept_id="5064" concept_set="506" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+            <concept concept_id="50641" retired="false" datatype_id="10" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid17"/>
+            <concept_name concept_id="50641" concept_name_id="150641" name="SAE Form, TB Drug Possibly related to SAE" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid17"/>
+            <concept_set concept_set_id="11" concept_id="50641" concept_set="5064" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+            <concept concept_id="50642" retired="false" datatype_id="2" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid17642"/>
+            <concept_name concept_id="50642" concept_name_id="150642" name="SAE Form, TB drug name" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid17642"/>
+            <concept_set concept_set_id="642" concept_id="50642" concept_set="5064" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+                <concept concept_id="506421" retired="false" datatype_id="4" class_id="3" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid6421"/>
+                <concept_name concept_id="506421" concept_name_id="1506421" name="Isoniazid" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid6421"/>
+                <concept_answer concept_answer_id="2506421" concept_id="50642" answer_concept="506421" creator="1" date_created="2004-08-12 00:00:00.0"/>
+
+                <concept concept_id="506422" retired="false" datatype_id="4" class_id="3" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid6422"/>
+                <concept_name concept_id="506422" concept_name_id="1506422" name="Bedaquiline" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid6422"/>
+                <concept_answer concept_answer_id="2506422" concept_id="50642" answer_concept="506422" creator="1" date_created="2004-08-12 00:00:00.0"/>
+
+
+            <concept concept_id="50643" retired="false" datatype_id="2" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid17643"/>
+            <concept_name concept_id="50643" concept_name_id="150643" name="SAE Form, Final action taken related to TB drug" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid17643"/>
+            <concept_set concept_set_id="643" concept_id="50643" concept_set="5064" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+                <concept concept_id="506431" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid6431"/>
+                <concept_name concept_id="506431" concept_name_id="1506431" name="Dose reduced" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid6431"/>
+                <concept_answer concept_answer_id="2506431" concept_id="50643" answer_concept="506421" creator="1" date_created="2004-08-12 00:00:00.0"/>
+
+                <concept concept_id="506432" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid6432"/>
+                <concept_name concept_id="506432" concept_name_id="1506432" name="Dose maintained" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid6432"/>
+                <concept_answer concept_answer_id="2506432" concept_id="50643" answer_concept="506422" creator="1" date_created="2004-08-12 00:00:00.0"/>
+
+        <concept concept_id="5065" retired="false" datatype_id="10" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid1165"/>
+        <concept_name concept_id="5065" concept_name_id="15065" name="SAE Form, Is SAE related to TB drugs" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid1165"/>
+        <concept_set concept_set_id="765" concept_id="5065" concept_set="506" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+    <concept concept_id="507" retired="false" datatype_id="4" class_id="1" is_set="true" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid18"/>
+    <concept_name concept_id="507" concept_name_id="1507" name="SAE Form, Other SAE term" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid18"/>
+    <concept_set concept_set_id="12" concept_id="507" concept_set="501" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+    <concept concept_id="508" retired="false" datatype_id="4" class_id="1" is_set="true" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid19"/>
+    <concept_name concept_id="508" concept_name_id="1508" name="SAE Form, SAE ID number" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid19"/>
+    <concept_set concept_set_id="13" concept_id="508" concept_set="501" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+    <concept concept_id="509" retired="false" datatype_id="4" class_id="1" is_set="true" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid20"/>
+    <concept_name concept_id="509" concept_name_id="1509" name="SAE Form, Other causal factors (data from PV unit summary)" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid20"/>
+    <concept_set concept_set_id="14" concept_id="509" concept_set="501" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+        <concept concept_id="5091" retired="false" datatype_id="10" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid21"/>
+        <concept_name concept_id="5091" concept_name_id="15091" name="SAE Form, Non TB drug of other causal factors" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid21"/>
+        <concept_set concept_set_id="15" concept_id="5091" concept_set="509" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+        <concept concept_id="5092" retired="false" datatype_id="10" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid22"/>
+        <concept_name concept_id="5092" concept_name_id="15092" name="SAE Form, Other causal factor" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid22"/>
+        <concept_set concept_set_id="16" concept_id="5092" concept_set="509" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+        <concept concept_id="5093" retired="false" datatype_id="10" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid23"/>
+        <concept_name concept_id="5093" concept_name_id="15093" name="SAE Form, Comorbidity of other causal factors" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid23"/>
+        <concept_set concept_set_id="17" concept_id="5093" concept_set="509" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+        <concept concept_id="5094" retired="false" datatype_id="2" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid24"/>
+        <concept_name concept_id="5094" concept_name_id="15094" name="SAE Form, Other causal factors related to SAE" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid24"/>
+        <concept_set concept_set_id="17" concept_id="5094" concept_set="509" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
+
+            <concept concept_id="50941" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid25"/>
+            <concept_name concept_id="50941" concept_name_id="150941" name="Non TB drugs" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid25"/>
+            <concept_answer concept_answer_id="250941" concept_id="5094" answer_concept="50941" creator="1" date_created="2004-08-12 00:00:00.0"/>
+
+            <concept concept_id="50942" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid26"/>
+            <concept_name concept_id="50942" concept_name_id="150942" name="Co-morbidity" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid26"/>
+            <concept_answer concept_answer_id="250942" concept_id="5094" answer_concept="50942" creator="1" date_created="2004-08-12 00:00:00.0"/>
+
+            <concept concept_id="50943" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid27"/>
+            <concept_name concept_id="50943" concept_name_id="150943" name="Other" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid27"/>
+            <concept_answer concept_answer_id="250943" concept_id="5094" answer_concept="50942" creator="1" date_created="2004-08-12 00:00:00.0"/>
 
 </dataset>

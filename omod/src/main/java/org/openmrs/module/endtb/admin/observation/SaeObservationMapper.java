@@ -127,7 +127,13 @@ public class SaeObservationMapper {
                 if(!value.equalsIgnoreCase(((EncounterTransaction.Concept) bahmniObservation.getValue()).getName())) {
                     return false;
                 }
-            } else if (!value.equalsIgnoreCase(bahmniObservation.getValue().toString())) {
+            }
+            else if(bahmniObservation.getConcept().getDataType().equalsIgnoreCase("Coded")) {
+                if(!bahmniConceptService.getConceptByFullySpecifiedName(value).getUuid().equals(bahmniObservation.getValue())) {
+                    return false;
+                }
+            }
+            else if (!value.equalsIgnoreCase(bahmniObservation.getValue().toString())) {
                 return false;
             }
         }
