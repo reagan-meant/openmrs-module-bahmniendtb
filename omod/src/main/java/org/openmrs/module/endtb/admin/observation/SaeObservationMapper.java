@@ -75,15 +75,18 @@ public class SaeObservationMapper {
     private void updateObservation(Map<String, Object> saeObservationMap, Collection<BahmniObservation> bahmniObservations, BahmniObservation parentObs, Date encounterDateTime) throws ParseException {
         for (final Map.Entry<String, Object> entry : saeObservationMap.entrySet()) {
             boolean isObservationPresent = false;
+
             for (BahmniObservation observation : bahmniObservations) {
                 if (observation.getConcept().getName().equals(entry.getKey()) && !observation.getVoided()) {
+                    isObservationPresent = true;
                     if (entry.getKey().equals(SAETemplateConstants.SAE_TB_DRUG_TREATMENT)) {
                         isObservationPresent = isObservationPresent || checkIfSAEFormTBDrugTreatmentIsAlreadyPresent(observation.getGroupMembers(), (Map<String, Object>)entry.getValue());
-                        continue;
                     }
-                    if(entry.getKey().equals(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS_PV)) {
+                    else if(entry.getKey().equals(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS_PV)) {
+                        //TODO functionality is not clear. Why are observations voided everytime for otherCasualFactors?
                         makeObservationsVoided(observation.getGroupMembers());
                     }
+
                     if (entry.getValue() instanceof String) {
                         if (StringUtils.isEmpty((String) entry.getValue())) {
                             observation.setVoided(true);
@@ -93,10 +96,9 @@ public class SaeObservationMapper {
                     } else {
                         updateObservation((Map<String, Object>) entry.getValue(), observation.getGroupMembers(), observation, encounterDateTime);
                     }
-                    isObservationPresent = true;
                 }
             }
-            if (!isObservationPresent) {
+            if (!isObservationPresent && !StringUtils.isEmpty(entry.getValue().toString())) {
                 addGroupMemberToParentObs(parentObs, encounterDateTime, entry);
             }
         }
@@ -105,6 +107,7 @@ public class SaeObservationMapper {
     private void makeObservationsVoided(Collection<BahmniObservation> observations) {
         for(BahmniObservation observation : observations) {
             observation.setVoided(true);
+            observation.setVoidReason("SAE PV Unit Import");
         }
     }
 
@@ -121,21 +124,14 @@ public class SaeObservationMapper {
     }
 
     private boolean checkIfSAEFormTBDrugTreatmentIsAlreadyPresent(Collection<BahmniObservation> groupMembers, Map<String, Object> tbDrugTreatmentMap) {
-        for (BahmniObservation bahmniObservation : groupMembers) {
-            String value = (String) tbDrugTreatmentMap.get(bahmniObservation.getConcept().getName());
-            if(bahmniObservation.getValue() instanceof EncounterTransaction.Concept) {
-                if(!value.equalsIgnoreCase(((EncounterTransaction.Concept) bahmniObservation.getValue()).getName())) {
-                    return false;
-                }
-            }
-            else if(bahmniObservation.getConcept().getDataType().equalsIgnoreCase("Coded")) {
-                if(!bahmniConceptService.getConceptByFullySpecifiedName(value).getUuid().equals(bahmniObservation.getValue())) {
-                    return false;
-                }
-            }
-            else if (!value.equalsIgnoreCase(bahmniObservation.getValue().toString())) {
-                return false;
-            }
+        BahmniObservation tbDrugObservation = groupMembers
+                .stream()
+                .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_TB_DRUG_NAME))
+                .findFirst()
+                .get();
+        String value = (String) tbDrugTreatmentMap.get(SAETemplateConstants.SAE_TB_DRUG_NAME);
+        if(!bahmniConceptService.getConceptByFullySpecifiedName(value).getUuid().equals(tbDrugObservation.getValue())) {
+            return false;
         }
         return true;
     }

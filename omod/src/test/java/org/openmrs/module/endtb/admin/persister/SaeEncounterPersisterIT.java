@@ -51,7 +51,6 @@ public class SaeEncounterPersisterIT  extends BaseModuleWebContextSensitiveTest 
     @After
     public void destroy() {
         sessionFactory.getCurrentSession().setFlushMode(flushMode);
-
     }
 
     @Test
@@ -102,6 +101,36 @@ public class SaeEncounterPersisterIT  extends BaseModuleWebContextSensitiveTest 
                 .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_TB_DRUG_TREATMENT))
                 .collect(Collectors.toList());
         assertEquals(1, SAETbTreatments.size());
+    }
+
+    @Test
+    public void itShouldOverwriteExistingTBDrugSectionWithMatchingDrug() throws Exception{
+        SaeEncounterRow encounterRow = createSaeEncounterRow("Bedaquiline", "TRUE", "Dose reduced");
+        SaeEncounterRow encounterRow2 = createSaeEncounterRow("Bedaquiline", "TRUE", "Dose maintained");
+
+        saeEncounterPersister.persist(encounterRow);
+        saeEncounterPersister.persist(encounterRow2);
+
+        Context.openSession();
+        Context.authenticate("admin", "test");
+        Collection<BahmniObservation> bahmniObservations = bahmniObsService.getObservationsForPatientProgram("ppuuid2", Arrays.asList(SAETemplateConstants.SAE_TEMPLATE));
+        Context.closeSession();
+
+        BahmniObservation SAEObservation = bahmniObservations.stream().findFirst().get();
+        BahmniObservation SAEOutcome = filterByConceptName(SAEObservation, SAETemplateConstants.SAE_OUTCOME_PV);
+
+        List<BahmniObservation> SAETbTreatments = SAEOutcome.getGroupMembers()
+                .stream()
+                .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_TB_DRUG_TREATMENT))
+                .collect(Collectors.toList());
+        assertEquals(1, SAETbTreatments.size());
+
+        BahmniObservation SAETbTreatmentPV = SAETbTreatments.get(0);
+        BahmniObservation SAETbDrug = filterByConceptName( SAETbTreatmentPV, SAETemplateConstants.SAE_TB_DRUG_NAME);
+        BahmniObservation tbDrugFinalAction = filterByConceptName(SAETbTreatmentPV, SAETemplateConstants.SAE_TB_DRUG_FINAL_ACTION);
+
+        assertEquals(encounterRow2.tbDrug, SAETbDrug.getValueAsString());
+        assertEquals(encounterRow2.tbDrugFinalAction, tbDrugFinalAction.getValueAsString());
     }
 
     private BahmniObservation filterByConceptName(BahmniObservation parentObservation, String conceptName) {
