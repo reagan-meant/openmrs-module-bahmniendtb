@@ -2,9 +2,12 @@ package org.openmrs.module.endtb.admin.models;
 
 import org.bahmni.csv.CSVEntity;
 import org.bahmni.csv.annotation.CSVHeader;
+import org.bahmni.csv.annotation.CSVRegexHeader;
+import org.bahmni.csv.annotation.CSVRepeatingHeaders;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 import static org.bahmni.module.admin.csv.utils.CSVUtils.getDateFromString;
 
@@ -40,14 +43,8 @@ public class SaeEncounterRow extends CSVEntity {
     @CSVHeader(name = "SAE related to TB drugs?")
     public String saeRelatedTbDrug;
 
-    @CSVHeader(name = "TB drug")
-    public String tbDrug;
-
-    @CSVHeader(name = "TB drug:final action")
-    public String tbDrugFinalAction;
-
-    @CSVHeader(name = "TB drug:related?")
-    public String tbDrugRelated;
+    @CSVRepeatingHeaders(names = {"TB drug", "TB drug:final action", "TB drug:related?"}, type = SaeTBDrugTreatmentRow.class)
+    public List<SaeTBDrugTreatmentRow> saeTBDrugTreatmentRows;
 
     public String saeOtherCasualFactors;
 
