@@ -30,6 +30,7 @@ public class SaeObservationMapper {
 
     private BahmniConceptService bahmniConceptService;
     private ETObsToBahmniObsMapper fromETObsToBahmniObs;
+    private String[] TBDrugTreatmentsConceptNames = {SAETemplateConstants.SAE_TB_DRUG_NAME, SAETemplateConstants.SAE_TB_DRUG_FINAL_ACTION, SAETemplateConstants.SAE_TB_DRUG_RELATED};
 
     @Autowired
     public SaeObservationMapper(BahmniConceptService bahmniConceptService, ETObsToBahmniObsMapper fromETObsToBahmniObs) {
@@ -110,30 +111,33 @@ public class SaeObservationMapper {
         for (final Map.Entry<String, Object> entry : saeObservationMap.entrySet()) {
             boolean isObservationPresent = false;
             String key = getKeyWithoutIndex(entry.getKey());
-
             for (BahmniObservation observation : bahmniObservations) {
                 if (observation.getConcept().getName().equals(key) && !observation.getVoided()) {
-                    isObservationPresent = true;
                     if (key.equals(SAETemplateConstants.SAE_TB_DRUG_TREATMENT)) {
-                        isObservationPresent = checkIfSAEFormTBDrugTreatmentIsAlreadyPresent(observation.getGroupMembers(), (Map<String, Object>)entry.getValue());
+                        isObservationPresent = isObservationPresent || checkIfSAEFormTBDrugTreatmentIsAlreadyPresent(observation.getGroupMembers(), (Map<String, Object>)entry.getValue());
                     }
-                    else if(key.equals(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS_PV)) {
+                    else {
+                        isObservationPresent = true;
+                    }
+                    if(key.equals(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS_PV)) {
                         //TODO functionality is not clear. Why are observations voided everytime for otherCasualFactors?
                         makeObservationsVoided(observation.getGroupMembers());
                     }
+
                     if (overwrite && entry.getValue() instanceof String) {
                         if (StringUtils.isEmpty((String) entry.getValue())) {
                             observation.setVoided(true);
                         } else {
                             observation.setValue(getValue(entry.getValue().toString(), key));
                         }
-                    } else if(overwrite){
+                    } else if(overwrite && isObservationPresent){
                         updateObservation((Map<String, Object>) entry.getValue(), isObservationPresent, observation.getGroupMembers(), observation, encounterDateTime);
+                        break;
                     }
                 }
             }
             if (!isObservationPresent && !StringUtils.isEmpty(entry.getValue().toString())) {
-                addGroupMemberToParentObs(parentObs, encounterDateTime, entry);
+                addGroupMemberToParentObs(bahmniObservations, parentObs, encounterDateTime, entry);
             }
         }
     }
@@ -145,7 +149,7 @@ public class SaeObservationMapper {
         }
     }
 
-    private void addGroupMemberToParentObs(BahmniObservation parentObs, Date encounterDateTime, Map.Entry<String, Object> entry) throws ParseException {
+    private void addGroupMemberToParentObs(Collection<BahmniObservation> tempChildBahmniObs, BahmniObservation parentObs, Date encounterDateTime, Map.Entry<String, Object> entry) throws ParseException {
         Map<String, Object> observationMap = new HashMap<>();
         String key = getKeyWithoutIndex(entry.getKey());
         observationMap.put(key, entry.getValue());
@@ -154,6 +158,7 @@ public class SaeObservationMapper {
         if (CollectionUtils.isNotEmpty(newlyCreatedObs)) {
             for (BahmniObservation bahmniObservation : newlyCreatedObs) {
                 parentObs.addGroupMember(bahmniObservation);
+                tempChildBahmniObs.add(bahmniObservation);
             }
         }
     }
