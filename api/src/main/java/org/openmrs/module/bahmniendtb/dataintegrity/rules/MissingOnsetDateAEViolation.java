@@ -1,6 +1,7 @@
 package org.openmrs.module.bahmniendtb.dataintegrity.rules;
 
-import org.openmrs.module.dataintegrity.rule.RuleDefn;
+import org.openmrs.module.dataintegrity.DataIntegrityRule;
+import org.openmrs.module.dataintegrity.rule.RuleDefinition;
 import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.Concept;
 import org.openmrs.PatientProgram;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
-public class MissingOnsetDateAEViolation implements RuleDefn<PatientProgram> {
+public class MissingOnsetDateAEViolation implements RuleDefinition<PatientProgram> {
 
     private ConceptService conceptService;
 
@@ -38,6 +39,11 @@ public class MissingOnsetDateAEViolation implements RuleDefn<PatientProgram> {
         return missingValuesHelper
             .getMissingObsInObsSetViolations(AE_ADVERSE_EVENT_TEMPLATE, AE_REPORTING_DATE,
                     Arrays.asList(reportingDateQuestion, onsetDateQuestion));
+    }
+
+    @Override
+    public DataIntegrityRule getRule() {
+        return null;
     }
 }
 

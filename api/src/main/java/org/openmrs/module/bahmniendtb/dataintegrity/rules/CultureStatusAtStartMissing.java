@@ -5,8 +5,8 @@ import org.openmrs.PatientProgram;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.dataintegrity.rules.helper.CultureStatusAtStartMissingHelper;
-import org.openmrs.module.bahmniendtb.dataintegrity.rules.helper.MissingValuesHelper;
-import org.openmrs.module.dataintegrity.rule.RuleDefn;
+import org.openmrs.module.dataintegrity.DataIntegrityRule;
+import org.openmrs.module.dataintegrity.rule.RuleDefinition;
 import org.openmrs.module.dataintegrity.rule.RuleResult;
 
 
@@ -16,7 +16,7 @@ import java.util.List;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
 
-public class CultureStatusAtStartMissing implements RuleDefn<PatientProgram> {
+public class CultureStatusAtStartMissing implements RuleDefinition<PatientProgram> {
 
     private ConceptService conceptService;
     private CultureStatusAtStartMissingHelper cultureStatusAtStartMissingHelper;
@@ -38,5 +38,10 @@ public class CultureStatusAtStartMissing implements RuleDefn<PatientProgram> {
         Concept bacteriologySpecimenCollectionDate = conceptService.getConceptByName(BACTERIOLOGY_SPECIMEN_COLLECTION_DATE);
         Concept bacteriologyCultureResults = conceptService.getConceptByName(BACTERIOLOGY_CULTURE_RESULTS);
         return cultureStatusAtStartMissingHelper.fetchCultureStatusAtStartMissing(Arrays.asList(mtbConfirmation, treatmentInitiationStartDate, bacteriologySpecimenCollectionDate, bacteriologyCultureResults));
+    }
+
+    @Override
+    public DataIntegrityRule getRule() {
+        return null;
     }
 }

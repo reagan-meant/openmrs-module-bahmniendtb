@@ -1,6 +1,7 @@
 package org.openmrs.module.bahmniendtb.dataintegrity.rules;
 
-import org.openmrs.module.dataintegrity.rule.RuleDefn;
+import org.openmrs.module.dataintegrity.DataIntegrityRule;
+import org.openmrs.module.dataintegrity.rule.RuleDefinition;
 import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.Concept;
 import org.openmrs.PatientProgram;
@@ -16,7 +17,7 @@ import static org.openmrs.module.bahmniendtb.EndTBConstants.EOT_STOP_DATE;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.TI_START_DATE;
 
 
-public class MissingOutcomeViolation implements RuleDefn<PatientProgram> {
+public class MissingOutcomeViolation implements RuleDefinition<PatientProgram> {
 
     private ConceptService conceptService;
     private OutcomeFormHelper outcomeFormHelper;
@@ -37,5 +38,10 @@ public class MissingOutcomeViolation implements RuleDefn<PatientProgram> {
         Concept treatmentStopDateConcept = conceptService.getConceptByName(EOT_STOP_DATE);
         Concept outcomeConcept = conceptService.getConceptByName(EOT_OUTCOME);
         return outcomeFormHelper.fetchMissingOutComeData(Arrays.asList(treatmentStartDateConcept, treatmentStopDateConcept, outcomeConcept));
+    }
+
+    @Override
+    public DataIntegrityRule getRule() {
+        return null;
     }
 }

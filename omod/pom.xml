@@ -138,7 +138,6 @@
         </dependency>
         <!-- End OpenMRS core -->
 
-
         <dependency>
             <groupId>org.bahmni.module</groupId>
             <artifactId>bahmnicore-api</artifactId>
@@ -152,6 +151,12 @@
             <version>${episodes.version}</version>
             <scope>provided</scope>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>uiframework-api</artifactId>
+            <version>${uiframeworkVersion}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
