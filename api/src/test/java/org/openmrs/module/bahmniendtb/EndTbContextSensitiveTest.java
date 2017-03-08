@@ -2,6 +2,7 @@ package org.openmrs.module.bahmniendtb;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.Concept;
 import org.openmrs.Program;
@@ -16,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @SkipBaseSetup
+@Ignore
 public class EndTbContextSensitiveTest extends BaseModuleContextSensitiveTest {
 
     protected static final String XML_DATASET_PATH = "endtbMetadata.xml";
