@@ -18,6 +18,7 @@ import org.openmrs.module.bahmniemrapi.encountertransaction.service.BahmniEncoun
 import org.openmrs.module.endtb.admin.constants.SAETemplateConstants;
 import org.openmrs.module.endtb.admin.encounter.BahmniSaeEncounterTransactionImportService;
 import org.openmrs.module.endtb.admin.models.SaeEncounterRow;
+import org.openmrs.module.endtb.admin.models.SaeTBDrugTreatmentRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -119,9 +120,12 @@ public class SaeEncounterPersister implements EntityPersister<SaeEncounterRow> {
             saeEncounterRow.otherSaeTerm = "";
         }
         if(saeEncounterRow.saeRelatedTbDrug.equalsIgnoreCase("false")) {
-            saeEncounterRow.tbDrug = "";
-            saeEncounterRow.tbDrugFinalAction = "";
-            saeEncounterRow.tbDrugRelated = "";
+            for(SaeTBDrugTreatmentRow tbDrugRow : saeEncounterRow.saeTBDrugTreatmentRows)
+            {
+                tbDrugRow.tbDrug = "";
+                tbDrugRow.tbDrugFinalAction = "";
+                tbDrugRow.tbDrugRelated = "";
+            }
         }
         if(!StringUtils.isEmpty(saeEncounterRow.nonTBdrug)) {
             setSaeOtherCasualFactors(saeEncounterRow, SAETemplateConstants.NON_TB_DRUGS_CONCEPT);

@@ -10,6 +10,7 @@ import org.bahmni.fileimport.FileImporter;
 import org.bahmni.module.common.db.JDBCConnectionProvider;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionImpl;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.endtb.admin.models.SaeEncounterRow;
@@ -122,7 +123,7 @@ public class EndTBAdminImportController extends BaseRestController {
             if (session.get() == null || !session.get().isOpen())
                 session.set(sessionFactory.openSession());
 
-            return session.get().connection();
+            return ((SessionImpl)session.get()).connection();
         }
 
         @Override

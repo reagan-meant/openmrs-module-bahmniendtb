@@ -16,12 +16,12 @@
     <patient_identifier date_created="2005-09-22 00:00:00" patient_identifier_id="1" patient_id ="5190" identifier="ARM10021" identifier_type="1"  creator="1"  uuid="8967f9d3-3a91-11e5-b380-0050568236ae" preferred="1" voided="0" />
 
     <person_name person_name_id="4190" preferred="true" person_id="5190" prefix="Mr." given_name="Horatio" middle_name="Test" family_name="Banka" family_name_suffix="Esq." creator="1" date_created="2005-09-22 00:00:00.0" voided="false" void_reason="" uuid="399e3a7b-6482-9907d-94ce-c07bb3ca3cca"/>
-    <visit visit_id="901" date_started="2008-08-17 00:00:00" date_created="2008-08-16 00:00:00" patient_id="5190" visit_type_id="1" date_stopped="2008-08-17 04:08:16" location_id="1" creator="1" changed_by="1" uuid="ad41fb41-a41a-4ad6-8835-2f59099acf5t" voided="0"/>
+    <visit visit_id="901" date_started="2008-08-17 00:00:00" date_created="2008-08-16 00:00:00" patient_id="5190" visit_type_id="1" location_id="1" creator="1" changed_by="1" uuid="ad41fb41-a41a-4ad6-8835-2f59099acf5t" voided="0"/>
 
 
     <program program_id="1078" concept_id="1023" creator="1" date_created="2015-08-24 12:03:38" retired="0" name="Baseline TB Register" uuid="53b2323232-afbf-4c41-9e80-949d66492bd0"/>
     <patient_program patient_program_id = "456" patient_id="5190"  program_id="1078" date_enrolled="2015-08-24 12:03:38" date_created="2015-08-24 12:03:38" creator="1" voided="0" uuid="dfdfoifo-dkcd-475d-b939-6d82327f36a3"/>
-    <patient_program patient_program_id = "459" patient_id="5190"  program_id="1078" date_enrolled="2015-08-24 12:03:38" date_created="2015-08-24 12:03:38" creator="1" voided="0" uuid="df0foifo-dkcd-475d-b939-6d82327f36a3"/>
+    <patient_program patient_program_id = "459" patient_id="5190"  program_id="1078" date_enrolled="2015-08-24 12:03:38" date_created="2015-08-24 12:03:38" creator="1" voided="0" uuid="ppuuid2"/>
 
     <program_attribute_type program_attribute_type_id="1" name="Registration Number" min_occurs="1" retired="false"
                             creator="1" date_created="2008-08-15 17:04:50.0" datatype="org.openmrs.customdatatype.datatype.FreeTextDatatype"

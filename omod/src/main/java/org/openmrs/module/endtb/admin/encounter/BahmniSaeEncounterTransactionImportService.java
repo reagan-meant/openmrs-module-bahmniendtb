@@ -61,7 +61,7 @@ public class BahmniSaeEncounterTransactionImportService {
 
                     if(saeEncounterRow.saeTerm.equalsIgnoreCase(SAETemplateConstants.OTHER_CONCEPT)) {
                         if(groupMembers.get(SAETemplateConstants.OTHER_SAE_TERM) != null
-                                && groupMembers.get(SAETemplateConstants.OTHER_SAE_TERM).equals(saeEncounterRow.otherSaeTerm)) {
+                                && groupMembers.get(SAETemplateConstants.OTHER_SAE_TERM).toString().equalsIgnoreCase(saeEncounterRow.otherSaeTerm)) {
                             observation = bahmniObservation;
                         }
                     } else {
