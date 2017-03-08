@@ -11,7 +11,7 @@
     <person person_id="5190" gender="M" dead="false" creator="1" birthdate_estimated="0" date_created="2008-08-15 15:57:09.0" voided="false"  uuid="86526ed5-3c11-11de-a0ba-001e3766667a"/>
 
     <patient patient_id="5190" creator="1" date_created="2008-08-15 15:57:09.0" changed_by="1" date_changed="2008-08-18 12:29:59.0" voided="false" void_reason=""/>
-    <global_property property="emr.primaryIdentifierType" property_value="1a339fe9-38bc-4ab3-b180-320988c0b968" uuid="9885827e-26fe-102b-80cb-2017a47871b3"/>
+    <global_property property="bahmni.primaryIdentifierType" property_value="1a339fe9-38bc-4ab3-b180-320988c0b968" uuid="9885827e-26fe-102b-80cb-2017a47871b3"/>
 
     <patient_identifier date_created="2005-09-22 00:00:00" patient_identifier_id="1" patient_id ="5190" identifier="ARM10021" identifier_type="1"  creator="1"  uuid="8967f9d3-3a91-11e5-b380-0050568236ae" preferred="1" voided="0" />
 
