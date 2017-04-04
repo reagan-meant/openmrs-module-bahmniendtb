@@ -119,14 +119,6 @@ public class SaeEncounterPersister implements EntityPersister<SaeEncounterRow> {
         if(!saeEncounterRow.saeTerm.equalsIgnoreCase(SAETemplateConstants.OTHER_CONCEPT)) {
             saeEncounterRow.otherSaeTerm = "";
         }
-        if(saeEncounterRow.saeRelatedTbDrug.equalsIgnoreCase("false")) {
-            for(SaeTBDrugTreatmentRow tbDrugRow : saeEncounterRow.saeTBDrugTreatmentRows)
-            {
-                tbDrugRow.tbDrug = "";
-                tbDrugRow.tbDrugFinalAction = "";
-                tbDrugRow.tbDrugRelated = "";
-            }
-        }
         if(!StringUtils.isEmpty(saeEncounterRow.nonTBdrug)) {
             setSaeOtherCasualFactors(saeEncounterRow, SAETemplateConstants.NON_TB_DRUGS_CONCEPT);
         }
