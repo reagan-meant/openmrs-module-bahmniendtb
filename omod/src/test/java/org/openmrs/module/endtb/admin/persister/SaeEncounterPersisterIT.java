@@ -116,36 +116,6 @@ public class SaeEncounterPersisterIT  extends BaseModuleWebContextSensitiveTest 
     }
 
     @Test
-    public void itShouldTBDrugSectionWhenSAERelatedTBDrugsIsFalse() throws Exception{
-        SaeTBDrugTreatmentRow tbDrugTreatmentRow = createSaeTBDrugTreatmentRow("Bedaquiline", "TRUE", "Dose reduced");
-        SaeEncounterRow encounterRow = createSaeEncounterRow("REG123456", "Hypertension", "2017-02-01", "FALSE");
-        encounterRow.saeTBDrugTreatmentRows.add(tbDrugTreatmentRow);
-
-        saeEncounterPersister.persist(encounterRow);
-
-        Context.openSession();
-        Context.authenticate("admin", "test");
-        Collection<BahmniObservation> bahmniObservations = bahmniObsService.getObservationsForPatientProgram("ppuuid2", Arrays.asList(SAETemplateConstants.SAE_TEMPLATE));
-        Context.closeSession();
-
-        BahmniObservation SAEObservation = bahmniObservations.stream().findFirst().get();
-        BahmniObservation SAEOutcome = filterByConceptName(SAEObservation, SAETemplateConstants.SAE_OUTCOME_PV);
-
-        List<BahmniObservation> SAETbTreatments = SAEOutcome.getGroupMembers()
-                .stream()
-                .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_TB_DRUG_TREATMENT))
-                .collect(Collectors.toList());
-        assertEquals(0, SAETbTreatments.size());
-
-        BahmniObservation SAEIsTbDrugRelated = SAEOutcome.getGroupMembers()
-                .stream()
-                .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_RELATED_TO_TB_DRUGS))
-                .findFirst().get();
-
-        assertEquals("No", SAEIsTbDrugRelated.getValueAsString());
-    }
-
-    @Test
     public void itShouldImportSAEEncounterWithTBDrugSection() throws Exception{
         SaeTBDrugTreatmentRow tbDrugTreatmentRow = createSaeTBDrugTreatmentRow("Bedaquiline", "TRUE", "Dose reduced");
         SaeEncounterRow encounterRow = createSaeEncounterRow("REG123456", "Hypertension", "2017-02-01", "TRUE");
