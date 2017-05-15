@@ -14,7 +14,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <bahmniEndTbVersion>2.1.0-SNAPSHOT</bahmniEndTbVersion>
         <openMRSVersion>2.0.3</openMRSVersion>
-        <bahmniEndTbVersion>1.8-SNAPSHOT</bahmniEndTbVersion>
         <atomfeedVersion>2.5.4</atomfeedVersion>
         <emrapiVersion>1.17</emrapiVersion>
         <providermanagementVersion>1.1.3</providermanagementVersion>
