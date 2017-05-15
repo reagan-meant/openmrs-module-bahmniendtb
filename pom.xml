@@ -12,6 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <bahmniEndTbVersion>2.1.0-SNAPSHOT</bahmniEndTbVersion>
         <openMRSVersion>2.0.3</openMRSVersion>
         <bahmniEndTbVersion>1.8-SNAPSHOT</bahmniEndTbVersion>
         <atomfeedVersion>2.5.4</atomfeedVersion>
@@ -22,7 +23,6 @@
         <calculationModuleVersion>1.3-SNAPSHOT</calculationModuleVersion>
         <serializationXstreamModuleVersion>0.2.12</serializationXstreamModuleVersion>
         <bahmniVersion>0.88-SNAPSHOT</bahmniVersion>
-        <bahmniEndTbVersion>2.0.0</bahmniEndTbVersion>
         <emrapi-omod.version>1.20</emrapi-omod.version>
         <episodesVersion>1.0-SNAPSHOT</episodesVersion>
         <legacyuiVersion>1.0</legacyuiVersion>
