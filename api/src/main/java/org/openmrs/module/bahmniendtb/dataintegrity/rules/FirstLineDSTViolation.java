@@ -7,8 +7,6 @@ import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.dataintegrity.rules.helper.DrugDSTViolationHelper;
 import org.openmrs.module.bahmniendtb.dataintegrity.service.DataintegrityRuleService;
-import org.openmrs.module.dataintegrity.DataIntegrityRule;
-import org.openmrs.module.dataintegrity.rule.RuleDefinition;
 import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.module.episodes.Episode;
 
@@ -19,7 +17,7 @@ import java.util.Set;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
-public class FirstLineDSTViolation implements RuleDefinition<PatientProgram> {
+public class FirstLineDSTViolation extends EndTbRuleDefinition<PatientProgram> {
 
     private DataintegrityRuleService dataintegrityRuleService;
     private ConceptService conceptService;
@@ -67,11 +65,6 @@ public class FirstLineDSTViolation implements RuleDefinition<PatientProgram> {
         episodesWithTreatmentStartDateAndCDRTB.removeAll(episodesWithRifampicinResistance);
 
         return drugDSTViolationHelper.getInconsistenciesForQuestion(episodesWithTreatmentStartDateAndCDRTB, BASELINE_FORM, BASELINE_DRUG_RESISTANCE, FIRST_LINE_RESISTANCE_RESULT_COMMENT);
-    }
-
-    @Override
-    public DataIntegrityRule getRule() {
-        return null;
     }
 
 }

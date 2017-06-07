@@ -16,22 +16,8 @@
     <version>${bahmniEndTbVersion}</version>
 
     <dependencies>
-        <!-- Begin OpenMRS modules -->
 
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>emrapi-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>emrapi-api-1.12</artifactId>
-        </dependency>
-
-        <!-- End OpenMRS modules -->
-
-
-        <!-- Begin OpenMRS core -->
+        <!-- OpenMRS core -->
 
         <dependency>
             <groupId>org.openmrs.api</groupId>
@@ -63,61 +49,86 @@
             <groupId>org.openmrs.test</groupId>
             <artifactId>openmrs-test</artifactId>
             <type>pom</type>
-            <scope>test</scope>
         </dependency>
+
+        <!-- OpenMRS Modules -->
+
+        <dependency>
+            <groupId>org.bahmni.module</groupId>
+            <artifactId>bahmni-emr-api</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>calculation-api</artifactId>
-            <scope>test</scope>
+            <artifactId>dataintegrity-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>reporting-api</artifactId>
-            <scope>test</scope>
+            <artifactId>emrapi-api-1.12</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>serialization.xstream-api-2.0</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>providermanagement-api</artifactId>
-            <version>1.1.3</version>
+            <artifactId>emrapi-api</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>episodes-api</artifactId>
-            <version>${episodes.version}</version>
-            <scope>provided</scope>
         </dependency>
-        <!-- End OpenMRS core -->
+
+        <!-- Test Module Dependencies -->
+
+        <dependency>
+            <groupId>org.bahmni.module</groupId>
+            <artifactId>bahmnicore-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bahmni.module</groupId>
+            <artifactId>bahmnicore-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bahmni.module</groupId>
+            <artifactId>bahmni-mapping</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>legacyui-omod</artifactId>
+            <artifactId>calculation-api</artifactId>
         </dependency>
 
-        <!-- Begin Data Integrity omod -->
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>dataintegrity-omod</artifactId>
-            <version>${dataintegrityVersion}</version>
-            <scope>provided</scope>
+            <artifactId>serialization.xstream-api-2.0</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>dataintegrity-api</artifactId>
-            <version>${dataintegrityVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- End Data Integrity omod  -->
 
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>reporting-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ict4h.openmrs</groupId>
+            <artifactId>openmrs-atomfeed-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>providermanagement-api</artifactId>
+        </dependency>
+
+        <!-- Other dependencies -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
+
     </dependencies>
 
 </project>

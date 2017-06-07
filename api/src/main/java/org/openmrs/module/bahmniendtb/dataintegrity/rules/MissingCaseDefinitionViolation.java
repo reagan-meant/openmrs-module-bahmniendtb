@@ -5,19 +5,14 @@ import org.openmrs.PatientProgram;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.dataintegrity.rules.helper.MissingCaseDefnHelper;
-import org.openmrs.module.dataintegrity.DataIntegrityRule;
-import org.openmrs.module.dataintegrity.rule.RuleDefinition;
 import org.openmrs.module.dataintegrity.rule.RuleResult;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_CASEDEFINITION_CONFIRMATION;
-import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_CASEDEFINITION_DISEASE_SITE;
-import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_CASEDEFINITION_WHO_GROUP;
-import static org.openmrs.module.bahmniendtb.EndTBConstants.BASELINE_FORM;
+import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
-public class MissingCaseDefinitionViolation implements RuleDefinition<PatientProgram> {
+public class MissingCaseDefinitionViolation extends EndTbRuleDefinition<PatientProgram> {
 
     private ConceptService conceptService;
 
@@ -43,11 +38,6 @@ public class MissingCaseDefinitionViolation implements RuleDefinition<PatientPro
         return missingCaseDefnHelper
             .getMissingObsInObsSetViolations(BASELINE_FORM,
                     Arrays.asList(whoGroupQuestion, siteDateQuestion, methodQuestion));
-    }
-
-    @Override
-    public DataIntegrityRule getRule() {
-        return null;
     }
 }
 

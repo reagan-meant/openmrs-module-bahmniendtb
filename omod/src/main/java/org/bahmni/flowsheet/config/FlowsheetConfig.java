@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FlowsheetConfig {
+
+	private boolean trackPending;
+	private boolean trackPlanned;
+	
     private List<MilestoneConfig> milestoneConfigs;
     private List<QuestionConfig> questionConfigs = new ArrayList<>();
 
@@ -37,4 +41,25 @@ public class FlowsheetConfig {
         }
         return null;
     }
+
+    @JsonProperty(FlowsheetConstant.TRACK_PENDING)
+	public boolean getTrackPending() {
+		return trackPending;
+	}
+
+    @JsonProperty(FlowsheetConstant.TRACK_PENDING)
+	public void setTrackPending(boolean trackPending) {
+		this.trackPending = trackPending;
+	}
+
+    @JsonProperty(FlowsheetConstant.TRACK_PLANNED)
+	public boolean getTrackPlanned() {
+		return trackPlanned;
+	}
+
+    @JsonProperty(FlowsheetConstant.TRACK_PLANNED)
+	public void setTrackPlanned(boolean trackPlanned) {
+		this.trackPlanned = trackPlanned;
+	}
+
 }

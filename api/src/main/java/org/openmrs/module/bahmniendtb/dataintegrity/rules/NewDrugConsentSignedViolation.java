@@ -1,13 +1,11 @@
 package org.openmrs.module.bahmniendtb.dataintegrity.rules;
 
-import org.openmrs.module.dataintegrity.DataIntegrityRule;
-import org.openmrs.module.dataintegrity.rule.RuleDefinition;
-import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.Concept;
 import org.openmrs.PatientProgram;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.dataintegrity.rules.helper.TIFormInconsistencyHelper;
+import org.openmrs.module.dataintegrity.rule.RuleResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +13,7 @@ import java.util.List;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
-public class NewDrugConsentSignedViolation implements RuleDefinition<PatientProgram> {
+public class NewDrugConsentSignedViolation extends EndTbRuleDefinition<PatientProgram> {
 
     private ConceptService conceptService;
 
@@ -37,11 +35,6 @@ public class NewDrugConsentSignedViolation implements RuleDefinition<PatientProg
         addConceptByNameToList(Arrays.asList(FALSE, UNKNOWN), unacceptableConsentResponses);
 
         return tiFormInconsistencyHelper.getInconsistenciesForQuestion(FSN_TREATMENT_INITIATION_FORM, FSN_TREATMENT_INITIATION_CONSENT_QUESTION, unacceptableConsentResponses);
-    }
-
-    @Override
-    public DataIntegrityRule getRule() {
-        return null;
     }
 
 

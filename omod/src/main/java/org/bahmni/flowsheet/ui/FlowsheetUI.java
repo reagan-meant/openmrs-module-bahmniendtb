@@ -1,19 +1,19 @@
 package org.bahmni.flowsheet.ui;
 
 import org.bahmni.flowsheet.api.models.Milestone;
+import org.bahmni.flowsheet.config.FlowsheetConfig;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class FlowsheetUI {
 
     private List<Milestone> milestones;
     private Map<String, List<String>> flowsheetData;
-    private String highlightedMilestone;
+    private String highlightedCurrentMilestone;
+    private String endDateMilestone;
+    private FlowsheetConfig flowsheetConfig;
 
     public Map<String, List<String>> getFlowsheetData() {
         if(null == this.flowsheetData) {
@@ -26,12 +26,12 @@ public class FlowsheetUI {
         this.flowsheetData = flowsheetData;
     }
 
-    public String getHighlightedMilestone() {
-        return highlightedMilestone;
+    public String getHighlightedCurrentMilestone() {
+        return highlightedCurrentMilestone;
     }
 
-    public void setHighlightedMilestone(String highlightedMilestone) {
-        this.highlightedMilestone = highlightedMilestone;
+    public void setHighlightedCurrentMilestone(String highlightedCurrentMilestone) {
+        this.highlightedCurrentMilestone = highlightedCurrentMilestone;
     }
 
     public List<Milestone> getMilestones() {
@@ -40,5 +40,21 @@ public class FlowsheetUI {
 
     public void setMilestones(List<Milestone> milestones) {
         this.milestones = milestones;
+    }
+
+	public String getEndDateMilestone() {
+		return endDateMilestone;
+	}
+
+	public void setEndDateMilestone(String endDateMilestone) {
+		this.endDateMilestone = endDateMilestone;
+	}
+
+    public FlowsheetConfig getFlowsheetConfig() {
+        return flowsheetConfig;
+    }
+
+    public void setFlowsheetConfig(FlowsheetConfig flowsheetConfig) {
+        this.flowsheetConfig = flowsheetConfig;
     }
 }

@@ -1,13 +1,11 @@
 package org.openmrs.module.bahmniendtb.dataintegrity.rules;
 
-import org.openmrs.module.dataintegrity.DataIntegrityRule;
-import org.openmrs.module.dataintegrity.rule.RuleDefinition;
-import org.openmrs.module.dataintegrity.rule.RuleResult;
 import org.openmrs.Concept;
 import org.openmrs.PatientProgram;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.dataintegrity.rules.helper.OutcomeFormHelper;
+import org.openmrs.module.dataintegrity.rule.RuleResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.List;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.EOT_OUTCOME;
 import static org.openmrs.module.bahmniendtb.EndTBConstants.EOT_STOP_DATE;
 
-public class MissingTreatmentStopDate implements RuleDefinition<PatientProgram> {
+public class MissingTreatmentStopDate extends EndTbRuleDefinition<PatientProgram> {
 
     private ConceptService conceptService;
     private OutcomeFormHelper outcomeFormHelper;
@@ -35,10 +33,5 @@ public class MissingTreatmentStopDate implements RuleDefinition<PatientProgram> 
         Concept treatmentStopDateConcept = conceptService.getConceptByName(EOT_STOP_DATE);
         Concept treatmentOutcomeConcept = conceptService.getConceptByName(EOT_OUTCOME);
         return outcomeFormHelper.retrieveMissingTreatmentStopDate(Arrays.asList(treatmentStopDateConcept, treatmentOutcomeConcept));
-    }
-
-    @Override
-    public DataIntegrityRule getRule() {
-        return null;
     }
 }
