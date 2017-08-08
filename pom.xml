@@ -27,6 +27,9 @@
         <legacyuiVersion>1.0</legacyuiVersion>
         <dataintegrityVersion>4.2.3</dataintegrityVersion>
         <uiframeworkVersion>3.3.1</uiframeworkVersion>
+        <idgenWebservicesVersion>1.1-SNAPSHOT</idgenWebservicesVersion>
+        <addressHierarchyVersion>2.9</addressHierarchyVersion>
+        <idgenVersion>4.4.0</idgenVersion>
     </properties>
 
     <organization>
@@ -205,6 +208,13 @@
 
             <dependency>
                 <groupId>org.openmrs.module</groupId>
+                <artifactId>rulesengine-api</artifactId>
+                <version>${bahmniVersion}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
                 <artifactId>calculation-api</artifactId>
                 <version>${calculationModuleVersion}</version>
                 <scope>test</scope>
@@ -234,6 +244,34 @@
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>providermanagement-api</artifactId>
                 <version>${providermanagementVersion}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>idgen-api</artifactId>
+                <version>${idgenVersion}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>addresshierarchy-api</artifactId>
+                <version>${addressHierarchyVersion}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>idgen-webservices-api</artifactId>
+                <version>${idgenWebservicesVersion}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>idgen-webservices-omod</artifactId>
+                <version>${idgenWebservicesVersion}</version>
                 <scope>test</scope>
             </dependency>
 

@@ -191,6 +191,41 @@
             <version>2.6.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>rulesengine-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>idgen-webservices-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>idgen-webservices-omod</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>idgen-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>addresshierarchy-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ict4h.openmrs</groupId>
+            <artifactId>openmrs-atomfeed-api</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
