@@ -111,7 +111,7 @@ public class PatientMonitoringFlowsheetServiceImplIT extends BaseModuleWebContex
         assertEquals("M4", flowsheetHeaders.get(3).getName());
         assertEquals("MTx", flowsheetHeaders.get(4).getName());
         assertEquals("M6M", flowsheetHeaders.get(5).getName());
-        assertEquals("M3", flowsheetUI.getHighlightedCurrentMilestone());
+        assertEquals("M3", flowsheetUI.getEndDateMilestone());
         assertEquals(6, flowsheetData.get("New Drugs").size());
         assertEquals(6, flowsheetData.get("Blood Pressure").size());
         assertEquals("grey", coloursForNewDrugs.get(0));
