@@ -12,7 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <bahmniEndTbVersion>2.2.0-SNAPSHOT</bahmniEndTbVersion>
+        <bahmniEndTbVersion>2.2.0</bahmniEndTbVersion>
         <openMRSVersion>2.0.3</openMRSVersion>
         <atomfeedVersion>2.5.4</atomfeedVersion>
         <emrapiVersion>1.17</emrapiVersion>
