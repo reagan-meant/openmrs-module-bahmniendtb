@@ -60,6 +60,8 @@ public class MissingCaseDefnHelper {
                 ruleResultList.add(episodeHelper.mapEpisodeToPatientProgram(episode, BASELINE_FORM, BASELINE_DATE, BASELINE_DEFAULT_COMMENT));
             }
         }
+
+        ruleService.clearHibernateSession();
         return ruleResultList;
     }
 

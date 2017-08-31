@@ -67,6 +67,8 @@ public class MissingValuesHelper {
                 }
             }
         }
+
+        ruleService.clearHibernateSession();
         return ruleResultList;
     }
 }

@@ -88,6 +88,8 @@ public class EpisodeHelper {
         for (Episode episode : filteredEpisode) {
             ruleResults.add(mapEpisodeDrugToPatientProgram(episode));
         }
+
+        clearHibernateSession();
         return ruleResults;
     }
 
@@ -159,5 +161,9 @@ public class EpisodeHelper {
             notes = notesObs.getComment();
         }
         return notes;
+    }
+
+    public void clearHibernateSession() {
+        this.dataintegrityRuleService.clearHibernateSession();
     }
 }

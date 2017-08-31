@@ -52,6 +52,8 @@ public class TIFormInconsistencyHelper {
         for (Episode episode : episodesWithInconsistency) {
             ruleResultList.add(transformEpisodeToRuleResult(episode, parentTemplateConcept, questionConceptName));
         }
+
+        dataintegrityRuleService.clearHibernateSession();
         return ruleResultList;
     }
 
@@ -66,6 +68,8 @@ public class TIFormInconsistencyHelper {
                 patientPrograms.add(episodeHelper.mapEpisodeToPatientProgram(episode, FSN_TREATMENT_INITIATION_FORM, TI_IS_TREATMENT_START_DATE, TI_DEFAULT_COMMENT));
             }
         }
+
+        dataintegrityRuleService.clearHibernateSession();
         return patientPrograms;
     }
 

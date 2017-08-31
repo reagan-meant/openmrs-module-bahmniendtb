@@ -40,6 +40,8 @@ public class OutcomeFormHelper {
                 patientPrograms.add(convertToPatientProgram(episodeObsMapEntry.getKey(), EOT_TREATMENT_TEMPLATE, EOT_OUTCOME, EOT_DEFAULT_COMMENT));
             }
         }
+
+        episodeHelper.clearHibernateSession();
         return patientPrograms;
     }
 
@@ -60,6 +62,8 @@ public class OutcomeFormHelper {
                 patientPrograms.add(convertToPatientProgram(episodeObsMapEntry.getKey(), EOT_TREATMENT_TEMPLATE, EOT_OUTCOME, EOT_DEFAULT_COMMENT));
             }
         }
+
+        episodeHelper.clearHibernateSession();
         return patientPrograms;
     }
 

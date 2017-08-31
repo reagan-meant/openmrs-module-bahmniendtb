@@ -41,6 +41,8 @@ public class CultureStatusAtStartMissingHelper {
                 patientPrograms.add(convertToPatientProgram(episodeObsMapEntry.getKey(), BASELINE_FORM, BASELINE_CASEDEFINITION_MDR_TB_DIAGNOSIS_METHOD, CULTURE_STATUS_MISSING_DEFAULT_COMMENT));
             }
         }
+
+        episodeHelper.clearHibernateSession();
         return patientPrograms;
     }
 

@@ -45,6 +45,8 @@ public class DrugDSTViolationHelper {
             }
             ruleResultList.add(patientProgramRuleResult);
         }
+
+        episodeHelper.clearHibernateSession();
         return ruleResultList;
     }
 }
