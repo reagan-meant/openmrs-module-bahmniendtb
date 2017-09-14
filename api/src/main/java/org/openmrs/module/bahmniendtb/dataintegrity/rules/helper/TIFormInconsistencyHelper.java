@@ -58,19 +58,19 @@ public class TIFormInconsistencyHelper {
     }
 
     public List<RuleResult<PatientProgram>> getDataWithMissingStartTreatmentDate(List<Concept> concepts) {
-        List<RuleResult<PatientProgram>> patientPrograms = new ArrayList<>();
-        List<Concept> allTbDrug = conceptService.getConcept(ALL_TB_DRUG).getSetMembers();
-        List<Episode> episodes = getEpisodeForEncounterWithDrugs(allTbDrug);
+        List<RuleResult<PatientProgram>> ruleResults = new ArrayList<>();
+        List<Concept> allTbDrugs = conceptService.getConcept(ALL_TB_DRUG).getSetMembers();
+        List<Episode> episodes = getEpisodeForEncounterWithDrugs(allTbDrugs);
+        Set<Episode> episodesWithStartTreatmentDate = dataintegrityRuleService.getUniqueEpisodeForEncountersWithConceptObs(concepts);
+
+        episodes.removeAll(episodesWithStartTreatmentDate);
+
         for (Episode episode : episodes) {
-            Patient patient = episode.getPatientPrograms().iterator().next().getPatient();
-            List<Obs> obsList = dataintegrityRuleService.getObsListForAPatient(patient, new ArrayList<Encounter>(episode.getEncounters()), concepts);
-            if(CollectionUtils.isEmpty(obsList)) {
-                patientPrograms.add(episodeHelper.mapEpisodeToPatientProgram(episode, FSN_TREATMENT_INITIATION_FORM, TI_IS_TREATMENT_START_DATE, TI_DEFAULT_COMMENT));
-            }
+            ruleResults.add(episodeHelper.mapEpisodeToPatientProgram(episode, FSN_TREATMENT_INITIATION_FORM, TI_IS_TREATMENT_START_DATE, TI_DEFAULT_COMMENT));
         }
 
         dataintegrityRuleService.clearHibernateSession();
-        return patientPrograms;
+        return ruleResults;
     }
 
     private List<Episode> getEpisodeForEncounterWithDrugs(List<Concept> drugConcepts) {

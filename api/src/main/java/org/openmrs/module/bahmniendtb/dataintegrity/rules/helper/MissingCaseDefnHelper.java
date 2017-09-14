@@ -11,10 +11,7 @@ import org.openmrs.module.episodes.Episode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.openmrs.module.bahmniendtb.EndTBConstants.*;
 
@@ -42,23 +39,22 @@ public class MissingCaseDefnHelper {
         List<RuleResult<PatientProgram>> ruleResultList = new ArrayList<>();
         if(requiredConcepts.size() == 0) return null;
 
-        Set<Episode> episodesOfInterest
-                = ruleService.getAllEpisodes();
+        Set<Episode> episodesOfInterest = ruleService.getAllEpisodes();
+
+        Set<Episode> episodesContainingAllConcepts = null;
+        for(Concept concept : requiredConcepts) {
+            Set<Episode> episodesWithConcept = ruleService.getUniqueEpisodeForEncountersWithConceptObs(Arrays.asList(concept));
+            if (episodesContainingAllConcepts != null) {
+                episodesContainingAllConcepts.retainAll(episodesWithConcept);
+            } else {
+                episodesContainingAllConcepts = episodesWithConcept;
+            }
+        }
+
+        episodesOfInterest.removeAll(episodesContainingAllConcepts);
 
         for(Episode episode : episodesOfInterest) {
-            Obs form = null;
-            int requiredObsForForm = -1;
-            List<Obs> formObs
-                    = endTBObsService.getObsForEpisode(episode, parentTemplateConcept);
-
-            if(formObs.size() > 0) {
-                form = formObs.iterator().next();
-                requiredObsForForm = getuniqueConceptCount(endTBObsService.getChildObsByConcepts(form, requiredConcepts));
-            }
-
-            if(form == null || requiredObsForForm != requiredConcepts.size()) {
-                ruleResultList.add(episodeHelper.mapEpisodeToPatientProgram(episode, BASELINE_FORM, BASELINE_DATE, BASELINE_DEFAULT_COMMENT));
-            }
+            ruleResultList.add(episodeHelper.mapEpisodeToPatientProgram(episode, BASELINE_FORM, BASELINE_DATE, BASELINE_DEFAULT_COMMENT));
         }
 
         ruleService.clearHibernateSession();
