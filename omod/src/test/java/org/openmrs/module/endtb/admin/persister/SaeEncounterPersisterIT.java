@@ -422,6 +422,28 @@ public class SaeEncounterPersisterIT  extends BaseModuleWebContextSensitiveTest 
         assertEquals(1, SAETbTreatments.size());
     }
 
+    @Test
+    public void itShouldOverwriteOtherCasualFactorsSectionWithEmpty() throws Exception{
+        SaeEncounterRow import1encounterRow = createSaeEncounterRow("REG123456", "Hypertension", "2017-02-01", "TRUE");
+        import1encounterRow.nonTBdrug = "nonTBdrug";
+        import1encounterRow.coMorbidity = "comorbidity";
+        import1encounterRow.otherCausalFactor = "otherCausalFactors";
+        saeEncounterPersister.persist(import1encounterRow);
+
+        SaeEncounterRow import2encounterRow = createSaeEncounterRow("REG123456", "Hypertension", "2017-02-01", "TRUE");
+        saeEncounterPersister.persist(import2encounterRow);
+
+        Context.openSession();
+        Context.authenticate("admin", "test");
+        Collection<BahmniObservation> bahmniObservations = bahmniObsService.getObservationsForPatientProgram("ppuuid2", Arrays.asList(SAETemplateConstants.SAE_TEMPLATE));
+        Context.closeSession();
+
+        BahmniObservation SAEObservation = bahmniObservations.stream().findFirst().get();
+        BahmniObservation saeOtherCausalFactorsSection = filterByConceptName(SAEObservation, SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS_PV);
+
+        assertEquals(null, saeOtherCausalFactorsSection);
+    }
+
     private BahmniObservation filterByConceptName(BahmniObservation parentObservation, String conceptName) {
         return parentObservation.getGroupMembers()
                 .stream()

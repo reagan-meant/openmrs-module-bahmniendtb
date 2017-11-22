@@ -120,8 +120,18 @@ public class SaeObservationMapper {
                         isObservationPresent = true;
                     }
                     if(key.equals(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS_PV)) {
-                        //TODO functionality is not clear. Why are observations voided everytime for otherCasualFactors?
-                        makeObservationsVoided(observation.getGroupMembers());
+                        Map<String, Object> otherCasualFactorSectionMembers = (Map<String, Object>) entry.getValue();
+                        boolean isNonTBdrugEmpty = StringUtils.isEmpty((String) otherCasualFactorSectionMembers.get(SAETemplateConstants.SAE_NON_TB_DRUG));
+                        boolean isCobordityEmpty = StringUtils.isEmpty((String) otherCasualFactorSectionMembers.get(SAETemplateConstants.SAE_COMORBIDITY));
+                        boolean isOtherCasualFactorEmpty = StringUtils.isEmpty((String) otherCasualFactorSectionMembers.get(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS));
+
+                        if(isNonTBdrugEmpty && isCobordityEmpty && isOtherCasualFactorEmpty) {
+                            observation.setVoided(true);
+                            observation.setVoidReason("SAE PV Unit Import");
+                        } else {
+                            //TODO functionality is not clear. Why are observations voided everytime for otherCasualFactors?
+                            makeObservationsVoided(observation.getGroupMembers());
+                        }
                     }
 
                     if (overwrite && entry.getValue() instanceof String) {
