@@ -43,11 +43,31 @@ public class SaeObservationMapper {
         Map<String, Object> saeTemplateMap = getSaeTemplateMap(saeEncounterRow);
         updateObservation(saeTemplateMap, true, Arrays.asList(bahmniObservation), null, encounterDateTime);
         updateObservationToKeepOnlyCurrentTBDrugSections(saeTemplateMap, bahmniObservation);
+        voidObservationIfItIsOrphanedGroup(bahmniObservation);
         return Arrays.asList(bahmniObservation);
+    }
+
+    private boolean voidObservationIfItIsOrphanedGroup(BahmniObservation bahmniObservation) {
+        int noOfChilds = bahmniObservation.getGroupMembers().size();
+        int voidedChildObs = 0;
+
+        for (BahmniObservation childObservation : bahmniObservation.getGroupMembers()) {
+            if (childObservation.getVoided() || (childObservation.getConcept().isSet() && voidObservationIfItIsOrphanedGroup(childObservation))) {
+                 voidedChildObs++ ;
+            }
+        }
+        if (noOfChilds == voidedChildObs) {
+            bahmniObservation.setVoided(true);
+            bahmniObservation.setVoidReason("SAE PV Unit Import");
+            return true;
+        }
+        return false;
     }
 
     private void updateObservationToKeepOnlyCurrentTBDrugSections(Map<String, Object> saeTemplateMap, BahmniObservation SAEObservation) {
         BahmniObservation SAEOutcome = filterByConceptName(SAEObservation, SAETemplateConstants.SAE_OUTCOME_PV);
+        if(SAEOutcome == null)
+            return;
         List<BahmniObservation> SAETbTreatments = SAEOutcome.getGroupMembers()
                 .stream()
                 .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_TB_DRUG_TREATMENT))
@@ -180,11 +200,13 @@ public class SaeObservationMapper {
     }
 
     private boolean checkIfSAEFormTBDrugTreatmentIsAlreadyPresent(Collection<BahmniObservation> tbDrugTreatmentMembers, Map<String, Object> importedTbDrugTreatment) {
-        BahmniObservation tbDrugNameObservation = tbDrugTreatmentMembers
+        Optional<BahmniObservation> first = tbDrugTreatmentMembers
                 .stream()
                 .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_TB_DRUG_NAME))
-                .findFirst()
-                .get();
+                .findFirst();
+        if(first.orElse(null) == null)
+            return false;
+        BahmniObservation tbDrugNameObservation = first.get();
         String importedDrugName = (String) importedTbDrugTreatment.get(SAETemplateConstants.SAE_TB_DRUG_NAME);
         Concept tbDrugConcept = bahmniConceptService.getConceptByFullySpecifiedName(importedDrugName);
         return tbDrugConcept != null && tbDrugConcept.getUuid().equals(tbDrugNameObservation.getValue());
@@ -259,11 +281,13 @@ public class SaeObservationMapper {
     }
 
     private BahmniObservation filterByConceptName(BahmniObservation parentObservation, String conceptName) {
-        return parentObservation.getGroupMembers()
+        Optional<BahmniObservation> foundObservation = parentObservation.getGroupMembers()
                 .stream()
                 .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(conceptName))
-                .findFirst()
-                .get();
+                .findFirst();
+        if(foundObservation.orElse(null) == null)
+            return null;
+        return foundObservation.get();
     }
 
 }
