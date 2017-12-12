@@ -68,16 +68,20 @@ public class SaeObservationMapper {
         BahmniObservation SAEOutcome = filterByConceptName(SAEObservation, SAETemplateConstants.SAE_OUTCOME_PV);
         if(SAEOutcome == null)
             return;
-        List<BahmniObservation> SAETbTreatments = SAEOutcome.getGroupMembers()
+        Stream<BahmniObservation> TBDrugObservation = SAEOutcome.getGroupMembers()
                 .stream()
-                .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_TB_DRUG_TREATMENT))
-                .collect(Collectors.toList());
+                .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_TB_DRUG_TREATMENT));
+        if(TBDrugObservation == null)
+            return;
+        List<BahmniObservation> SAETbTreatments = TBDrugObservation.collect(Collectors.toList());
         Map<String, Object> SAEOutcomePV = (Map<String, Object>)((Map<String, Object>)saeTemplateMap.get(SAETemplateConstants.SAE_TEMPLATE)).get(SAETemplateConstants.SAE_OUTCOME_PV);
         List<String> SAETbTreatmentKeys = SAEOutcomePV.keySet().stream().filter(key -> getKeyWithoutIndex(key).equals(SAETemplateConstants.SAE_TB_DRUG_TREATMENT)).collect(Collectors.toList());
 
         for (BahmniObservation SAETbTreatmentSectionPV : SAETbTreatments) {
             boolean remove = true;
             BahmniObservation SAETbDrug = filterByConceptName(SAETbTreatmentSectionPV, SAETemplateConstants.SAE_TB_DRUG_NAME);
+            if(SAETbDrug == null)
+                continue;
             for (String key : SAETbTreatmentKeys) {
                 String importedDrugName = (String) ((Map<String, Object>) SAEOutcomePV.get(key)).get(SAETemplateConstants.SAE_TB_DRUG_NAME);
                 Concept tbDrugConcept = bahmniConceptService.getConceptByFullySpecifiedName(importedDrugName);
