@@ -38,7 +38,7 @@ public class PatientMonitoringFlowsheetController extends BaseRestController {
 
     private static Logger logger = Logger.getLogger(PatientMonitoringFlowsheetController.class);
     private static final String PATIENT_MONITORING_CONFIG_LOCATION = "endtb.patientMonitoring.configLocation";
-    private static final String EMR_PRIMARY_IDENTIFIER_TYPE = "emr.primaryIdentifierType";
+    private static final String EMR_PRIMARY_IDENTIFIER_TYPE = "bahmni.primaryIdentifierType";
 
     @Autowired
     private PatientMonitoringFlowsheetService patientMonitoringFlowsheetService;
