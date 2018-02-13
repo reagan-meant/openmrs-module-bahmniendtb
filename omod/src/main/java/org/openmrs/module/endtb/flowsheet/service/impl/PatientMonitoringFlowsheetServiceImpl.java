@@ -5,16 +5,19 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.bahmni.flowsheet.api.QuestionType;
 import org.bahmni.flowsheet.api.Status;
-import org.bahmni.flowsheet.api.models.*;
+import org.bahmni.flowsheet.api.models.Flowsheet;
+import org.bahmni.flowsheet.api.models.Milestone;
+import org.bahmni.flowsheet.api.models.Question;
+import org.bahmni.flowsheet.api.models.Result;
 import org.bahmni.flowsheet.config.Config;
 import org.bahmni.flowsheet.config.FlowsheetConfig;
 import org.bahmni.flowsheet.config.MilestoneConfig;
 import org.bahmni.flowsheet.config.QuestionConfig;
 import org.bahmni.flowsheet.definition.HandlerProvider;
+import org.bahmni.flowsheet.api.models.QuestionEvaluatorFactory;
 import org.bahmni.flowsheet.definition.models.FlowsheetDefinition;
 import org.bahmni.flowsheet.definition.models.MilestoneDefinition;
 import org.bahmni.flowsheet.definition.models.QuestionDefinition;
-import org.bahmni.flowsheet.ui.FlowsheetUI;
 import org.bahmni.module.bahmnicore.dao.ObsDao;
 import org.bahmni.module.bahmnicore.dao.OrderDao;
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.BahmniPatientProgram;
@@ -24,6 +27,7 @@ import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniendtb.EndTBConstants;
 import org.openmrs.module.endtb.flowsheet.models.FlowsheetAttribute;
+import org.bahmni.flowsheet.ui.FlowsheetUI;
 import org.openmrs.module.endtb.flowsheet.service.PatientMonitoringFlowsheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,7 +76,7 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
 
         String highlightedCurrentMilestoneName = findCurrentMonthMilestone(milestones, floatingMilestoneNames);
         String treatmentEndMilestoneName = findEndDateMilestone(milestones, endDate, floatingMilestoneNames);
-
+        
         List<QuestionConfig> questionConfigs = flowsheetConfig.getQuestionConfigs();
 
         Map<String, List<String>> flowsheetData = new LinkedHashMap<>();
@@ -80,15 +84,8 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
             String questionName = questionConfig.getName();
             List<String> colorCodes = new LinkedList<>();
             for (Milestone milestone : milestones) {
-                Question milestoneQuestion = getQuestionFromSet(milestone.getQuestions(), questionName);
-                if (milestoneQuestion == null ) {
-                    if(milestone.isQuestionAdded(flowsheetConfig.getQuestionConfigByName(questionName), bahmniConceptService, questionEvaluatorFactory))
-                       colorCodes.add("green");
-                    else
-                        colorCodes.add("grey") ;
-                }else {
-                    colorCodes.add(getColorCodeForStatus(milestoneQuestion.getResult().getStatus()));
-                }
+	            Question milestoneQuestion = getQuestionFromSet(milestone.getQuestions(), questionName);
+	            colorCodes.add(getColorCodeForStatus(milestoneQuestion, flowsheetConfig));
             }
             flowsheetData.put(questionName, colorCodes);
         }
@@ -306,19 +303,19 @@ public class PatientMonitoringFlowsheetServiceImpl implements PatientMonitoringF
     	if (milestoneQuestion == null || milestoneQuestion.getResult() == null) {
             return result;
         }
-
+    	
     	Status status = milestoneQuestion.getResult().getStatus();
-
+    	
     	if (status.equals(Status.DATA_ADDED)) {
             result = "green";
         }
-
+        
         if (status.equals(Status.PLANNED)) {
         	if (flowsheetConf.getTrackPlanned()) {
                 result = "yellow";
             }
         }
-
+        
         if (status.equals(Status.PENDING)) {
         	if (flowsheetConf.getTrackPending()) {
                 result = "purple";
