@@ -16,14 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component(value = "saeObservationMapper")
 public class SaeObservationMapper {
@@ -43,21 +38,45 @@ public class SaeObservationMapper {
         Map<String, Object> saeTemplateMap = getSaeTemplateMap(saeEncounterRow);
         updateObservation(saeTemplateMap, true, Arrays.asList(bahmniObservation), null, encounterDateTime);
         updateObservationToKeepOnlyCurrentTBDrugSections(saeTemplateMap, bahmniObservation);
+        voidObservationIfItIsOrphanedGroup(bahmniObservation);
         return Arrays.asList(bahmniObservation);
+    }
+
+    private boolean voidObservationIfItIsOrphanedGroup(BahmniObservation bahmniObservation) {
+        int noOfChilds = bahmniObservation.getGroupMembers().size();
+        int voidedChildObs = 0;
+
+        for (BahmniObservation childObservation : bahmniObservation.getGroupMembers()) {
+            if (childObservation.getVoided() || (childObservation.getConcept().isSet() && voidObservationIfItIsOrphanedGroup(childObservation))) {
+                 voidedChildObs++ ;
+            }
+        }
+        if (noOfChilds == voidedChildObs) {
+            bahmniObservation.setVoided(true);
+            bahmniObservation.setVoidReason("SAE PV Unit Import");
+            return true;
+        }
+        return false;
     }
 
     private void updateObservationToKeepOnlyCurrentTBDrugSections(Map<String, Object> saeTemplateMap, BahmniObservation SAEObservation) {
         BahmniObservation SAEOutcome = filterByConceptName(SAEObservation, SAETemplateConstants.SAE_OUTCOME_PV);
-        List<BahmniObservation> SAETbTreatments = SAEOutcome.getGroupMembers()
+        if(SAEOutcome == null)
+            return;
+        Stream<BahmniObservation> TBDrugObservation = SAEOutcome.getGroupMembers()
                 .stream()
-                .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_TB_DRUG_TREATMENT))
-                .collect(Collectors.toList());
+                .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_TB_DRUG_TREATMENT));
+        if(TBDrugObservation == null)
+            return;
+        List<BahmniObservation> SAETbTreatments = TBDrugObservation.collect(Collectors.toList());
         Map<String, Object> SAEOutcomePV = (Map<String, Object>)((Map<String, Object>)saeTemplateMap.get(SAETemplateConstants.SAE_TEMPLATE)).get(SAETemplateConstants.SAE_OUTCOME_PV);
         List<String> SAETbTreatmentKeys = SAEOutcomePV.keySet().stream().filter(key -> getKeyWithoutIndex(key).equals(SAETemplateConstants.SAE_TB_DRUG_TREATMENT)).collect(Collectors.toList());
 
         for (BahmniObservation SAETbTreatmentSectionPV : SAETbTreatments) {
             boolean remove = true;
             BahmniObservation SAETbDrug = filterByConceptName(SAETbTreatmentSectionPV, SAETemplateConstants.SAE_TB_DRUG_NAME);
+            if(SAETbDrug == null)
+                continue;
             for (String key : SAETbTreatmentKeys) {
                 String importedDrugName = (String) ((Map<String, Object>) SAEOutcomePV.get(key)).get(SAETemplateConstants.SAE_TB_DRUG_NAME);
                 Concept tbDrugConcept = bahmniConceptService.getConceptByFullySpecifiedName(importedDrugName);
@@ -120,8 +139,18 @@ public class SaeObservationMapper {
                         isObservationPresent = true;
                     }
                     if(key.equals(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS_PV)) {
-                        //TODO functionality is not clear. Why are observations voided everytime for otherCasualFactors?
-                        makeObservationsVoided(observation.getGroupMembers());
+                        Map<String, Object> otherCasualFactorSectionMembers = (Map<String, Object>) entry.getValue();
+                        boolean isNonTBdrugEmpty = StringUtils.isEmpty((String) otherCasualFactorSectionMembers.get(SAETemplateConstants.SAE_NON_TB_DRUG));
+                        boolean isCobordityEmpty = StringUtils.isEmpty((String) otherCasualFactorSectionMembers.get(SAETemplateConstants.SAE_COMORBIDITY));
+                        boolean isOtherCasualFactorEmpty = StringUtils.isEmpty((String) otherCasualFactorSectionMembers.get(SAETemplateConstants.SAE_OTHER_CASUAL_FACTORS));
+
+                        if(isNonTBdrugEmpty && isCobordityEmpty && isOtherCasualFactorEmpty) {
+                            observation.setVoided(true);
+                            observation.setVoidReason("SAE PV Unit Import");
+                        } else {
+                            //TODO functionality is not clear. Why are observations voided everytime for otherCasualFactors?
+                            makeObservationsVoided(observation.getGroupMembers());
+                        }
                     }
 
                     if (overwrite && entry.getValue() instanceof String) {
@@ -170,11 +199,13 @@ public class SaeObservationMapper {
     }
 
     private boolean checkIfSAEFormTBDrugTreatmentIsAlreadyPresent(Collection<BahmniObservation> tbDrugTreatmentMembers, Map<String, Object> importedTbDrugTreatment) {
-        BahmniObservation tbDrugNameObservation = tbDrugTreatmentMembers
+        Optional<BahmniObservation> first = tbDrugTreatmentMembers
                 .stream()
                 .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(SAETemplateConstants.SAE_TB_DRUG_NAME))
-                .findFirst()
-                .get();
+                .findFirst();
+        if(first.orElse(null) == null)
+            return false;
+        BahmniObservation tbDrugNameObservation = first.get();
         String importedDrugName = (String) importedTbDrugTreatment.get(SAETemplateConstants.SAE_TB_DRUG_NAME);
         Concept tbDrugConcept = bahmniConceptService.getConceptByFullySpecifiedName(importedDrugName);
         return tbDrugConcept != null && tbDrugConcept.getUuid().equals(tbDrugNameObservation.getValue());
@@ -249,11 +280,13 @@ public class SaeObservationMapper {
     }
 
     private BahmniObservation filterByConceptName(BahmniObservation parentObservation, String conceptName) {
-        return parentObservation.getGroupMembers()
+        Optional<BahmniObservation> foundObservation = parentObservation.getGroupMembers()
                 .stream()
                 .filter(observation -> observation.getConcept().getName().equalsIgnoreCase(conceptName))
-                .findFirst()
-                .get();
+                .findFirst();
+        if(foundObservation.orElse(null) == null)
+            return null;
+        return foundObservation.get();
     }
 
 }

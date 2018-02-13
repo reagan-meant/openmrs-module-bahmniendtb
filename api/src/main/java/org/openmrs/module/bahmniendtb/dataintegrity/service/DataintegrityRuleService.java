@@ -192,5 +192,9 @@ public class DataintegrityRuleService {
 
         return new HashSet<>(criteria.list());
     }
+
+    public void clearHibernateSession() {
+        sessionFactory.getCurrentSession().clear();
+    }
 }
 
