@@ -26,7 +26,7 @@ public class DateConditionsForFilledForms implements EncounterDataPreSaveCommand
     @Override
     public BahmniEncounterTransaction update(BahmniEncounterTransaction bahmniEncounterTransaction) {
         checkDateOfOnSetReportForTemplates(bahmniEncounterTransaction, ADVERSE_EVENTS_TEMPLATE, ADVERSE_EVENTS_DATE_OF_ONSET, ADVERSE_EVENTS_DATE_OF_REPORT);
-        checkDateOfOnSetReportForTemplates(bahmniEncounterTransaction, SERIOUS_ADVERSE_EVENTS_TEMPLATE, SERIOUS_ADVERSE_EVENTS_DATE_OF_ONSET, SERIOUS_ADVERSE_EVENTS_DATE_OF_REPORT);
+//        checkDateOfOnSetReportForTemplates(bahmniEncounterTransaction, SERIOUS_ADVERSE_EVENTS_TEMPLATE, SERIOUS_ADVERSE_EVENTS_DATE_OF_ONSET, SERIOUS_ADVERSE_EVENTS_DATE_OF_REPORT);
         return bahmniEncounterTransaction;
     }
 
@@ -45,6 +45,11 @@ public class DateConditionsForFilledForms implements EncounterDataPreSaveCommand
             }
         }
     }
+
+
+
+
+
 
     private Date getDate(Object value) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-M-d");
