@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import org.bahmni.csv.CSVFile;
 import org.bahmni.csv.EntityPersister;
 import org.bahmni.fileimport.FileImporter;
-import org.bahmni.module.common.db.JDBCConnectionProvider;
+import org.bahmni.common.db.JDBCConnectionProvider;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.internal.SessionImpl;

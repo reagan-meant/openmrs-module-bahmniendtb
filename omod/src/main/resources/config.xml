@@ -18,7 +18,7 @@
 
     <!-- Required Modules -->
     <require_modules>
-        <require_module version="${bahmniVersion}">
+        <require_module version="${bahmniCoreVersion}">
             org.bahmni.module.bahmnicore
         </require_module>
         <require_module version="${dataintegrityVersion}">
