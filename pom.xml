@@ -30,6 +30,7 @@
         <idgenWebservicesVersion>1.1-SNAPSHOT</idgenWebservicesVersion>
         <addressHierarchyVersion>2.9</addressHierarchyVersion>
         <idgenVersion>4.4.0</idgenVersion>
+        <httpclientVersion>4.3.6</httpclientVersion>
     </properties>
 
     <organization>
