@@ -65,7 +65,7 @@ public class PatientMonitoringFlowsheetServiceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        patientMonitoringFlowsheetService = new PatientMonitoringFlowsheetServiceImpl(orderDao, obsDao, bahmniConceptService, handlerProvider, questionEvaluatorFactory);
+        patientMonitoringFlowsheetService = new PatientMonitoringFlowsheetServiceImpl(orderDao, obsDao, bahmniConceptService, handlerProvider, questionEvaluatorFactory, null);
         when(bahmniConceptService.getConceptByFullySpecifiedName("Systolic")).thenReturn(new Concept(1));
         when(bahmniConceptService.getConceptByFullySpecifiedName("Diastolic")).thenReturn(new Concept(2));
     }
