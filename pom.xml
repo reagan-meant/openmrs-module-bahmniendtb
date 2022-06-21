@@ -5,7 +5,7 @@
 
     <groupId>org.bahmni.module</groupId>
     <artifactId>bahmniendtb</artifactId>
-    <version>${bahmniEndTbVersion}</version>
+    <version>2.3.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>EndTB extension Module</name>
     <description>Modules to override features in bahmni-core by implementors</description>
