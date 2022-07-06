@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.bahmni.module</groupId>
         <artifactId>bahmniendtb</artifactId>
-        <version>${bahmniEndTbVersion}</version>
+        <version>2.3.4-SNAPSHOT</version>
     </parent>
 
     <packaging>jar</packaging>
     <artifactId>bahmniendtb-omod</artifactId>
-    <version>${bahmniEndTbVersion}</version>
+    <version>2.3.4-SNAPSHOT</version>
 
     <dependencies>
 
