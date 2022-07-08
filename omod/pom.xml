@@ -171,6 +171,12 @@
 
         <dependency>
             <groupId>org.bahmni.module</groupId>
+            <artifactId>web-clients</artifactId>
+            <version>${bahmniUtilsVersion}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.bahmni.module</groupId>
             <artifactId>admin</artifactId>
             <version>${bahmniCoreVersion}</version>
             <scope>provided</scope>
