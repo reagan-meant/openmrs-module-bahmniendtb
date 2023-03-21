@@ -102,6 +102,18 @@ public class RulesForFormFilledTest {
     }
 
     @Test
+    public void shouldNotThrowExceptionIfFormFilledWithNullEncounterDate() {
+        Obs obs = new Obs();
+        obs.setObsDatetime(DateTime.now().plusMonths(5).toDate());
+        when(obsDao.getObsByPatientProgramUuidAndConceptNames(any(String.class), any(List.class), any(Integer.class), any(ObsDaoImpl.OrderBy.class), any(Date.class), any(Date.class))).thenReturn(Arrays.asList(obs));
+        bahmniEncounterTransaction = getBahmniEncounterTransaction(Arrays.asList("Monthly Treatment Completeness Template"));
+        bahmniEncounterTransaction.getObservations().iterator().next().setObservationDateTime(null);
+        BahmniEncounterTransaction actualResult = rulesForFormFilled.update(bahmniEncounterTransaction);
+        BahmniEncounterTransaction expectedResult = bahmniEncounterTransaction;
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
     public void shouldThrowExceptionIfFormFilledForSameMonthYearTwice() {
         Obs obs = new Obs();
         obs.setObsDatetime(new Date());

@@ -93,7 +93,7 @@ public class RulesForFormFilled implements EncounterDataPreSaveCommand {
         Set<String> dateSet = new HashSet<>();
         Set<String> processedObservationUuids = new HashSet<>();
         for (BahmniObservation newObservation : newObservations) {
-            if (!checkIfVoided(newObservation) && isDatePresentInDateSet(dateSet, newObservation.getObservationDateTime())) {
+            if (!checkIfVoided(newObservation) && newObservation.getObservationDateTime() != null && isDatePresentInDateSet(dateSet, newObservation.getObservationDateTime())) {
                 return true;
             }
             processedObservationUuids.add(newObservation.getUuid());
